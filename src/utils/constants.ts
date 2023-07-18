@@ -20,7 +20,6 @@ export const DEFAULT_RESIZABLE_CONFIG = {
 // Navigation constants
 export const PAGES = [
   { title: 'Home', href: '/' },
-  { title: 'Logs', href: '/' },
   { title: 'Exploits', href: '/exploits' },
   { title: 'Scoreboard', href: '/scoreboard' },
 ];

@@ -13,6 +13,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.0",
+    "@tanstack/react-virtual": "^3.0.0-beta.54",
     "eslint-config-prettier": "^8.8.0",
     "jotai": "^2.2.2",
     "prettier": "^3.0.0",
