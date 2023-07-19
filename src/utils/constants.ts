@@ -1,22 +1,3 @@
-// Resizable constants
-export const DEFAULT_RESIZABLE_ENABLE = {
-  top: false,
-  right: false,
-  bottom: false,
-  left: false,
-  topRight: false,
-  bottomRight: false,
-  bottomLeft: false,
-  topLeft: false,
-};
-export const DEFAULT_RESIZABLE_CONFIG = {
-  maxWidth: '100%',
-  maxHeight: '100%',
-  minHeight: 110,
-  defaultSize: { width: '100%', height: 500 },
-  enable: { ...DEFAULT_RESIZABLE_ENABLE, bottom: true },
-};
-
 // Navigation constants
 export const PAGES = [
   { title: 'Home', href: '/' },
@@ -114,8 +95,6 @@ export const DUMMY_SCOREBOARD_DATA = {
     },
   },
 };
-
-// Stack
 export const DUMMY_FLAGSUBMISSION_LOG = [
   {
     team: 3,
@@ -182,8 +161,6 @@ export const DUMMY_FLAGSUBMISSION_LOG = [
     service: 'dummy-web1',
   },
 ];
-
-// Stack
 export const DUMMY_EXPLOIT_LOG = [
   {
     timestamp: new Date(13),

@@ -17,28 +17,43 @@ type LoggingDisplayType = {
   parser: 'exploit' | 'submission';
 };
 
-export const exploitDataParser = (data: DataType) => {
+const exploitDataParser = (data: DataType) => {
   return (
-    <div className={`flex w-full h-full ${data.status ?? ''}`} title={data.raw}>
+    <div
+      className={`log flex w-full h-full ${data.status ?? ''}`}
+      title={data.raw}
+    >
       <p>{data.raw}</p>
       <span className="status">{data.status}</span>
     </div>
   );
 };
-export const flagSubmissionDataParser = (data: DataType) => {
+const flagSubmissionDataParser = (data: DataType) => {
   return (
-    <div className={`flex w-full h-full ${data.code ?? ''}`}>
-      <span className="status tick" title="tick">
+    <div
+      className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:2.25rem_2.25rem_8rem_1fr_3rem] items-center text-center text-sm ${
+        data.code ?? ''
+      }`}
+    >
+      <span className="secondaryColor rounded-sm py-[0.1rem]" title="tick">
         {data.tick}
       </span>
-      <span className="status teamid" title="team">
+      <span className="secondaryColor rounded-sm py-[0.1rem]" title="team">
         {data.team}
       </span>
-      <span className="status service" title="service">
+      <span className="secondaryColor rounded-sm py-[0.1rem]" title="service">
         {data.service}
       </span>
-      <p title={data.raw}>{data.output}</p>
-      <span className="status" title="code">
+      <p
+        title={data.raw}
+        className="text-left text-ellipsis whitespace-nowrap overflow-hidden pl-1 [color:var(--logBackgroundColor)]"
+      >
+        {data.output}
+      </p>
+      <span
+        className="rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
+        title="code"
+      >
         {data.code}
       </span>
     </div>
@@ -48,26 +63,17 @@ export const flagSubmissionDataParser = (data: DataType) => {
 const LoggingDisplay = ({ data, parser }: LoggingDisplayType) => {
   // The scrollable element for your list
   const parentRef = React.useRef(null);
-
   // The virtualizer
   const rowVirtualizer = useVirtualizer({
     count: data.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 35,
+    estimateSize: () => 28,
   });
 
   return (
     <>
       {/* The scrollable element for your list */}
-      <div
-        ref={parentRef}
-        style={{
-          height: `${rowVirtualizer.getTotalSize()}px`,
-          overflow: 'auto', // Make it scroll!
-          width: '100%',
-          position: 'relative',
-        }}
-      >
+      <div ref={parentRef}>
         {/* The large inner element to hold all of the items */}
         <div
           style={{

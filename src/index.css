@@ -8,29 +8,67 @@
   box-sizing: border-box;
 }
 
-.primaryColor {
-  background-color: #5e35b1;
-}
-.secondaryColor {
-  background-color: #0f192e;
-}
-.tertiaryColor {
-  background-color: #17223b;
-}
-
 :root {
+  --primary: #5e35b1;
+  --secondary: #0f192e;
+  --tertiary: #17223b;
+
+  --redWrapper: #e8d7d7;
+  --redBg: #e78284;
+  --redText: #7b2021;
+  --greenWrapper: #dfe7db;
+  --greenBg: #a6d189;
+  --greenText: #2d550f;
+  --yellowWrapper: #eae6df;
+  --yellowBg: #edda9b;
+  --yellowText: #83611d;
+
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
   color: rgba(255, 255, 255, 1);
-  background-color: #0f192e;
+  background-color: var(--secondary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+}
+
+.primaryColor {
+  background-color: var(--primary);
+}
+.secondaryColor {
+  background-color: var(--secondary);
+}
+.tertiaryColor {
+  background-color: var(--tertiary);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+html ::-webkit-scrollbar {
+  width: 10px;
+  height: 11px;
+  transition: all 0.2s;
+}
+html ::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 4rem;
+}
+html ::-webkit-scrollbar-thumb {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4rem;
+}
+html ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 body {
@@ -43,4 +81,39 @@ body {
   display: flex;
   flex-direction: column;
   padding: 0.75rem;
+}
+
+.log.error {
+  --logWrapperColor: var(--redWrapper);
+  --logBackgroundColor: var(--redBg);
+  --logColor: var(--redText);
+}
+.log.success {
+  --logWrapperColor: var(--greenWrapper);
+  --logBackgroundColor: var(--greenBg);
+  --logColor: var(--greenText);
+}
+.log.info {
+  --logWrapperColor: var(--yellowWrapper);
+  --logBackgroundColor: var(--yellowBg);
+  --logColor: var(--yellowText);
+}
+.log.OK {
+  --logWrapperColor: var(--greenWrapper);
+  --logBackgroundColor: var(--greenBg);
+  --logColor: var(--greenText);
+}
+.log.DUP,
+.log.OLD {
+  --logWrapperColor: var(--yellowWrapper);
+  --logBackgroundColor: var(--yellowBg);
+  --logColor: var(--yellowText);
+}
+.log.NOP,
+.log.INV,
+.log.ERR,
+.log.OWN {
+  --logWrapperColor: var(--redWrapper);
+  --logBackgroundColor: var(--redBg);
+  --logColor: var(--redText);
 }

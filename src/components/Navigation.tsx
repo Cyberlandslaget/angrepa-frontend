@@ -12,17 +12,17 @@ const Navigation = () => {
         <img src={Logo} alt="Skjeling logo" className="h-full" />
         <h1 className="flex font-bold mr-4">Skjeling</h1>
         <div className="flex gap-2">
-          <p className="flex px-3 py-[4px] text-xs rounded-sm bg-slate-950 bg-opacity-70">
+          <p className="flex px-3 py-[4px] text-xs rounded-sm bg-slate-950 bg-opacity-40">
             Tick: {currentTick}
           </p>
           <p
-            className="flex px-3 py-[4px] text-xs rounded-sm bg-slate-950 bg-opacity-70"
+            className="flex px-3 py-[4px] text-xs rounded-sm bg-slate-950 bg-opacity-40"
             title="Total angripa runs logged"
           >
             {1432}
           </p>
           <p
-            className="flex px-3 py-[4px] text-xs rounded-sm bg-slate-950 bg-opacity-70"
+            className="flex px-3 py-[4px] text-xs rounded-sm bg-slate-950 bg-opacity-40"
             title="Total flags logged"
           >
             {102}
