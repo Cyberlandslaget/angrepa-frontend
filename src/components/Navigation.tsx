@@ -2,6 +2,7 @@ import Logo from '../assets/logo.svg';
 import { useAtom, useAtomValue } from 'jotai';
 import { PAGES } from '../utils/constants';
 import { currentTickAtom } from '../utils/atoms';
+import { Link } from 'react-router-dom';
 
 const Navigation = () => {
   const currentTick = useAtomValue(currentTickAtom);
@@ -32,17 +33,17 @@ const Navigation = () => {
 
       <nav className="flex items-center gap-2">
         {PAGES.map((page) => (
-          <a
+          <Link
             key={page.title}
-            className={`primaryColor p-1 px-3 rounded-sm text-sm ${
+            className={`primaryColor p-1 px-3 rounded-sm text-sm transition-all hover:!bg-purple-500 ${
               window.location.href.split('/')[3] === page.href.substring(1)
                 ? '!bg-purple-600'
                 : ''
             }`}
-            href={page.href}
+            to={page.href}
           >
             {page.title}
-          </a>
+          </Link>
         ))}
       </nav>
     </header>
