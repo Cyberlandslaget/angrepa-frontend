@@ -2,14 +2,13 @@ import Logo from '../assets/logo.svg';
 import { useAtom, useAtomValue } from 'jotai';
 import { PAGES } from '../utils/constants';
 import { currentTickAtom, sensorFlagAtom } from '../utils/atoms';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { DoNotDisturb, EmojiFlags } from '@mui/icons-material';
-import useTheme from '@mui/material/styles/useTheme';
 
 const Navigation = ({ className = '' }) => {
   const currentTick = useAtomValue(currentTickAtom);
   const [sensorFlags, setSensorFlags] = useAtom(sensorFlagAtom);
-  const theme = useTheme();
+  const _navigate = useNavigate(); // This line enables component re-render on navigation
 
   return (
     <header
@@ -39,13 +38,24 @@ const Navigation = ({ className = '' }) => {
 
       <nav className="flex items-center gap-2">
         <div
-          className={"p-1 px-3 rounded-sm text-sm transition-all select-none"}
-          onClick={() => setSensorFlags(val => !val)}
-          style={{backgroundColor: !sensorFlags ? theme.palette.error.dark : theme.palette.success.dark}}
+          className={`log flex justify-center items-center p-1 rounded-sm text-sm w-36 transition-all select-none cursor-pointer ${
+            !sensorFlags
+              ? 'bg-[var(--greenBg)] text-[var(--greenText)] hover:brightness-110'
+              : 'bg-[var(--redBg)] text-[var(--redText)] hover:brightness-110'
+          }`}
+          onClick={() => setSensorFlags((val) => !val)}
         >
-          {!sensorFlags ?
-           <div><DoNotDisturb fontSize='small'/> Sensor flags</div> :
-           <div><EmojiFlags fontSize='small'/> Show flags</div>}
+          {!sensorFlags ? (
+            <div className="flex items-center gap-1">
+              <EmojiFlags fontSize="inherit" className="translate-y-[1px]" />
+              <p>Flags shown</p>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1">
+              <DoNotDisturb fontSize="inherit" className="translate-y-[1px]" />
+              <p>Flags censored</p>
+            </div>
+          )}
         </div>
         {PAGES.map((page) => (
           <Link

@@ -14,14 +14,11 @@ export default function Home() {
   const [pin, setPin] = useState(HomePanelEnum.Simple);
   const [fullscreen, setFullscreen] = useState<HomePanelEnum | null>(null);
   const resizableRef = useRef<HTMLElement | null>(null);
-
   const { setActiveHandler } = useResizeableComponent(resizableRef);
 
   const updatePin = (display: HomePanelEnum) => {
-    console.log(display);
     setPin(display);
   };
-
   const updateFullscreen = (display: HomePanelEnum) => {
     if (fullscreen === display) setFullscreen(null);
     else setFullscreen(display);
@@ -30,7 +27,7 @@ export default function Home() {
   return (
     <main
       ref={resizableRef}
-      className="w-full h-full grid [grid-template-columns:1fr_0.2rem_50%] [grid-template-rows:1fr_0.2rem_35%] gap-[0.5rem]"
+      className="w-full h-[calc(100%-3.35rem)] grid [grid-template-columns:1fr_0.2rem_50%] [grid-template-rows:1fr_0.2rem_35%] gap-[0.5rem]"
     >
       <PinButtonsWrapper
         className={`${pin === HomePanelEnum.Runner ? 'order-4' : 'order-5'}`}

@@ -21,7 +21,7 @@ export default function PinButtonsWrapper({
         pin ? '!order-1 [grid-column:span_3] simple' : ''
       } ${
         fullscreen
-          ? 'absolute z-20 mt-[3.25rem] top-3 left-3 [width:calc(100%-1.5rem)] [height:calc(100%-2.25rem-2.75rem)] fullscreen'
+          ? 'absolute z-20 mt-[3.5rem] top-3 left-3 [width:calc(100%-1.5rem)] [height:calc(100%-2.25rem-2.75rem)] fullscreen'
           : ''
       } ${className}`}
     >
