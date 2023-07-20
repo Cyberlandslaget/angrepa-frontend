@@ -14,7 +14,7 @@ export default function useResizeableComponent(
       if (activeHandler === DragDirection.Row) {
         // Get the current mouse position and calculate current percentage of the screen
         const pos = 100 - ((e.clientY - 15) / window.innerHeight) * 100;
-        if (pos < 4 || pos > 87) return;
+        if (pos < 4 || pos > 92) return;
         (
           resizableRef.current as HTMLElement
         ).style.gridTemplateRows = `1fr 0.2rem ${pos}%`;

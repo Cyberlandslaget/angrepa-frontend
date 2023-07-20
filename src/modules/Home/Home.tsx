@@ -37,6 +37,7 @@ export default function Home() {
         updatePin={() => updatePin(HomePanelEnum.Simple)}
       >
         <SimpleDisplay
+          extended={fullscreen === HomePanelEnum.Simple}
           data={{
             scoreboard: DUMMY_SCOREBOARD_DATA,
             flag: DUMMY_FLAGSUBMISSION_LOG,

@@ -1,4 +1,5 @@
 import { atom } from 'jotai';
+import { ExtendedType } from './enums';
 
 export const pagingSelectionAtom = atom('All');
 
@@ -12,4 +13,8 @@ export const submissionLogLengthAtom = atom(
 );
 export const exploitLogLengthAtom = atom((get) => get(exploitLogAtom).length);
 
+export const extendedSelectionAtom = atom<{
+  type: ExtendedType | null;
+  selection: string | null;
+}>({ type: null, selection: null });
 export const sensorFlagAtom = atom(false);
