@@ -1,24 +1,26 @@
 import Logo from '../assets/logo.svg';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtomValue } from 'jotai';
 import { PAGES } from '../utils/constants';
 import { currentTickAtom } from '../utils/atoms';
 import { Link } from 'react-router-dom';
 
-const Navigation = () => {
+const Navigation = ({ className = '' }) => {
   const currentTick = useAtomValue(currentTickAtom);
 
   return (
-    <header className="tertiaryColor w-full h-full p-2 rounded-md flex justify-between">
+    <header
+      className={`tertiaryColor w-full h-full p-2 rounded-md flex justify-between ${className}`}
+    >
       <div className="flex items-center h-full gap-2">
         <img src={Logo} alt="Skjeling logo" className="h-full" />
-        <h1 className="flex font-bold mr-4">Skjeling</h1>
+        <h1 className="flex font-bold mr-4">Angrapa</h1>
         <div className="flex gap-2">
           <p className="flex px-3 py-[4px] text-xs rounded-sm bg-slate-950 bg-opacity-40">
             Tick: {currentTick}
           </p>
           <p
             className="flex px-3 py-[4px] text-xs rounded-sm bg-slate-950 bg-opacity-40"
-            title="Total angripa runs logged"
+            title="Total angrapa runs logged"
           >
             {1432}
           </p>

@@ -203,7 +203,7 @@ const SimpleDisplay = ({ data }: SimpleDisplayProps) => {
   );
 
   return (
-    <div className="wrapper flex">
+    <div className="wrapper flex my-1">
       <div className="grid [grid-template-columns:11.5rem_1fr] gap-2">
         <div className="flex flex-col gap-1">
           <p className="flex mb-1 items-center font-bold text-sm p-2 h-[2.1rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden">
