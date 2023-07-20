@@ -6,11 +6,13 @@ import {
 } from './utils/constants';
 import LoggingDisplay from './components/LoggingDisplay';
 import SimpleDisplay from './components/SimpleDisplay';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 function App() {
   const [pin, setPin] = useState('simple');
   const [fullscreen, setFullscreen] = useState('');
+  const [activeHandler, setActiveHandler] = useState('');
+  const resizableRef = useRef(null);
 
   const updatePin = (display: 'simple' | 'runner' | 'submission') => {
     console.log(display);
@@ -22,16 +24,64 @@ function App() {
     else setFullscreen(display);
   };
 
+  const mouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (resizableRef.current === null) return;
+      if (activeHandler === 'row') {
+        // Get the current mouse position and calculate current percentage of the screen
+        const pos = 100 - (e.clientY / window.innerHeight) * 100;
+        if (pos < 4 || pos > 87) return;
+        (
+          resizableRef.current as HTMLElement
+        ).style.gridTemplateRows = `2.75rem 1fr 0.2rem ${pos}%`;
+      } else if (activeHandler === 'col') {
+        const pos = 100 - (e.clientX / window.innerWidth) * 100;
+        if (pos < 20 || pos > 80) return;
+        (
+          resizableRef.current as HTMLElement
+        ).style.gridTemplateColumns = `1fr 0.2rem ${pos}%`;
+      }
+    },
+    [resizableRef, activeHandler]
+  );
+
+  const removeListeners = useCallback(() => {
+    window.removeEventListener('mousemove', mouseMove);
+    window.removeEventListener('mouseup', removeListeners);
+  }, [mouseMove]);
+
+  const mouseUp = useCallback(() => {
+    setActiveHandler('');
+    removeListeners();
+  }, [setActiveHandler, removeListeners]);
+
+  useEffect(() => {
+    if (activeHandler !== '') {
+      window.addEventListener('mousemove', mouseMove);
+      window.addEventListener('mouseup', mouseUp);
+    }
+    return () => {
+      removeListeners();
+    };
+  }, [activeHandler, mouseMove, mouseUp, removeListeners]);
+
   return (
-    <main className="w-full h-full grid grid-cols-2 [grid-template-rows:2.75rem_1fr_14rem] gap-3">
-      <Navigation className="[grid-column:span_2]" />
+    <main
+      ref={resizableRef}
+      className="w-full h-full grid [grid-template-columns:1fr_0.2rem_50%] [grid-template-rows:2.75rem_1fr_0.2rem_35%] gap-[0.5rem]"
+    >
+      <Navigation className="[grid-column:span_3]" />
 
       <div
         className={`tertiaryColor w-full h-full p-2 rounded-md overflow-auto ${
-          pin === 'simple' ? '!order-1 [grid-column:span_2] simple' : 'order-3'
+          pin === 'simple'
+            ? '!order-1 [grid-column:span_3] simple'
+            : pin === 'runner'
+            ? 'order-4'
+            : 'order-5'
         } ${
           fullscreen === 'simple'
-            ? 'absolute z-20 mt-[3.5rem] top-3 left-3 [width:calc(100%-1.5rem)] [height:calc(100%-2.25rem-2.75rem)] fullscreen'
+            ? 'absolute z-20 mt-[3.25rem] top-3 left-3 [width:calc(100%-1.5rem)] [height:calc(100%-2.25rem-2.75rem)] fullscreen'
             : ''
         }`}
       >
@@ -58,11 +108,18 @@ function App() {
       </div>
 
       <div
+        className={`w-full h-full [grid-column:span_3] tertiaryColor brightness-125 order-2 cursor-row-resize ${
+          fullscreen !== '' ? 'opacity-0 pointer-events-none' : ''
+        }`}
+        onMouseDown={() => setActiveHandler('row')}
+      ></div>
+
+      <div
         className={`tertiaryColor w-full h-full p-2 rounded-md overflow-auto overflow-x-hidden order-2 ${
-          pin === 'runner' ? '!order-1 [grid-column:span_2] runner' : ''
+          pin === 'runner' ? '!order-1 [grid-column:span_3] runner' : ''
         } ${
           fullscreen === 'runner'
-            ? 'absolute z-20 mt-[3.5rem] top-3 left-3 [width:calc(100%-1.5rem)] [height:calc(100%-2.25rem-2.75rem)] fullscreen'
+            ? 'absolute z-20 mt-[3.25rem] top-3 left-3 [width:calc(100%-1.5rem)] [height:calc(100%-2.25rem-2.75rem)] fullscreen'
             : ''
         }`}
       >
@@ -84,11 +141,18 @@ function App() {
       </div>
 
       <div
-        className={`tertiaryColor w-full h-full p-2 rounded-md overflow-auto order-4 ${
-          pin === 'submission' ? '!order-1 [grid-column:span_2] submission' : ''
+        className={`w-full h-[calc(100%+0.5rem)] -translate-y-2 tertiaryColor order-4 brightness-125 cursor-col-resize ${
+          fullscreen !== '' ? 'opacity-0 pointer-events-none' : ''
+        }`}
+        onMouseDown={() => setActiveHandler('col')}
+      ></div>
+
+      <div
+        className={`tertiaryColor w-full h-full p-2 rounded-md overflow-auto order-5 ${
+          pin === 'submission' ? '!order-1 [grid-column:span_3] submission' : ''
         } ${
           fullscreen === 'submission'
-            ? 'absolute z-20 mt-[3.5rem] top-3 left-3 [width:calc(100%-1.5rem)] [height:calc(100%-2.25rem-2.75rem)] fullscreen'
+            ? 'absolute z-20 mt-[3.25rem] top-3 left-3 [width:calc(100%-1.5rem)] [height:calc(100%-2.25rem-2.75rem)] fullscreen'
             : ''
         }`}
       >
