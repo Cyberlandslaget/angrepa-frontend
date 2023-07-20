@@ -5,20 +5,18 @@ import './index.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Scoreboard from './modules/Scoreboard/Scoreboard.tsx';
 import Exploits from './modules/Exploits/Exploits.tsx';
-import Navigation from 'components/Navigation.tsx';
 import Layout from 'modules/Layout.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-      <BrowserRouter>
-              <Layout>
+    <BrowserRouter>
+      <Layout>
         <Routes>
-
           <Route path="/" element={<Home />} />
           <Route path="/scoreboard" element={<Scoreboard />} />
-         <Route path="/exploits" element={<Exploits />} />
+          <Route path="/exploits" element={<Exploits />} />
         </Routes>
-              </Layout>
-      </BrowserRouter>
+      </Layout>
+    </BrowserRouter>
   </React.StrictMode>
 );

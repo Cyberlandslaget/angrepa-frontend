@@ -41,7 +41,12 @@ const flagSubmissionDataParser = (data: DataType, sensor: boolean) => {
         title={data.raw}
         className="text-left text-ellipsis whitespace-nowrap overflow-hidden pl-1 [color:var(--logBackgroundColor)]"
       >
-        {sensor ? data.output?.replace(/(.*)?\{(.*)?(.{5})\}(.*)/g, '$1{$2' + 'x'.repeat(5) + '}$4') : data.output}
+        {sensor
+          ? data.output?.replace(
+              /(.*)?\{(.*)?(.{5})\}(.*)/g,
+              '$1{$2' + 'x'.repeat(5) + '}$4'
+            )
+          : data.output}
       </p>
       <span
         className="rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
