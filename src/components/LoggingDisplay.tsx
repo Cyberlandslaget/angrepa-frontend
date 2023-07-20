@@ -1,6 +1,8 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import React from 'react';
 import { DataType, LoggingDisplayProps } from '../utils/types';
+import { useAtomValue } from 'jotai';
+import { sensorFlagAtom } from 'utils/atoms';
 
 const exploitDataParser = (data: DataType) => {
   return (
@@ -19,7 +21,7 @@ const exploitDataParser = (data: DataType) => {
     </div>
   );
 };
-const flagSubmissionDataParser = (data: DataType) => {
+const flagSubmissionDataParser = (data: DataType, sensor: boolean) => {
   return (
     <div
       className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:2.25rem_2.25rem_8rem_1fr_3rem] items-center text-center text-sm ${
@@ -39,7 +41,7 @@ const flagSubmissionDataParser = (data: DataType) => {
         title={data.raw}
         className="text-left text-ellipsis whitespace-nowrap overflow-hidden pl-1 [color:var(--logBackgroundColor)]"
       >
-        {data.output}
+        {sensor ? data.output?.replace(/(.*)?\{(.*)?(.{5})\}(.*)/g, '$1{$2' + 'x'.repeat(5) + '}$4') : data.output}
       </p>
       <span
         className="rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
@@ -60,6 +62,7 @@ const LoggingDisplay = ({ data, parser }: LoggingDisplayProps) => {
     getScrollElement: () => parentRef.current,
     estimateSize: () => 28,
   });
+  const sensor = useAtomValue(sensorFlagAtom);
 
   return (
     <>
@@ -87,7 +90,7 @@ const LoggingDisplay = ({ data, parser }: LoggingDisplayProps) => {
               }}
             >
               {parser === 'submission'
-                ? flagSubmissionDataParser(data[virtualItem.index])
+                ? flagSubmissionDataParser(data[virtualItem.index], sensor)
                 : exploitDataParser(data[virtualItem.index])}
             </div>
           ))}

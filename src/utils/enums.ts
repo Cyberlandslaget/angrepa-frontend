@@ -3,3 +3,8 @@ export enum HomePanelEnum {
     Runner = 'runner',
     Submission = 'submission'
 }
+
+export enum DragDirection{
+    Row = 'row',
+    Column = 'col'
+}

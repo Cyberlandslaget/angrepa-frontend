@@ -11,3 +11,5 @@ export const submissionLogLengthAtom = atom(
   (get) => get(submissionLogAtom).length
 );
 export const exploitLogLengthAtom = atom((get) => get(exploitLogAtom).length);
+
+export const sensorFlagAtom = atom(false);

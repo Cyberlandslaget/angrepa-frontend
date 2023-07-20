@@ -1,11 +1,15 @@
 import Logo from '../assets/logo.svg';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { PAGES } from '../utils/constants';
-import { currentTickAtom } from '../utils/atoms';
+import { currentTickAtom, sensorFlagAtom } from '../utils/atoms';
 import { Link } from 'react-router-dom';
+import { DoNotDisturb, EmojiFlags } from '@mui/icons-material';
+import useTheme from '@mui/material/styles/useTheme';
 
 const Navigation = ({ className = '' }) => {
   const currentTick = useAtomValue(currentTickAtom);
+  const [sensorFlags, setSensorFlags] = useAtom(sensorFlagAtom);
+  const theme = useTheme();
 
   return (
     <header
@@ -34,6 +38,15 @@ const Navigation = ({ className = '' }) => {
       </div>
 
       <nav className="flex items-center gap-2">
+        <div
+          className={"p-1 px-3 rounded-sm text-sm transition-all select-none"}
+          onClick={() => setSensorFlags(val => !val)}
+          style={{backgroundColor: !sensorFlags ? theme.palette.error.dark : theme.palette.success.dark}}
+        >
+          {!sensorFlags ?
+           <div><DoNotDisturb fontSize='small'/> Sensor flags</div> :
+           <div><EmojiFlags fontSize='small'/> Show flags</div>}
+        </div>
         {PAGES.map((page) => (
           <Link
             key={page.title}
