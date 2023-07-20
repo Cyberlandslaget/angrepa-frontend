@@ -23,6 +23,7 @@ const SimpleOverview = ({
     Math.max(currentTick - total, 0),
     currentTick - total > 0 ? total : currentTick
   );
+
   return (
     <>
       {status === SERVICE_STATUS.UP ||
@@ -56,7 +57,6 @@ type SimpleDisplayProps = {
     flag: DataType[];
   };
 };
-
 const SimpleDisplay = ({ data }: SimpleDisplayProps) => {
   const currentTick = useAtomValue(currentTickAtom);
   const total = 5;

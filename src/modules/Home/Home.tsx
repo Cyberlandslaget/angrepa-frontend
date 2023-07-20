@@ -30,7 +30,7 @@ export default function Home() {
       className="w-full h-[calc(100%-3.35rem)] grid [grid-template-columns:1fr_0.2rem_50%] [grid-template-rows:1fr_0.2rem_35%] gap-[0.5rem]"
     >
       <PinButtonsWrapper
-        className={`${pin === HomePanelEnum.Runner ? 'order-4' : 'order-5'}`}
+        className={pin === HomePanelEnum.Runner ? 'order-4' : 'order-5'}
         pin={pin === HomePanelEnum.Simple}
         fullscreen={fullscreen === HomePanelEnum.Simple}
         updateFullscreen={() => updateFullscreen(HomePanelEnum.Simple)}
