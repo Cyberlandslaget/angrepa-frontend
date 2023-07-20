@@ -11,7 +11,8 @@
 :root {
   --primary: #5e35b1;
   --secondary: #0f192e;
-  --tertiary: #17223b;
+  --tertiary: #1d273b;
+  --quaternary: #17223b;
 
   --redWrapper: #e8d7d7;
   --redBg: #e78284;
@@ -45,6 +46,9 @@
 }
 .tertiaryColor {
   background-color: var(--tertiary);
+}
+.quaternaryColor {
+  background-color: var(--quaternary);
 }
 
 html {

@@ -1,6 +1,11 @@
 import Navigation from './components/Navigation';
-import { DUMMY_EXPLOIT_LOG, DUMMY_FLAGSUBMISSION_LOG } from './utils/constants';
+import {
+  DUMMY_EXPLOIT_LOG,
+  DUMMY_FLAGSUBMISSION_LOG,
+  DUMMY_SCOREBOARD_DATA,
+} from './utils/constants';
 import LoggingDisplay from './components/LoggingDisplay';
+import SimpleDisplay from './components/SimpleDisplay';
 
 function App() {
   return (
@@ -16,7 +21,12 @@ function App() {
             Fullscreen
           </button>
         </div>
-        Simple
+        <SimpleDisplay
+          data={{
+            scoreboard: DUMMY_SCOREBOARD_DATA,
+            flag: DUMMY_FLAGSUBMISSION_LOG,
+          }}
+        />
       </div>
 
       <div className="flex gap-3">

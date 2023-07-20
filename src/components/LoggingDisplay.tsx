@@ -1,21 +1,6 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import React from 'react';
-
-type DataType = {
-  team?: number;
-  tick?: number;
-  code?: string;
-  output?: string;
-  timestamp?: Date;
-  service?: string;
-
-  status?: string;
-  raw?: string;
-};
-type LoggingDisplayType = {
-  data: DataType[];
-  parser: 'exploit' | 'submission';
-};
+import { DataType, LoggingDisplayProps } from '../utils/types';
 
 const exploitDataParser = (data: DataType) => {
   return (
@@ -66,7 +51,7 @@ const flagSubmissionDataParser = (data: DataType) => {
   );
 };
 
-const LoggingDisplay = ({ data, parser }: LoggingDisplayType) => {
+const LoggingDisplay = ({ data, parser }: LoggingDisplayProps) => {
   // The scrollable element for your list
   const parentRef = React.useRef(null);
   // The virtualizer
