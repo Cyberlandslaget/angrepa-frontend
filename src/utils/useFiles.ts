@@ -1,11 +1,15 @@
 import { useAtom } from 'jotai';
-import { currentFiles as currentFilesAtom } from 'utils/atoms';
-import generateTar from './generateTar';
-import parseTar from './parseTar';
+import {
+  currentFiles as currentFilesAtom,
+  currentlySelectedFile,
+} from 'utils/atoms';
+import generateTar from './tar/generateTar';
+import parseTar from './tar/parseTar';
 import { File } from 'utils/types';
 
-export default function useTar() {
+export default function useFiles() {
   const [currentFiles, setCurrentFiles] = useAtom(currentFilesAtom);
+  const [selectedFile, setSelectedFile] = useAtom(currentlySelectedFile);
 
   const addFile = (file: File) => {
     setCurrentFiles([...currentFiles, file]);
@@ -31,6 +35,26 @@ export default function useTar() {
     );
   };
 
+  const renameFile = (filename: string, newFilename: string) => {
+    setCurrentFiles(
+      currentFiles.map((file) => {
+        if (file.name === filename) {
+          return { ...file, name: newFilename };
+        }
+        return file;
+      })
+    );
+  };
+
+  const getFile = (filename: string) => {
+    return currentFiles.find((file) => file.name === filename);
+  };
+
+  const getSelectedFile = () => {
+    if (!selectedFile) return null;
+    return getFile(selectedFile);
+  };
+
   const getTar = async () => {
     return await generateTar(currentFiles);
   };
@@ -40,11 +64,25 @@ export default function useTar() {
     setCurrentFiles(files);
   };
 
+  const setFiles = (files: File[]) => {
+    setCurrentFiles(files);
+  };
+
+  console.log(currentFiles);
+  console.log(selectedFile);
+
   return {
     addFile,
     removeFile,
     clearFiles,
     updateFile,
     getTar,
+    setFiles,
+    setTar,
+    renameFile,
+    getFile,
+    getSelectedFile,
+    setSelectedFile,
+    currentFiles,
   };
 }

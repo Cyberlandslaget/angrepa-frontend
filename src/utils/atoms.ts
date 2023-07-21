@@ -25,3 +25,5 @@ export const sensorFlagAtom = atom(false);
 export const currentFiles = atom<File[]>([]);
 
 export const currentExploit = atom<Exploit | null>(null);
+
+export const currentlySelectedFile = atom<string | null>(null);
