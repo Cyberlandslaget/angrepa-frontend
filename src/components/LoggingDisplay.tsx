@@ -14,8 +14,6 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
-import { InvertColors } from '@mui/icons-material';
-import { blue } from '@mui/material/colors';
 
 const exploitDataParser = (data: DataType) => {
   return (
@@ -38,7 +36,7 @@ const flagSubmissionDataParser = (data: DataType, sensor: boolean) => {
   return (
     <div
       className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:2.25rem_2.25rem_8rem_1fr_3rem] items-center text-center text-sm ${
-        data.code ?? ''
+        data.status ?? ''
       }`}
     >
       <span className="secondaryColor rounded-sm py-[0.1rem]" title="tick">
@@ -48,24 +46,19 @@ const flagSubmissionDataParser = (data: DataType, sensor: boolean) => {
         {data.team}
       </span>
       <span className="secondaryColor rounded-sm py-[0.1rem]" title="service">
-        {data.service}
+        {data.flagstore}
       </span>
-      <p
-        title={data.raw}
-        className="text-left text-ellipsis whitespace-nowrap overflow-hidden pl-1 [color:var(--logBackgroundColor)]"
-      >
+      <p className="text-left text-ellipsis whitespace-nowrap overflow-hidden pl-1 [color:var(--logBackgroundColor)]">
         {sensor
-          ? data.output?.replace(
-              /(.*)?\{(.*)?(.{5})\}(.*)/g,
-              '$1{$2' + 'x'.repeat(5) + '}$4'
-            )
-          : data.output}
+          ? (data.flag?.substring(0, data.flag?.length - 8) || '') +
+            'x'.repeat(8)
+          : data.flag}
       </p>
       <span
         className="rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
-        title="code"
+        title="status code"
       >
-        {data.code}
+        {data.status}
       </span>
     </div>
   );
@@ -83,7 +76,7 @@ const LoggingDisplay = ({
   const [statusFilter, setStatusFilter] = React.useState<string[]>(filters);
 
   const filterData = data.filter((d) =>
-    statusFilter.includes(String(d.code || d.status))
+    statusFilter.includes(String(d.status))
   );
 
   // The virtualizer
@@ -160,15 +153,20 @@ const LoggingDisplay = ({
               renderValue={(selected) => selected.join(', ')}
               MenuProps={MenuProps}
             >
-              <MenuItem value="all" sx={{ color: 'white',
-              'svg': { filter: 'invert(1)'} ,
-              '.Mui-checked svg': { filter: 'invert(0)'},
-              '.MuiCheckbox-indeterminate svg': { filter: 'invert(0)'} 
-              }}>
+              <MenuItem
+                value="all"
+                sx={{
+                  color: 'white',
+                  svg: { filter: 'invert(1)' },
+                  '.Mui-checked svg': { filter: 'invert(0)' },
+                  '.MuiCheckbox-indeterminate svg': { filter: 'invert(0)' },
+                }}
+              >
                 <ListItemIcon>
                   <Checkbox
                     checked={
-                      filters.length > 0 && filters.length === statusFilter.length
+                      filters.length > 0 &&
+                      filters.length === statusFilter.length
                     }
                     indeterminate={
                       statusFilter.length > 0 &&
@@ -184,9 +182,9 @@ const LoggingDisplay = ({
                   value={filter}
                   sx={{
                     color: 'white',
-                    'svg': { filter: 'invert(1)'} ,
-                      '.Mui-checked svg': { filter: 'invert(0)'} 
-                    }}
+                    svg: { filter: 'invert(1)' },
+                    '.Mui-checked svg': { filter: 'invert(0)' },
+                  }}
                 >
                   <Checkbox checked={statusFilter.indexOf(filter) > -1} />
                   <ListItemText primary={filter} />

@@ -1,15 +1,26 @@
 import { FLAG_CODE, SERVICE_STATUS } from './constants';
 
 export type DataType = {
-  team?: number;
-  tick?: number;
-  code?: string;
-  output?: string;
+  // Exploit
+  id?: string;
+  running?: boolean;
+  attack_target?: string | null;
+  docker_image?: string;
+  exploit_kind?: string;
   timestamp?: Date;
-  service?: string;
+  raw?: string;
+
+  // Submission
+  flag?: string;
+  tick?: number;
+  stamp?: Date;
+  exploit_id?: string;
+  target_ip?: string;
+  team?: number;
+  flagstore?: string;
+  sent?: boolean;
 
   status?: string;
-  raw?: string;
 };
 
 export type LoggingDisplayProps = {

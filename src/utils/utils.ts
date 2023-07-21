@@ -38,20 +38,20 @@ export const removeDuplicates = (
       let nexists, nnexists;
       const exists = nchalls[chall?.team || ''];
       if (exists) {
-        nexists = exists[chall?.service || ''];
+        nexists = exists[chall?.flagstore || ''];
         if (nexists) nnexists = nexists[chall?.tick || 0];
       }
 
       if (nnexists) {
         if (
-          FLAG_CODE[chall.code as FlagCodeType] >
-          FLAG_CODE[nnexists.code as FlagCodeType]
+          FLAG_CODE[chall.status as FlagCodeType] >
+          FLAG_CODE[nnexists.status as FlagCodeType]
         ) {
-          nchalls[chall?.team || ''][chall?.service || ''][chall?.tick || 0] =
+          nchalls[chall?.team || ''][chall?.flagstore || ''][chall?.tick || 0] =
             chall;
         }
       } else {
-        nchalls[chall?.team || ''][chall?.service || ''][chall?.tick || 0] =
+        nchalls[chall?.team || ''][chall?.flagstore || ''][chall?.tick || 0] =
           chall;
       }
     } catch (err) {

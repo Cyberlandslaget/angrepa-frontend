@@ -1,6 +1,5 @@
 import { atom } from 'jotai';
 import { ExtendedType } from './enums';
-import { ITarWriteItem } from '@gera2ld/tarjs';
 import { Exploit } from './types';
 import { File } from './types';
 
