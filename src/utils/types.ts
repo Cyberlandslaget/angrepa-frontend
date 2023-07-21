@@ -15,6 +15,8 @@ export type DataType = {
 export type LoggingDisplayProps = {
   data: DataType[];
   parser: 'exploit' | 'submission';
+  extended: boolean;
+  filters: string[];
 };
 
 export type FlagCodeType = keyof typeof FLAG_CODE;
