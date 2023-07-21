@@ -1,1 +1,0 @@
-const API_ENDPOINT = 'https://localhost:7777';
