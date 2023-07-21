@@ -1,5 +1,8 @@
 import { atom } from 'jotai';
 import { ExtendedType } from './enums';
+import { ITarWriteItem } from '@gera2ld/tarjs';
+import { Exploit } from './types';
+import { File } from './types';
 
 export const pagingSelectionAtom = atom('All');
 
@@ -18,3 +21,7 @@ export const extendedSelectionAtom = atom<{
   selection: string | null;
 }>({ type: null, selection: null });
 export const sensorFlagAtom = atom(false);
+
+export const currentFiles = atom<File[]>([]);
+
+export const currentExploit = atom<Exploit | null>(null);
