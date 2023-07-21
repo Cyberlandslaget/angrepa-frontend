@@ -2,6 +2,7 @@ import {
   DUMMY_EXPLOIT_LOG,
   DUMMY_FLAGSUBMISSION_LOG,
   DUMMY_SCOREBOARD_DATA,
+  FLAG_CODE,
 } from 'utils/constants';
 import LoggingDisplay from 'components/LoggingDisplay';
 import SimpleDisplay from 'components/SimpleDisplay';
@@ -59,7 +60,7 @@ export default function Home() {
         updateFullscreen={() => updateFullscreen(HomePanelEnum.Runner)}
         updatePin={() => updatePin(HomePanelEnum.Runner)}
       >
-        <LoggingDisplay data={DUMMY_EXPLOIT_LOG} parser={'exploit'} />
+        <LoggingDisplay data={DUMMY_EXPLOIT_LOG} parser={'exploit'} extended={fullscreen === HomePanelEnum.Runner} filters={['success', 'info', 'error']} />
       </PinButtonsWrapper>
 
       <div
@@ -76,7 +77,7 @@ export default function Home() {
         updateFullscreen={() => updateFullscreen(HomePanelEnum.Submission)}
         updatePin={() => updatePin(HomePanelEnum.Submission)}
       >
-        <LoggingDisplay data={DUMMY_FLAGSUBMISSION_LOG} parser={'submission'} />
+        <LoggingDisplay data={DUMMY_FLAGSUBMISSION_LOG} parser={'submission'} extended={fullscreen === HomePanelEnum.Submission} filters={['DUP', 'ERR', 'INV', 'NOP', 'OK', 'OLD', 'OWN']} />
       </PinButtonsWrapper>
     </main>
   );
