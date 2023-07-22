@@ -1,9 +1,10 @@
 import { TarWriter } from '@gera2ld/tarjs';
+import { File } from 'utils/types';
 
-export default async function generateTar(files: any[]) {
+export default async function generateTar(files: File[]) {
   const tar = new TarWriter();
   files.forEach((file) => {
-    tar.addFile(file.path, file.content);
+    tar.addFile(file.name, file.data);
   });
   return (await tar.write()).arrayBuffer();
 }

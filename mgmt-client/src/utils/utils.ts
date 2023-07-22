@@ -36,7 +36,7 @@ export const removeDuplicates = (
     const chall = challs[i];
     try {
       let nexists, nnexists;
-      const exists = nchalls[chall?.team || ''];
+      const exists = nchalls[Math.floor(chall?.team || 0) || ''];
       if (exists) {
         nexists = exists[chall?.flagstore || ''];
         if (nexists) nnexists = nexists[chall?.tick || 0];
@@ -47,12 +47,14 @@ export const removeDuplicates = (
           FLAG_CODE[chall.status as FlagCodeType] >
           FLAG_CODE[nnexists.status as FlagCodeType]
         ) {
-          nchalls[chall?.team || ''][chall?.flagstore || ''][chall?.tick || 0] =
-            chall;
+          nchalls[Math.floor(chall?.team || 0) || ''][chall?.flagstore || ''][
+            chall?.tick || 0
+          ] = chall;
         }
       } else {
-        nchalls[chall?.team || ''][chall?.flagstore || ''][chall?.tick || 0] =
-          chall;
+        nchalls[Math.floor(chall?.team || 0) || ''][chall?.flagstore || ''][
+          chall?.tick || 0
+        ] = chall;
       }
     } catch (err) {
       continue;

@@ -134,7 +134,7 @@ app.post("/submission", (req, res) => {
 		exploit_id,
 		tick,
 		target_ip,
-		team,
+		team: team.toString(),
 		flagstore,
 		sent,
 		status,

@@ -81,8 +81,6 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
     currentTick
   );
 
-  console.log(filteredData, data.flag);
-
   useEffect(() => {
     if (!extended && extendedSelection.type !== null)
       setExtendedSelection({ type: null, selection: null });

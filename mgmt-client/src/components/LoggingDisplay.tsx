@@ -43,7 +43,7 @@ const flagSubmissionDataParser = (data: DataType, sensor: boolean) => {
         {data.tick}
       </span>
       <span className="secondaryColor rounded-sm py-[0.1rem]" title="team">
-        {data.team}
+        {Math.floor(data.team || 0)}
       </span>
       <span className="secondaryColor rounded-sm py-[0.1rem]" title="service">
         {data.flagstore}
