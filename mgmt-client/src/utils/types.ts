@@ -69,9 +69,9 @@ CREATE TABLE exploits (
 );
 */
 export type ExploitType = {
-  id: number;
+  id: string;
   running: boolean;
-  attack_target: string;
+  attack_target: string; // Service
   blacklist: string[];
   docker_image: string;
   exploit_kind: string;

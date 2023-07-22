@@ -9,7 +9,7 @@ export const currentTickAtom = atom(5);
 export const scoreboardDataAtom = atom<ScoreboardType | null>(null);
 export const submissionLogAtom = atom<DataType[] | null>(null);
 export const exploitLogAtom = atom<DataType[] | null>(null);
-export const exportLogAtom = atom<ExploitType[] | null>(null);
+export const exploitsAtom = atom<ExploitType[] | null>(null);
 
 export const submissionLogLengthAtom = atom(
   (get) => get(submissionLogAtom)?.length
