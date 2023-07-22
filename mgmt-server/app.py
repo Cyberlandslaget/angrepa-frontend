@@ -152,8 +152,6 @@ def exploit(id):
     cur = db.cursor()
     cur.execute("SELECT tar, config FROM exploits_log WHERE id = %s", (id,))
     tar, config = cur.fetchone()
-    tar = b64encode(tar).decode("utf-8")
-    config = b64encode(config).decode("utf-8")
     return jsonify({"tar": tar, "config": config})
 
 """

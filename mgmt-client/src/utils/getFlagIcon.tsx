@@ -2,7 +2,13 @@ import { FLAG_CODE, FLAG_STATUS } from 'utils/constants';
 import { DataType, FlagCodeType } from 'utils/types';
 
 export default function getFlagIcon(chall: DataType, tick: number) {
-  switch (FLAG_CODE[FLAG_STATUS[chall?.status] as FlagCodeType]) {
+  switch (
+    FLAG_CODE[
+      FLAG_STATUS[
+        chall?.status
+      ] as FlagCodeType
+    ]
+  ) {
     case FLAG_CODE.OK:
       return (
         <svg
