@@ -192,6 +192,12 @@ def update_runlogs():
             socketio.emit('exploit', logs)
             last_runlog_id = max([s["id"] for s in logs])
         sleep(5)
+    
+@app.route('/api/update_config/<id>', methods=['GET'])
+def update_config(id):
+    config = request.json
+    r = req.post(f"{ATTACK_SERVER}/update_config?id={id}", json=config, headers={"Content-Type": "application/json"})
+    return jsonify(r.json())
 
 if __name__ == '__main__':
     socketio.start_background_task(update_flags)
