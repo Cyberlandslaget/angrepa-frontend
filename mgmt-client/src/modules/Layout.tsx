@@ -53,6 +53,19 @@ export default function Layout({ children }: { children: ReactNode }) {
         .then((data) => {
           setSubmissionLog(data);
         });
+    if (!exploitLog)
+      fetch(
+        `${
+          import.meta.env.DEV
+            ? 'http://172.17.82.30:5000'
+            : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
+              'http://localhost:3000'
+        }/api/exploit_logs`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setExploitLog(data);
+        });
     return () => {
       newSocket.close();
     };
@@ -74,8 +87,8 @@ export default function Layout({ children }: { children: ReactNode }) {
     socket.on('exploit', (data: DataType[]) => {
       if (data?.length > 0)
         setExploitLog((ex) => {
-          const newData = data.filter((d) => !ex.find((e) => e.id === d.id));
-          return [...ex, ...newData];
+          const newData = data.filter((d) => !ex?.find((e) => e.id === d.id));
+          return [...(ex ?? []), ...newData];
         });
     });
 
@@ -91,7 +104,6 @@ export default function Layout({ children }: { children: ReactNode }) {
     setExploitLog,
     setCurrentTick,
   ]);
-
   return (
     <main className="w-full h-full grid grid-cols-1 [grid-template-rows:2.75rem_1fr] gap-3">
       <Navigation />

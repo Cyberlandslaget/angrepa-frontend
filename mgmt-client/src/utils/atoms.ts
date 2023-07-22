@@ -8,12 +8,12 @@ export const pagingSelectionAtom = atom('All');
 export const currentTickAtom = atom(5);
 export const scoreboardDataAtom = atom<ScoreboardType | null>(null);
 export const submissionLogAtom = atom<DataType[] | null>(null);
-export const exploitLogAtom = atom<DataType[]>([]);
+export const exploitLogAtom = atom<DataType[] | null>(null);
 
 export const submissionLogLengthAtom = atom(
   (get) => get(submissionLogAtom)?.length
 );
-export const exploitLogLengthAtom = atom((get) => get(exploitLogAtom).length);
+export const exploitLogLengthAtom = atom((get) => get(exploitLogAtom)?.length);
 
 export const extendedSelectionAtom = atom<{
   type: ExtendedType | null;

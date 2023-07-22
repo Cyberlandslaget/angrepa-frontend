@@ -3,12 +3,10 @@ import { FLAG_CODE, SERVICE_STATUS } from './constants';
 export type DataType = {
   // Exploit
   id?: string;
-  running?: boolean;
-  attack_target?: string | null;
-  docker_image?: string;
-  exploit_kind?: string;
+  from_exploit?: boolean;
+  from_ip?: string | null;
+  content?: string;
   timestamp?: Date;
-  raw?: string;
 
   // Submission
   flag?: string;
