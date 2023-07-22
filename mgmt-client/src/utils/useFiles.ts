@@ -61,7 +61,10 @@ export default function useFiles() {
 
   const setTar = async (tar: ArrayBuffer) => {
     const files = await parseTar(tar);
-    setCurrentFiles(files);
+    setCurrentFiles((curFiles) => [
+      ...curFiles.filter((f) => f.name !== 'config.json'),
+      ...files,
+    ]);
   };
 
   const setFiles = (files: File[]) => {

@@ -1,5 +1,7 @@
 export const CONFIG = {
-  MGMT_SERVER_URL: `http://${window.location.hostname}:5000`,
+  MGMT_SERVER_URL: import.meta.env.DEV
+    ? 'http://localhost:5000'
+    : 'http://172.17.82.30:5000', //`http://${window.location.hostname}:5000`,
 };
 // Navigation constants
 export const PAGES = [

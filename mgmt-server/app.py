@@ -137,14 +137,14 @@ def stop(id):
     
 @app.route('/api/upload', methods=['POST'])
 def upload():
-    tar_file = request.files['tar']
-    config = request.files['config']
+    tar_file = request.files['tar'].read()
+    config = request.files['config'].read()
     r = req.post(f"{ATTACK_SERVER}/upload", files={"tar": tar_file, "config": config})
     res = r.json()
     if "error" in res:
         return jsonify(res)
     cur = db.cursor()
-    cur.execute("INSERT INTO exploits_log (id, tar, config) VALUES (%s, %s, %s)", (res["id"], b64encode(tar_file.read()), b64encode(config.read())))
+    cur.execute("INSERT INTO exploits_log (id, tar, config) VALUES (%s, %s, %s)", (res["id"], tar_file, config))
     cur.connection.commit()
     return jsonify(res)
 

@@ -21,48 +21,28 @@ export default function Layout({ children }: { children: ReactNode }) {
   // const [_, setCurrentTick] = useAtom(currentTickAtom);
 
   useEffect(() => {
-    const newSocket = io(
-      `${
-        import.meta.env.DEV ? 'http://localhost:5000' : CONFIG.MGMT_SERVER_URL
-      }`
-    );
+    const newSocket = io(`${CONFIG.MGMT_SERVER_URL}`);
     setSocket(newSocket);
     if (!scoreboardData)
-      fetch(
-        `${
-          import.meta.env.DEV ? 'http://localhost:5000' : CONFIG.MGMT_SERVER_URL
-        }/api/scoreboard`
-      )
+      fetch(`${CONFIG.MGMT_SERVER_URL}/api/scoreboard`)
         .then((res) => res.json())
         .then((data) => {
           setScoreboardData(data);
         });
     if (!submissionLog)
-      fetch(
-        `${
-          import.meta.env.DEV ? 'http://localhost:5000' : CONFIG.MGMT_SERVER_URL
-        }/api/flag`
-      )
+      fetch(`${CONFIG.MGMT_SERVER_URL}/api/flag`)
         .then((res) => res.json())
         .then((data) => {
           setSubmissionLog(data);
         });
     if (!exploitLog)
-      fetch(
-        `${
-          import.meta.env.DEV ? 'http://localhost:5000' : CONFIG.MGMT_SERVER_URL
-        }/api/exploit_logs`
-      )
+      fetch(`${CONFIG.MGMT_SERVER_URL}/api/exploit_logs`)
         .then((res) => res.json())
         .then((data) => {
           setExploitLog(data);
         });
     if (!exploits)
-      fetch(
-        `${
-          import.meta.env.DEV ? 'http://localhost:5000' : CONFIG.MGMT_SERVER_URL
-        }/api/exploits`
-      )
+      fetch(`${CONFIG.MGMT_SERVER_URL}/api/exploits`)
         .then((res) => res.json())
         .then((data) => {
           setExploits(data);
