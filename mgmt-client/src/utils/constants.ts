@@ -1,5 +1,5 @@
 export const CONFIG = {
-  MGMT_SERVER_URL: 'http://web-server:5000',
+  MGMT_SERVER_URL: `http://${window.location.hostname}:5000`,
 };
 // Navigation constants
 export const PAGES = [

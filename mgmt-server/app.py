@@ -202,4 +202,4 @@ def update_config(id):
 if __name__ == '__main__':
     socketio.start_background_task(update_flags)
     socketio.start_background_task(update_runlogs)
-    socketio.run(app, host='0.0.0.0', port=5000)
+    socketio.run(app, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)
