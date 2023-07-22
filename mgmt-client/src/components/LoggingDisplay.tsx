@@ -14,6 +14,7 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
+import { FLAG_STATUS } from 'utils/constants';
 
 const exploitDataParser = (data: DataType) => {
   return (
@@ -36,17 +37,17 @@ const flagSubmissionDataParser = (data: DataType, sensor: boolean) => {
   return (
     <div
       className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:2.25rem_2.25rem_8rem_1fr_3rem] items-center text-center text-sm ${
-        data.status ?? ''
+        FLAG_STATUS[data?.status ?? 'Error'] ?? ''
       }`}
     >
       <span className="secondaryColor rounded-sm py-[0.1rem]" title="tick">
-        {data.tick}
+        {data.tick || '?'}
       </span>
       <span className="secondaryColor rounded-sm py-[0.1rem]" title="team">
         {Math.floor(data.team || 0)}
       </span>
       <span className="secondaryColor rounded-sm py-[0.1rem]" title="service">
-        {data.flagstore}
+        {data.flagstore || '???'}
       </span>
       <p className="text-left text-ellipsis whitespace-nowrap overflow-hidden pl-1 [color:var(--logBackgroundColor)]">
         {sensor
@@ -58,7 +59,7 @@ const flagSubmissionDataParser = (data: DataType, sensor: boolean) => {
         className="rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
         title="status code"
       >
-        {data.status}
+        {FLAG_STATUS[data?.status ?? 'Error']}
       </span>
     </div>
   );
@@ -72,7 +73,6 @@ const LoggingDisplay = ({
 }: LoggingDisplayProps) => {
   // The scrollable element for your list
   const parentRef = React.useRef(null);
-
   const [statusFilter, setStatusFilter] = React.useState<string[]>(filters);
 
   const filterData = data.filter((d) =>

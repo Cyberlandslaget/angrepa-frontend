@@ -21,7 +21,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     const newSocket = io(
       `${
         import.meta.env.DEV
-          ? 'http://172.17.82.30:5000'
+          ? 'http://172.23.55.118:5000'
           : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
             'http://localhost:3000'
       }`
@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       fetch(
         `${
           import.meta.env.DEV
-            ? 'http://172.17.82.30:5000'
+            ? 'http://172.23.55.118:5000'
             : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
               'http://localhost:3000'
         }/api/scoreboard`
@@ -44,7 +44,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       fetch(
         `${
           import.meta.env.DEV
-            ? 'http://172.17.82.30:5000'
+            ? 'http://172.23.55.118:5000'
             : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
               'http://localhost:3000'
         }/api/flag`

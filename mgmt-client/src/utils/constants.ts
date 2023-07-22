@@ -15,6 +15,14 @@ export const FLAG_CODE = {
   OWN: 2, // Denied: flag is your own
   ERR: 1, // Error: <<ERROR>>
 };
+export const FLAG_STATUS = {
+  Accepted: 'OK', // Accepted: X flag points
+  Duplicate: 'DUP', // Denied: flag already claimed
+  Old: 'OLD', // Denied: flag too old
+  Invalid: 'INV', // Denied: invalid flag
+  Own: 'OWN', // Denied: flag is your own
+  Error: 'ERR', // Error: <<ERROR>>
+};
 export const SERVICE_STATUS = {
   UP: 0,
   DOWN: 1,

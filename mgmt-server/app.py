@@ -37,7 +37,7 @@ def scoreboard():
         fetched = cur.fetchone()
         if fetched is None:
             return jsonify({"teams": {}})
-        scoreboardData = json.loads(fetched)
+        scoreboardData = json.loads(fetched[0])
         return jsonify(scoreboardData)
 
 """
