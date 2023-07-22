@@ -6,7 +6,7 @@ from flask_socketio import SocketIO, emit
 from time import sleep
 import requests as req
 from base64 import b64encode
-import sys
+from datetime import datetime
 
 ATTACK_SERVER = "http://angrepa.cybl:8888"
 
@@ -105,7 +105,6 @@ sent_flags = set()
 def update_flags():
     global sent_flags
     while True:
-        print("yoyoyo", file=sys.stderr)
         cur = db.cursor()
         cur.execute("SELECT flag, tick, stamp, exploit_id, target_ip, flagstore, sent, status FROM flags")
         flags = cur.fetchall()
@@ -122,7 +121,6 @@ def flags():
     flags = cur.fetchall()
     flags = [{"flag": s[0], "tick": s[1], "stamp": s[2], "exploit_id": s[3], "target_ip": s[4], "flagstore": s[5], "sent": s[6], "status": s[7]} for s in flags]
     return jsonify(flags)
-
 
 @app.route('/api/start/<id>', methods=['GET'])
 def start(id):
@@ -190,7 +188,7 @@ def update_runlogs():
         cur = db.cursor()
         cur.execute("SELECT id, from_exploit_id, from_ip, tick, stamp, content FROM runlogs WHERE id > %s", (last_runlog_id,))
         logs = cur.fetchall()
-        logs = [{"id": s[0], "from_exploit_id": s[1], "from_ip": s[2], "tick": s[3], "stamp": s[4], "content": s[5]} for s in logs]
+        logs = [{"id": s[0], "from_exploit_id": s[1], "from_ip": s[2], "tick": s[3], "stamp": str(s[4]), "content": s[5]} for s in logs]
         if len(logs) > 0:
             socketio.emit('exploit', logs)
             last_runlog_id = max([s["id"] for s in logs])
@@ -202,7 +200,19 @@ def update_config(id):
     r = req.post(f"{ATTACK_SERVER}/update_config?id={id}", json=config, headers={"Content-Type": "application/json"})
     return jsonify(r.json())
 
+def update_tick():
+    while True:        
+        current_time_ms = datetime.now().timestamp() * 1000
+        target_time_ms = datetime(2023, 7, 22, 12, 0, 0, tzinfo=datetime.timezone.utc).timestamp() * 1000
+        time_difference_minutes = (current_time_ms - target_time_ms) / (1000 * 60)
+        tick = int(time_difference_minutes)
+
+        socketio.emit('tick', tick)
+        sleep(1)
+
 if __name__ == '__main__':
     socketio.start_background_task(update_flags)
     socketio.start_background_task(update_runlogs)
+    socketio.start_background_task(update_exploits)
+    socketio.start_background_task(update_tick)
     socketio.run(app, host='0.0.0.0', port=5000, allow_unsafe_werkzeug=True)

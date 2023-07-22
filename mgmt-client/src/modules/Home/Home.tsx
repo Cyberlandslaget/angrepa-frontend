@@ -11,7 +11,6 @@ import { DragDirection, HomePanelEnum } from 'utils/enums';
 import PinButtonsWrapper from 'components/PinButtonsWrapper';
 import useResizeableComponent from 'utils/useResizeableComponent';
 import {
-  currentTickAtom,
   exploitLogAtom,
   scoreboardDataAtom,
   submissionLogAtom,
@@ -19,7 +18,6 @@ import {
 import { useAtom } from 'jotai';
 
 export default function Home() {
-  const [currentTick, setCurrentTick] = useAtom(currentTickAtom);
   const [scoreboardData, _setScoreboardData] = useAtom(scoreboardDataAtom);
   const [submissionLog, _setSubmissionLog] = useAtom(submissionLogAtom);
   const [exploitLog, _setExploitLog] = useAtom(exploitLogAtom);
@@ -27,8 +25,6 @@ export default function Home() {
   const [fullscreen, setFullscreen] = useState<HomePanelEnum | null>(null);
   const resizableRef = useRef<HTMLElement | null>(null);
   const { setActiveHandler } = useResizeableComponent(resizableRef);
-
-  console.log('123', submissionLog);
 
   const updatePin = (display: HomePanelEnum) => {
     setPin(display);
