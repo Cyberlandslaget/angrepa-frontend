@@ -53,3 +53,27 @@ export type Exploit = {
   service: string;
   files: File[];
 };
+
+/*
+CREATE TABLE exploits (
+    -- unique id
+    id TEXT PRIMARY KEY,
+    running BOOLEAN NOT NULL DEFAULT FALSE,
+    -- the service to attack
+    attack_target TEXT,
+    -- the blacklisted ips (non-null array of non-null strings)
+    blacklist TEXT[] NOT NULL,
+    -- the image id
+    docker_image TEXT NOT NULL,
+    -- the type (for recreating the actual instance)
+    exploit_kind TEXT NOT NULL
+);
+*/
+export type ExploitType = {
+  id: number;
+  running: boolean;
+  attack_target: string;
+  blacklist: string[];
+  docker_image: string;
+  exploit_kind: string;
+};
