@@ -3,22 +3,21 @@ import { FLAG_CODE, SERVICE_STATUS } from './constants';
 export type DataType = {
   // Exploit
   id?: string;
-  from_exploit?: boolean;
+  from_exploit_id?: string;
   from_ip?: string | null;
   content?: string;
-  timestamp?: Date;
 
   // Submission
   flag?: string;
-  tick?: number;
-  stamp?: Date;
   exploit_id?: string;
   target_ip?: string;
   team?: number;
   flagstore?: string;
   sent?: boolean;
-
   status?: string;
+
+  tick?: number;
+  stamp?: Date;
 };
 export type ScoreboardType = {
   currentTick: number;

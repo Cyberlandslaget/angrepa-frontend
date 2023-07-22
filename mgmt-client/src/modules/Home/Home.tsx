@@ -73,7 +73,7 @@ export default function Home() {
           data={exploitLog || DUMMY_EXPLOIT_LOG}
           parser={'exploit'}
           extended={fullscreen === HomePanelEnum.Runner}
-          filters={['success', 'info', 'error']}
+          filters={['success', 'info', 'error', 'undefined']}
         />
       </PinButtonsWrapper>
 

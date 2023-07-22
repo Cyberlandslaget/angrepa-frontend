@@ -57,7 +57,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       fetch(
         `${
           import.meta.env.DEV
-            ? 'http://172.17.82.30:5000'
+            ? 'http://172.23.55.118:5000'
             : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
               'http://localhost:3000'
         }/api/exploit_logs`
