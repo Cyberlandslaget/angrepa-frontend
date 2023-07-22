@@ -12,7 +12,7 @@ export default function useFiles() {
   const [selectedFile, setSelectedFile] = useAtom(currentlySelectedFile);
 
   const addFile = (file: File) => {
-    setCurrentFiles([...currentFiles, file]);
+    setCurrentFiles((cf) => [...cf, file]);
   };
 
   const removeFile = (filename: string | File) => {
@@ -67,9 +67,6 @@ export default function useFiles() {
   const setFiles = (files: File[]) => {
     setCurrentFiles(files);
   };
-
-  console.log(currentFiles);
-  console.log(selectedFile);
 
   return {
     addFile,
