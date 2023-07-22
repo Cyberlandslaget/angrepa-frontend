@@ -42,12 +42,38 @@ export default function Home() {
     const newSocket = io(
       `${
         import.meta.env.DEV
-          ? 'http://localhost:3000'
+          ? 'http://172.17.82.30:5000'
           : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
             'http://localhost:3000'
       }`
     );
     setSocket(newSocket);
+    if (!scoreboardData)
+      fetch(
+        `${
+          import.meta.env.DEV
+            ? 'http://172.17.82.30:5000'
+            : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
+              'http://localhost:3000'
+        }/api/scoreboard`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setScoreboardData(data);
+        });
+    if (!submissionLog)
+      fetch(
+        `${
+          import.meta.env.DEV
+            ? 'http://172.17.82.30:5000'
+            : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
+              'http://localhost:3000'
+        }/api/flag`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setSubmissionLog(data);
+        });
     return () => {
       newSocket.close();
     };
@@ -60,10 +86,18 @@ export default function Home() {
       if (Number(data?.currentTick)) setCurrentTick(Number(data.currentTick));
     });
     socket.on('submission', (data: DataType[]) => {
-      if (data?.length > 0) setSubmissionLog(data);
+      if (data?.length > 0)
+        setSubmissionLog((sub) => {
+          const newData = data.filter((d) => !sub?.find((s) => s.id === d.id));
+          return [...(sub ?? []), ...newData];
+        });
     });
     socket.on('exploit', (data: DataType[]) => {
-      if (data?.length > 0) setExploitLog(data);
+      if (data?.length > 0)
+        setExploitLog((ex) => {
+          const newData = data.filter((d) => !ex.find((e) => e.id === d.id));
+          return [...ex, ...newData];
+        });
     });
 
     return () => {

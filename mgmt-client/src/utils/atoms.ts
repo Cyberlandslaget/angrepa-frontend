@@ -6,15 +6,12 @@ import { File } from './types';
 export const pagingSelectionAtom = atom('All');
 
 export const currentTickAtom = atom(5);
-export const scoreboardDataAtom = atom<ScoreboardType>({
-  currentTick: 1,
-  teams: { '1': { name: '', services: {} } },
-});
-export const submissionLogAtom = atom<DataType[]>([]);
+export const scoreboardDataAtom = atom<ScoreboardType | null>(null);
+export const submissionLogAtom = atom<DataType[] | null>(null);
 export const exploitLogAtom = atom<DataType[]>([]);
 
 export const submissionLogLengthAtom = atom(
-  (get) => get(submissionLogAtom).length
+  (get) => get(submissionLogAtom)?.length
 );
 export const exploitLogLengthAtom = atom((get) => get(exploitLogAtom).length);
 
