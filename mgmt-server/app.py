@@ -193,7 +193,7 @@ def update_runlogs():
             last_runlog_id = max([s["id"] for s in logs])
         sleep(5)
     
-@app.route('/api/update_config/<id>', methods=['GET'])
+@app.route('/api/update_config/<id>', methods=['POST'])
 def update_config(id):
     config = request.json
     r = req.post(f"{ATTACK_SERVER}/update_config?id={id}", json=config, headers={"Content-Type": "application/json"})

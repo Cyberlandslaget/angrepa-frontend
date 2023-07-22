@@ -5,10 +5,16 @@ import { File } from './types';
 
 export const pagingSelectionAtom = atom('All');
 
-export const currentTickAtom = atom(5);
+export const currentTickAtom = atom(() =>
+  Math.floor(
+    (new Date().getTime() - new Date('2023-07-22T12:00:00Z').getTime()) /
+      (1000 * 60)
+  )
+);
 export const scoreboardDataAtom = atom<ScoreboardType | null>(null);
 export const submissionLogAtom = atom<DataType[] | null>(null);
 export const exploitLogAtom = atom<DataType[] | null>(null);
+
 export const exploitsAtom = atom<ExploitType[] | null>(null);
 
 export const submissionLogLengthAtom = atom(
