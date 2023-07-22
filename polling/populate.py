@@ -1,7 +1,7 @@
 import requests
 from utils import parse
 
-SERVER_URL = "http://localhost:5000/api/scoreboard"
+SERVER_URL = "http://172.17.82.30:5000/api/scoreboard"
 import requests
 
 ips = requests.get('https://7.enowars.com/api/data/ips').text.split('\n')

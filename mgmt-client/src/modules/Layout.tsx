@@ -23,14 +23,18 @@ export default function Layout({ children }: { children: ReactNode }) {
   useEffect(() => {
     const newSocket = io(
       `${
-        import.meta.env.DEV ? 'http://localhost:5000' : CONFIG.MGMT_SERVER_URL
+        import.meta.env.DEV
+          ? 'http://172.17.82.30:5000'
+          : CONFIG.MGMT_SERVER_URL
       }`
     );
     setSocket(newSocket);
     if (!scoreboardData)
       fetch(
         `${
-          import.meta.env.DEV ? 'http://localhost:5000' : CONFIG.MGMT_SERVER_URL
+          import.meta.env.DEV
+            ? 'http://172.17.82.30:5000'
+            : CONFIG.MGMT_SERVER_URL
         }/api/scoreboard`
       )
         .then((res) => res.json())
@@ -40,7 +44,9 @@ export default function Layout({ children }: { children: ReactNode }) {
     if (!submissionLog)
       fetch(
         `${
-          import.meta.env.DEV ? 'http://localhost:5000' : CONFIG.MGMT_SERVER_URL
+          import.meta.env.DEV
+            ? 'http://172.17.82.30:5000'
+            : CONFIG.MGMT_SERVER_URL
         }/api/flag`
       )
         .then((res) => res.json())
@@ -50,7 +56,9 @@ export default function Layout({ children }: { children: ReactNode }) {
     if (!exploitLog)
       fetch(
         `${
-          import.meta.env.DEV ? 'http://localhost:5000' : CONFIG.MGMT_SERVER_URL
+          import.meta.env.DEV
+            ? 'http://172.17.82.30:5000'
+            : CONFIG.MGMT_SERVER_URL
         }/api/exploit_logs`
       )
         .then((res) => res.json())
@@ -60,7 +68,9 @@ export default function Layout({ children }: { children: ReactNode }) {
     if (!exploits)
       fetch(
         `${
-          import.meta.env.DEV ? 'http://localhost:5000' : CONFIG.MGMT_SERVER_URL
+          import.meta.env.DEV
+            ? 'http://172.17.82.30:5000'
+            : CONFIG.MGMT_SERVER_URL
         }/api/exploits`
       )
         .then((res) => res.json())
