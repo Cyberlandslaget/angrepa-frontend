@@ -1,3 +1,4 @@
+requests
 flask[async]
 flask-socketio
 flask-cors

@@ -3,12 +3,13 @@ import { useAtom } from 'jotai';
 import { ReactNode, useEffect, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
 import {
-  currentTickAtom,
+  // currentTickAtom,
   exploitLogAtom,
   exploitsAtom,
   scoreboardDataAtom,
   submissionLogAtom,
 } from 'utils/atoms';
+import { CONFIG } from 'utils/constants';
 import { DataType, ExploitType, ScoreboardType } from 'utils/types';
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -17,15 +18,14 @@ export default function Layout({ children }: { children: ReactNode }) {
   const [exploitLog, setExploitLog] = useAtom(exploitLogAtom);
   const [exploits, setExploits] = useAtom(exploitsAtom);
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [_, setCurrentTick] = useAtom(currentTickAtom);
+  // const [_, setCurrentTick] = useAtom(currentTickAtom);
 
   useEffect(() => {
     const newSocket = io(
       `${
         import.meta.env.DEV
           ? 'http://172.23.55.118:5000'
-          : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
-            'http://localhost:3000'
+          : CONFIG.MGMT_SERVER_URL || 'http://localhost:3000'
       }`
     );
     setSocket(newSocket);
@@ -34,8 +34,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         `${
           import.meta.env.DEV
             ? 'http://172.23.55.118:5000'
-            : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
-              'http://localhost:3000'
+            : CONFIG.MGMT_SERVER_URL || 'http://localhost:3000'
         }/api/scoreboard`
       )
         .then((res) => res.json())
@@ -47,8 +46,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         `${
           import.meta.env.DEV
             ? 'http://172.23.55.118:5000'
-            : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
-              'http://localhost:3000'
+            : CONFIG.MGMT_SERVER_URL || 'http://localhost:3000'
         }/api/flag`
       )
         .then((res) => res.json())
@@ -60,8 +58,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         `${
           import.meta.env.DEV
             ? 'http://172.23.55.118:5000'
-            : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
-              'http://localhost:3000'
+            : CONFIG.MGMT_SERVER_URL || 'http://localhost:3000'
         }/api/exploit_logs`
       )
         .then((res) => res.json())
@@ -73,8 +70,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         `${
           import.meta.env.DEV
             ? 'http://172.23.55.118:5000'
-            : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
-              'http://localhost:3000'
+            : CONFIG.MGMT_SERVER_URL || 'http://localhost:3000'
         }/api/exploits`
       )
         .then((res) => res.json())
@@ -90,7 +86,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     if (!socket) return;
     socket.on('scoreboard', (data: ScoreboardType) => {
       if (data?.teams) setScoreboardData(data);
-      if (Number(data?.currentTick)) setCurrentTick(Number(data.currentTick));
+      // if (Number(data?.currentTick)) setCurrentTick(Number(data.currentTick));
     });
     socket.on('submission', (data: DataType[]) => {
       if (data?.length > 0)
@@ -125,7 +121,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     setScoreboardData,
     setSubmissionLog,
     setExploitLog,
-    setCurrentTick,
+    // setCurrentTick,
   ]);
   return (
     <main className="w-full h-full grid grid-cols-1 [grid-template-rows:2.75rem_1fr] gap-3">
