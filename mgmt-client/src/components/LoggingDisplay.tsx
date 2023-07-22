@@ -115,7 +115,7 @@ const LoggingDisplay = ({
   return (
     <>
       {extended && (
-        <div>
+        <div className="flex justify-end">
           <FormControl
             sx={{
               m: 1,
