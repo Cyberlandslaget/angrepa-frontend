@@ -1,0 +1,6 @@
+flask[async]
+flask-socketio
+flask-cors
+psycopg2-binary
+gevent-websocket
+eventlet

@@ -1,7 +1,7 @@
 import requests
 from utils import parse
 
-SERVER_URL = "http://localhost:3000/scoreboard"
+SERVER_URL = "http://localhost:5000/api/scoreboard"
 teams = [
 	{"id": 1, "name": "organizers"},
 	{"id": 2, "name": "fibonhack"},
