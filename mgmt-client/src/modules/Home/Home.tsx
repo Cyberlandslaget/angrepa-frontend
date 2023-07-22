@@ -2,16 +2,15 @@ import {
   DUMMY_EXPLOIT_LOG,
   DUMMY_FLAGSUBMISSION_LOG,
   DUMMY_SCOREBOARD_DATA,
+  FLAG_STATUS,
 } from 'utils/constants';
-import { Socket, io } from 'socket.io-client';
 import LoggingDisplay from 'components/LoggingDisplay';
 import SimpleDisplay from 'components/SimpleDisplay';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { DragDirection, HomePanelEnum } from 'utils/enums';
 import PinButtonsWrapper from 'components/PinButtonsWrapper';
 import useResizeableComponent from 'utils/useResizeableComponent';
 import {
-  currentTickAtom,
   exploitLogAtom,
   scoreboardDataAtom,
   submissionLogAtom,
@@ -19,11 +18,9 @@ import {
 import { useAtom } from 'jotai';
 
 export default function Home() {
-  const [scoreboardData, setScoreboardData] = useAtom(scoreboardDataAtom);
-  const [submissionLog, setSubmissionLog] = useAtom(submissionLogAtom);
-  const [exploitLog, setExploitLog] = useAtom(exploitLogAtom);
-  const [socket, setSocket] = useState<Socket | null>(null);
-  const [_, setCurrentTick] = useAtom(currentTickAtom);
+  const [scoreboardData, _setScoreboardData] = useAtom(scoreboardDataAtom);
+  const [submissionLog, _setSubmissionLog] = useAtom(submissionLogAtom);
+  const [exploitLog, _setExploitLog] = useAtom(exploitLogAtom);
   const [pin, setPin] = useState(HomePanelEnum.Simple);
   const [fullscreen, setFullscreen] = useState<HomePanelEnum | null>(null);
   const resizableRef = useRef<HTMLElement | null>(null);
@@ -40,7 +37,7 @@ export default function Home() {
   return (
     <main
       ref={resizableRef}
-      className="w-full h-full grid [grid-template-columns:1fr_0.2rem_50%] [grid-template-rows:1fr_0.2rem_35%] gap-[0.5rem]"
+      className="w-full h-[calc(100vh-5rem)] grid [grid-template-columns:1fr_0.2rem_50%] [grid-template-rows:1fr_0.2rem_35%] gap-[0.5rem]"
     >
       <PinButtonsWrapper
         className={pin === HomePanelEnum.Runner ? 'order-4' : 'order-5'}
@@ -98,7 +95,7 @@ export default function Home() {
           data={submissionLog || DUMMY_FLAGSUBMISSION_LOG}
           parser={'submission'}
           extended={fullscreen === HomePanelEnum.Submission}
-          filters={['DUP', 'ERR', 'INV', 'NOP', 'OK', 'OLD', 'OWN']}
+          filters={Object.keys(FLAG_STATUS)}
         />
       </PinButtonsWrapper>
     </main>
