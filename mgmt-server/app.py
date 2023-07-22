@@ -6,6 +6,7 @@ from flask_socketio import SocketIO, emit
 from time import sleep
 import requests as req
 from base64 import b64encode
+import sys
 
 ATTACK_SERVER = "http://angrepa.cybl:8888"
 
@@ -104,10 +105,11 @@ sent_flags = set()
 def update_flags():
     global sent_flags
     while True:
+        print("yoyoyo", file=sys.stderr)
         cur = db.cursor()
         cur.execute("SELECT flag, tick, stamp, exploit_id, target_ip, flagstore, sent, status FROM flags")
         flags = cur.fetchall()
-        flags = [{"flag": s[0], "tick": s[1], "stamp": s[2], "exploit_id": s[3], "target_ip": s[4], "flagstore": s[5], "sent": s[6], "status": s[7]} for s in flags if s[0] not in sent_flags]
+        flags = [{"flag": s[0], "tick": s[1], "stamp": str(s[2]), "exploit_id": s[3], "target_ip": s[4], "flagstore": s[5], "sent": s[6], "status": s[7]} for s in flags if s[0] not in sent_flags]
         if len(flags) > 0:
             socketio.emit('submission', flags)
             sent_flags.update([s["flag"] for s in flags])
@@ -124,11 +126,14 @@ def flags():
 
 @app.route('/api/start/<id>', methods=['GET'])
 def start(id):
-    req.get(f"{ATTACK_SERVER}/api/start?id={id}")
+    r = req.post(f"{ATTACK_SERVER}/start?id={id}")
+    return jsonify(r.json())
+    
 
 @app.route('/api/stop/<id>', methods=['GET'])
 def stop(id):
-    req.get(f"{ATTACK_SERVER}/api/stop?id={id}")
+    r = req.post(f"{ATTACK_SERVER}/stop?id={id}")
+    return jsonify(r.json())
     
 @app.route('/api/upload', methods=['POST'])
 def upload():

@@ -1,6 +1,6 @@
 import Navigation from 'components/Navigation';
 import { useAtom } from 'jotai';
-import { ReactNode, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useReducer, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
 import {
   // currentTickAtom,
@@ -79,11 +79,14 @@ export default function Layout({ children }: { children: ReactNode }) {
       // if (Number(data?.currentTick)) setCurrentTick(Number(data.currentTick));
     });
     socket.on('submission', (data: DataType[]) => {
-      if (data?.length > 0)
+      console.log('got flag!', data);
+      if (data?.length > 0) {
+        console.log('yuh', data.length);
         setSubmissionLog((sub) => {
           const newData = data.filter((d) => !sub?.find((s) => s.id === d.id));
           return [...(sub ?? []), ...newData];
         });
+      }
     });
     socket.on('exploit', (data: DataType[]) => {
       if (data?.length > 0)
@@ -106,13 +109,8 @@ export default function Layout({ children }: { children: ReactNode }) {
       socket.off('exploit');
       socket.off('exploits');
     };
-  }, [
-    socket,
-    setScoreboardData,
-    setSubmissionLog,
-    setExploitLog,
-    // setCurrentTick,
-  ]);
+  }, [socket, setScoreboardData, setSubmissionLog, setExploitLog, setExploits]);
+
   return (
     <main className="w-full h-full grid grid-cols-1 [grid-template-rows:2.75rem_1fr] gap-3">
       <Navigation />
