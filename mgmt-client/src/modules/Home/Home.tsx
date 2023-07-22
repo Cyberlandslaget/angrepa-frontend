@@ -16,7 +16,6 @@ import {
   scoreboardDataAtom,
   submissionLogAtom,
 } from 'utils/atoms';
-import { DataType, ScoreboardType } from 'utils/types';
 import { useAtom } from 'jotai';
 
 export default function Home() {
@@ -37,81 +36,6 @@ export default function Home() {
     if (fullscreen === display) setFullscreen(null);
     else setFullscreen(display);
   };
-
-  useEffect(() => {
-    const newSocket = io(
-      `${
-        import.meta.env.DEV
-          ? 'http://172.17.82.30:5000'
-          : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
-            'http://localhost:3000'
-      }`
-    );
-    setSocket(newSocket);
-    if (!scoreboardData)
-      fetch(
-        `${
-          import.meta.env.DEV
-            ? 'http://172.17.82.30:5000'
-            : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
-              'http://localhost:3000'
-        }/api/scoreboard`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          setScoreboardData(data);
-        });
-    if (!submissionLog)
-      fetch(
-        `${
-          import.meta.env.DEV
-            ? 'http://172.17.82.30:5000'
-            : String(import.meta.env.VITE_MGTM_SERVER_URL) ||
-              'http://localhost:3000'
-        }/api/flag`
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          setSubmissionLog(data);
-        });
-    return () => {
-      newSocket.close();
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!socket) return;
-    socket.on('scoreboard', (data: ScoreboardType) => {
-      if (data?.teams) setScoreboardData(data);
-      if (Number(data?.currentTick)) setCurrentTick(Number(data.currentTick));
-    });
-    socket.on('submission', (data: DataType[]) => {
-      if (data?.length > 0)
-        setSubmissionLog((sub) => {
-          const newData = data.filter((d) => !sub?.find((s) => s.id === d.id));
-          return [...(sub ?? []), ...newData];
-        });
-    });
-    socket.on('exploit', (data: DataType[]) => {
-      if (data?.length > 0)
-        setExploitLog((ex) => {
-          const newData = data.filter((d) => !ex.find((e) => e.id === d.id));
-          return [...ex, ...newData];
-        });
-    });
-
-    return () => {
-      socket.off('scoreboard');
-      socket.off('submission');
-      socket.off('exploit');
-    };
-  }, [
-    socket,
-    setScoreboardData,
-    setSubmissionLog,
-    setExploitLog,
-    setCurrentTick,
-  ]);
 
   return (
     <main

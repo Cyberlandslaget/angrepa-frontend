@@ -17,7 +17,7 @@ socketio = SocketIO(app, cors_allowed_origins="*", async_handlers=True, async_mo
 cur = db.cursor()
 
 cur.execute("CREATE TABLE IF NOT EXISTS scoreboard (id SERIAL PRIMARY KEY, data TEXT NOT NULL)")
-cur.execute("CREATE TABLE IF NOT EXISTS exploits_log (id TEXT PRIMARY KEY, tar TEXT NOT NULL)")
+cur.execute("CREATE TABLE IF NOT EXISTS exploits_log (id TEXT PRIMARY KEY, tar TEXT NOT NULL, config TEXT NOT NULL)")
 cur.connection.commit()
 
 @app.route('/api/scoreboard', methods=['GET', 'POST'])
@@ -37,7 +37,7 @@ def scoreboard():
         fetched = cur.fetchone()
         if fetched is None:
             return jsonify({"teams": {}})
-        scoreboardData = json.loads(fetched)
+        scoreboardData = json.loads(fetched[0])
         return jsonify(scoreboardData)
 
 """
@@ -139,7 +139,7 @@ def upload():
     if "error" in res:
         return jsonify(res)
     cur = db.cursor()
-    cur.execute("INSERT INTO exploits_log (id, tar) VALUES (%s, %s, %s)", (res["id"], b64encode(tar_file.read()), b64encode(config.read())))
+    cur.execute("INSERT INTO exploits_log (id, tar, config) VALUES (%s, %s, %s)", (res["id"], b64encode(tar_file.read()), b64encode(config.read())))
     cur.connection.commit()
     return jsonify(res)
 
@@ -150,12 +150,50 @@ def exploit(id):
         r = req.post(f"{ATTACK_SERVER}/api/exploit?id={id}", files={"config": config})
         return jsonify(r.json())
     cur = db.cursor()
-    cur.execute("SELECT tar FROM exploits_log WHERE id = %s", (id,))
+    cur.execute("SELECT tar, config FROM exploits_log WHERE id = %s", (id,))
     tar, config = cur.fetchone()
     tar = b64encode(tar).decode("utf-8")
     config = b64encode(config).decode("utf-8")
     return jsonify({"tar": tar, "config": config})
 
+"""
+CREATE TABLE runlogs (
+    -- unique incrementing id
+    id SERIAL PRIMARY KEY,
+
+    -- metadata
+    from_exploit_id TEXT NOT NULL,
+    from_ip TEXT NOT NULL,
+
+    tick INTEGER NOT NULL,
+    stamp TIMESTAMP NOT NULL,
+    content TEXT NOT NULL
+)
+"""
+
+
+@app.route('/api/exploit_logs', methods=['GET'])
+def exploit_logs():
+    cur = db.cursor()
+    cur.execute("SELECT id, from_exploit_id, from_ip, tick, stamp, content FROM runlogs")
+    logs = cur.fetchall()
+    logs = [{"id": s[0], "from_exploit_id": s[1], "from_ip": s[2], "tick": s[3], "stamp": s[4], "content": s[5]} for s in logs]
+    return jsonify(logs)
+
+last_runlog_id = 0
+def update_runlogs():
+    global last_runlog_id
+    while True:
+        cur = db.cursor()
+        cur.execute("SELECT id, from_exploit_id, from_ip, tick, stamp, content FROM runlogs WHERE id > %s", (last_runlog_id,))
+        logs = cur.fetchall()
+        logs = [{"id": s[0], "from_exploit_id": s[1], "from_ip": s[2], "tick": s[3], "stamp": s[4], "content": s[5]} for s in logs]
+        if len(logs) > 0:
+            socketio.emit('exploit', logs)
+            last_runlog_id = max([s["id"] for s in logs])
+        sleep(5)
+
 if __name__ == '__main__':
     socketio.start_background_task(update_flags)
+    socketio.start_background_task(update_runlogs)
     socketio.run(app, host='0.0.0.0', port=5000)

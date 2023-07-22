@@ -21,10 +21,10 @@ const exploitDataParser = (data: DataType) => {
       className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:1fr_4rem] items-center text-center text-sm ${
         data.status ?? ''
       }`}
-      title={data.raw}
+      title={data.content}
     >
       <p className="text-left text-ellipsis whitespace-nowrap overflow-hidden pl-1 [color:var(--logBackgroundColor)]">
-        {data.raw}
+        {data.content}
       </p>
       <span className="rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]">
         {data.status}
