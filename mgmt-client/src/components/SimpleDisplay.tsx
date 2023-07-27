@@ -7,7 +7,8 @@ import getFlagIcon from 'utils/getFlagIcon';
 import { useEffect, useRef } from 'react';
 import { DragDirection, ExtendedType } from 'utils/enums';
 import useResizeableComponent from 'utils/useResizeableComponent';
-import { useVirtualizer } from '@tanstack/react-virtual';
+import { FixedSizeList as List } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
 type Data = {
   [key: string]: {
@@ -57,17 +58,6 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
   const { setActiveHandler } = useResizeableComponent(resizableRef);
 
   const currentTick = useAtomValue(currentTickAtom);
-
-  // The scrollable element for your list
-  const parentRef = useRef(null);
-  // The virtualizer
-  const columnVirtualizer = useVirtualizer({
-    horizontal: true,
-    count: currentTick,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 28,
-    overscan: 5,
-  });
 
   const total = 5;
   const teams = Object.entries(data?.scoreboard?.teams);
@@ -232,10 +222,7 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
               </div>
 
               {/* The scrollable element for your list */}
-              <div
-                className="flex overflow-auto w-full h-[calc(100%+1rem)]"
-                ref={parentRef}
-              >
+              <div className="flex overflow-auto w-full h-[calc(100%+1rem)]">
                 <div className="flex flex-col gap-1 w-full">
                   <p
                     className={`absolute top-0 right-0 flex w-[calc(100%-12.25rem)] mb-1 items-center font-bold text-sm p-2 h-[2.1rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden transition-all`}
@@ -243,89 +230,89 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                     Status
                   </p>
 
-                  {/* The large inner element to hold all of the items */}
-                  <div
-                    className="flex gap-[2px] mt-[2.6rem]"
-                    style={{
-                      width: `${columnVirtualizer.getTotalSize()}px`,
-                      height: '100%',
-                      position: 'relative',
-                    }}
-                  >
-                    {/* Only the visible items in the virtualizer, manually positioned to be in view */}
-                    {columnVirtualizer.getVirtualItems().map((virtualItem) => (
-                      <div
-                        key={virtualItem.key}
-                        style={{
-                          position: 'absolute',
-                          top: 0,
-                          left: 0,
-                          height: '100%',
-                          width: `${virtualItem.size}px`,
-                          transform: `translateX(${virtualItem.start}px)`,
-                        }}
-                        className="flex flex-col gap-1"
-                      >
-                        <p
-                          className={`flex w-full mb-1 items-center justify-center text-xs h-[1.25rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden transition-all ${
-                            (currentTick - virtualItem.index) % 2 === 0
-                              ? 'text-indigo-300'
-                              : 'text-indigo-100'
-                          }`}
+                  <div className="flex gap-[2px] mt-[2.6rem] w-full h-full">
+                    <AutoSizer>
+                      {({ height, width }) => (
+                        <List
+                          height={height}
+                          itemCount={currentTick}
+                          itemSize={28}
+                          width={width}
+                          layout="horizontal"
                         >
-                          <span>{currentTick - virtualItem.index}</span>
-                        </p>
-                        {extendedSelection.type === ExtendedType.Team
-                          ? services.map((service) => (
+                          {({ index, style }) => (
+                            <div
+                              key={`key-${index}`}
+                              style={{
+                                ...style,
+                              }}
+                              className="flex flex-col gap-1"
+                            >
                               <p
-                                key={`service_${service}_extended_${
-                                  currentTick - virtualItem.index
+                                className={`flex w-full mb-1 items-center justify-center text-xs h-[1.25rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden transition-all ${
+                                  (currentTick - index) % 2 === 0
+                                    ? 'text-indigo-300'
+                                    : 'text-indigo-100'
                                 }`}
-                                className="flex h-[2.1rem] bg-slate-950 bg-opacity-20 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden"
                               >
-                                <SimpleOverview
-                                  data={
-                                    filteredData[
-                                      teams[
-                                        Number(extendedSelection.selection)
-                                      ][0]
-                                    ][service] as Data
-                                  }
-                                  status={
-                                    teams[
-                                      Number(extendedSelection.selection)
-                                    ][1].services[service]
-                                  }
-                                  currentTick={currentTick - virtualItem.index}
-                                  total={1}
-                                />
+                                <span>{currentTick - index}</span>
                               </p>
-                            ))
-                          : Object.keys(teams).map((team) => (
-                              <p
-                                key={`team_${team}_extended_${
-                                  currentTick - virtualItem.index
-                                }`}
-                                className="flex h-[2.1rem] bg-slate-950 bg-opacity-20 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden"
-                              >
-                                <SimpleOverview
-                                  data={
-                                    filteredData[teams[Number(team)][0]][
-                                      String(extendedSelection.selection)
-                                    ] as Data
-                                  }
-                                  status={
-                                    teams[Number(team)][1].services[
-                                      String(extendedSelection.selection)
-                                    ]
-                                  }
-                                  currentTick={currentTick - virtualItem.index}
-                                  total={1}
-                                />
-                              </p>
-                            ))}
-                      </div>
-                    ))}
+                              {extendedSelection.type === ExtendedType.Team
+                                ? services.map((service) => (
+                                    <p
+                                      key={`service_${service}_extended_${
+                                        currentTick - index
+                                      }`}
+                                      className="flex h-[2.1rem] bg-slate-950 bg-opacity-20 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden"
+                                    >
+                                      <SimpleOverview
+                                        data={
+                                          filteredData[
+                                            teams[
+                                              Number(
+                                                extendedSelection.selection
+                                              )
+                                            ][0]
+                                          ][service] as Data
+                                        }
+                                        status={
+                                          teams[
+                                            Number(extendedSelection.selection)
+                                          ][1].services[service]
+                                        }
+                                        currentTick={currentTick - index}
+                                        total={1}
+                                      />
+                                    </p>
+                                  ))
+                                : Object.keys(teams).map((team) => (
+                                    <p
+                                      key={`team_${team}_extended_${
+                                        currentTick - index
+                                      }`}
+                                      className="flex h-[2.1rem] bg-slate-950 bg-opacity-20 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden"
+                                    >
+                                      <SimpleOverview
+                                        data={
+                                          filteredData[teams[Number(team)][0]][
+                                            String(extendedSelection.selection)
+                                          ] as Data
+                                        }
+                                        status={
+                                          teams[Number(team)][1].services[
+                                            String(extendedSelection.selection)
+                                          ]
+                                        }
+                                        currentTick={currentTick - index}
+                                        total={1}
+                                      />
+                                    </p>
+                                  ))}
+                            </div>
+                          )}
+                        </List>
+                      )}
+                    </AutoSizer>
                   </div>
                 </div>
               </div>

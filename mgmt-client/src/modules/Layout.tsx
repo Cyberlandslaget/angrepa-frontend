@@ -26,8 +26,8 @@ export default function Layout({ children }: { children: ReactNode }) {
   const [_, setCurrentTick] = useAtom(currentTickAtom);
 
   useEffect(() => {
-    const newSocket = io(`${CONFIG.MGMT_SERVER_URL}`);
-    setSocket(newSocket);
+    // const newSocket = io(`${CONFIG.MGMT_SERVER_URL}`);
+    // setSocket(newSocket);
     // if (!scoreboardData)
     //   fetch(`${CONFIG.MGMT_SERVER_URL}/api/scoreboard`)
     //     .then((res) => res.json())
@@ -48,6 +48,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               team: exec?.team,
             };
           });
+          console.log(1, d[0]);
           setFlagLog(d);
         })
         .catch((_err) => {});
@@ -63,6 +64,7 @@ export default function Layout({ children }: { children: ReactNode }) {
               team: d.target.team,
             };
           });
+          console.log(2, d[0]);
           setExecutionLog(d as ExecutionType[]);
         })
         .catch((_err) => {});
@@ -75,7 +77,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         })
         .catch((_err) => {});
     return () => {
-      newSocket.close();
+      // newSocket.close();
     };
   }, [
     executionLog,
@@ -89,7 +91,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   ]);
 
   useEffect(() => {
-    if (!socket) return;
+    if (!socket || true) return;
     socket.on('scoreboard', (data: ScoreboardType) => {
       if (data?.teams) setScoreboardData(data);
       // if (Number(data?.currentTick)) setCurrentTick(Number(data.currentTick));

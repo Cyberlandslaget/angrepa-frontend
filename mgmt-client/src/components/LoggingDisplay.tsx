@@ -1,4 +1,3 @@
-import { useVirtualizer } from '@tanstack/react-virtual';
 import React from 'react';
 import { ExecutionType, FlagType, LoggingDisplayProps } from '../utils/types';
 import { useAtomValue } from 'jotai';
@@ -14,6 +13,8 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
+import { FixedSizeList as List } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
 
 const executionsDataParser = (data: ExecutionType) => {
   return (
@@ -97,20 +98,13 @@ const LoggingDisplay = ({
   extended,
   filters,
 }: LoggingDisplayProps) => {
-  // The scrollable element for your list
-  const parentRef = React.useRef(null);
   const [statusFilter, setStatusFilter] = React.useState<string[]>(filters);
 
-  const filterData = data.filter((d: unknown) =>
-    statusFilter.includes(String(d.status) || String(d.exit_code))
-  );
+  const filterData =
+    data?.filter((d: unknown) =>
+      statusFilter.includes(String(d.status) || String(d.exit_code))
+    ) ?? [];
 
-  // The virtualizer
-  const rowVirtualizer = useVirtualizer({
-    count: filterData.length,
-    getScrollElement: () => parentRef.current,
-    estimateSize: () => 28,
-  });
   const sensor = useAtomValue(sensorFlagAtom);
 
   const handleChange = (event: SelectChangeEvent<typeof statusFilter>) => {
@@ -220,40 +214,31 @@ const LoggingDisplay = ({
           </FormControl>
         </div>
       )}
-      {/* The scrollable element for your list */}
-      <div ref={parentRef}>
-        {/* The large inner element to hold all of the items */}
-        <div
-          style={{
-            height: `${rowVirtualizer.getTotalSize()}px`,
-            width: '100%',
-            position: 'relative',
-          }}
-        >
-          {/* Only the visible items in the virtualizer, manually positioned to be in view */}
-          {rowVirtualizer.getVirtualItems().map((virtualItem) => (
-            <div
-              key={virtualItem.key}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: `${virtualItem.size}px`,
-                transform: `translateY(${virtualItem.start}px)`,
-              }}
+
+      <div className="w-full h-[calc(100%-1rem)]">
+        <AutoSizer>
+          {({ height, width }) => (
+            <List
+              height={height}
+              itemCount={filterData.length}
+              itemSize={28}
+              width={width}
             >
-              {parser === 'submission'
-                ? flagSubmissionDataParser(
-                    filterData[filterData.length - 1 - virtualItem.index],
-                    sensor
-                  )
-                : executionsDataParser(
-                    filterData[filterData.length - 1 - virtualItem.index]
-                  )}
-            </div>
-          ))}
-        </div>
+              {({ index, style }) => (
+                <div style={{ ...style }}>
+                  {parser === 'submission'
+                    ? flagSubmissionDataParser(
+                        filterData[filterData.length - 1 - index],
+                        sensor
+                      )
+                    : executionsDataParser(
+                        filterData[filterData.length - 1 - index]
+                      )}
+                </div>
+              )}
+            </List>
+          )}
+        </AutoSizer>
       </div>
     </>
   );
