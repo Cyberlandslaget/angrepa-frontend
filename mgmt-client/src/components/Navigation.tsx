@@ -2,7 +2,7 @@ import Logo from '../assets/logo.svg';
 import { useAtom, useAtomValue } from 'jotai';
 import {
   currentTickAtom,
-  exploitLogLengthAtom,
+  executionsLogLengthAtom,
   sensorFlagAtom,
   submissionLogLengthAtom,
 } from '../utils/atoms';
@@ -18,7 +18,7 @@ const Navigation = ({ className = '' }) => {
   const currentTick = useAtomValue(currentTickAtom);
   const [sensorFlags, setSensorFlags] = useAtom(sensorFlagAtom);
   const submissionLogLength = useAtomValue(submissionLogLengthAtom);
-  const exploitLogLength = useAtomValue(exploitLogLengthAtom);
+  const exploitLogLength = useAtomValue(executionsLogLengthAtom);
   const _navigate = useNavigate(); // This line enables component re-render on navigation
 
   return (

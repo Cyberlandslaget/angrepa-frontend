@@ -1,6 +1,6 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import React from 'react';
-import { DataType, LoggingDisplayProps } from '../utils/types';
+import { DataType, ExecutionType, LoggingDisplayProps } from '../utils/types';
 import { useAtomValue } from 'jotai';
 import { sensorFlagAtom } from 'utils/atoms';
 import {
@@ -16,20 +16,38 @@ import {
 } from '@mui/material';
 import { FLAG_STATUS } from 'utils/constants';
 
-const exploitDataParser = (data: DataType) => {
+const executionsDataParser = (data: ExecutionType) => {
   return (
     <div
-      className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:1fr_4rem] items-center text-center text-sm ${
-        data.status ?? 'info'
-      }`}
-      title={data.content}
+      className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:1fr_6.5rem] items-center text-center text-sm ${'success'}`}
+      title={data.output}
     >
-      <p className="text-left text-ellipsis whitespace-nowrap overflow-hidden pl-1 [color:var(--logBackgroundColor)]">
-        {data.content}
-      </p>
-      <span className="rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]">
-        {data.status ?? 'info'}
-      </span>
+      <div
+        className="flex gap-1 text-left truncate [color:var(--logBackgroundColor)]"
+        title={'Execution ID'}
+      >
+        <span className="px-1 rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]">
+          {data.id}
+        </span>
+        <p className="truncate">{data.output}</p>
+      </div>
+      <div className="flex gap-1 pl-1">
+        <span
+          className="w-16 rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
+          title={'Exploit ID'}
+        >
+          {data.exploit_id}
+        </span>
+        <span
+          className="w-full px-1 rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
+          title={'Execution time'}
+        >
+          {(new Date(data.finished_at).getTime() -
+            new Date(data.started_at).getTime()) /
+            1000}
+          s
+        </span>
+      </div>
     </div>
   );
 };
@@ -222,7 +240,7 @@ const LoggingDisplay = ({
                     filterData[filterData.length - 1 - virtualItem.index],
                     sensor
                   )
-                : exploitDataParser(
+                : executionsDataParser(
                     filterData[filterData.length - 1 - virtualItem.index]
                   )}
             </div>

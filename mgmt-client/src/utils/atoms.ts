@@ -1,6 +1,12 @@
 import { atom } from 'jotai';
 import { ExtendedType } from './enums';
-import { DataType, Exploit, ExploitType, ScoreboardType } from './types';
+import {
+  DataType,
+  ExecutionType,
+  Exploit,
+  ExploitType,
+  ScoreboardType,
+} from './types';
 import { File } from './types';
 
 export const pagingSelectionAtom = atom('All');
@@ -8,14 +14,16 @@ export const pagingSelectionAtom = atom('All');
 export const currentTickAtom = atom(5);
 export const scoreboardDataAtom = atom<ScoreboardType | null>(null);
 export const submissionLogAtom = atom<DataType[] | null>(null);
-export const exploitLogAtom = atom<DataType[] | null>(null);
+export const executionsLogAtom = atom<ExecutionType[] | null>(null);
 
 export const exploitsAtom = atom<ExploitType[] | null>(null);
 
 export const submissionLogLengthAtom = atom(
   (get) => get(submissionLogAtom)?.length
 );
-export const exploitLogLengthAtom = atom((get) => get(exploitLogAtom)?.length);
+export const executionsLogLengthAtom = atom(
+  (get) => get(executionsLogAtom)?.length
+);
 
 export const extendedSelectionAtom = atom<{
   type: ExtendedType | null;

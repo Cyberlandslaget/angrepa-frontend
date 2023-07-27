@@ -1,5 +1,22 @@
 import { FLAG_CODE, SERVICE_STATUS } from './constants';
 
+export type ExecutionType = {
+  exploit_id: number;
+  finished_at: Date;
+  id: number;
+  output: string;
+  started_at: Date;
+  target_id: number;
+};
+// {
+//   exploit_id: 1;
+//   finished_at: '2023-07-27T12:13:11.256369';
+//   id: 1;
+//   output: '10.0.7.1 ["user39","user40"]\nECSC_I07bMguc47Z0ucfZWAGYkcNwEzFzorBK\n';
+//   started_at: '2023-07-27T12:13:11.055922';
+//   target_id: 321;
+// }
+
 export type DataType = {
   // Exploit
   id?: string;
@@ -32,7 +49,7 @@ export type ScoreboardType = {
 };
 
 export type LoggingDisplayProps = {
-  data: DataType[];
+  data: DataType[] | ExecutionType[];
   parser: 'exploit' | 'submission';
   extended: boolean;
   filters: string[];

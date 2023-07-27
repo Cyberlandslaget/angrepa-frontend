@@ -4,18 +4,23 @@ import { ReactNode, useEffect, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
 import {
   currentTickAtom,
-  exploitLogAtom,
+  executionsLogAtom,
   exploitsAtom,
   scoreboardDataAtom,
   submissionLogAtom,
 } from 'utils/atoms';
 import { CONFIG } from 'utils/constants';
-import { DataType, ExploitType, ScoreboardType } from 'utils/types';
+import {
+  DataType,
+  ExecutionType,
+  ExploitType,
+  ScoreboardType,
+} from 'utils/types';
 
 export default function Layout({ children }: { children: ReactNode }) {
   const [scoreboardData, setScoreboardData] = useAtom(scoreboardDataAtom);
   const [submissionLog, setSubmissionLog] = useAtom(submissionLogAtom);
-  const [exploitLog, setExploitLog] = useAtom(exploitLogAtom);
+  const [executionsLog, setExecutionsLog] = useAtom(executionsLogAtom);
   const [exploits, setExploits] = useAtom(exploitsAtom);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [_, setCurrentTick] = useAtom(currentTickAtom);
@@ -37,11 +42,12 @@ export default function Layout({ children }: { children: ReactNode }) {
           setSubmissionLog(data as DataType[]);
         })
         .catch((_err) => {});
-    if (!exploitLog)
-      fetch(`${CONFIG.MGMT_SERVER_URL}/api/exploit_logs`)
+    if (!executionsLog)
+      fetch(`${CONFIG.MGMT_SERVER_URL}/logs/executions`)
         .then((res) => res.json())
-        .then((data) => {
-          setExploitLog(data as DataType[]);
+        .then((data: { status: 'ok' | 'error'; data: ExecutionType[] }) => {
+          console.log(data.data);
+          setExecutionsLog(data.data);
         })
         .catch((_err) => {});
     if (!exploits)
@@ -55,10 +61,10 @@ export default function Layout({ children }: { children: ReactNode }) {
       newSocket.close();
     };
   }, [
-    exploitLog,
+    executionsLog,
     exploits,
     scoreboardData,
-    setExploitLog,
+    setExecutionsLog,
     setExploits,
     setScoreboardData,
     setSubmissionLog,
@@ -83,7 +89,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     });
     socket.on('exploit', (data: DataType[]) => {
       if (data?.length > 0)
-        setExploitLog((ex) => {
+        setExecutionsLog((ex) => {
           const newData = data.filter((d) => !ex?.find((e) => e.id === d.id));
           return [...(ex ?? []), ...newData];
         });
@@ -110,7 +116,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     socket,
     setScoreboardData,
     setSubmissionLog,
-    setExploitLog,
+    setExecutionsLog,
     setExploits,
     setCurrentTick,
   ]);

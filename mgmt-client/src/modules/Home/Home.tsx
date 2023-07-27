@@ -11,16 +11,16 @@ import { DragDirection, HomePanelEnum } from 'utils/enums';
 import PinButtonsWrapper from 'components/PinButtonsWrapper';
 import useResizeableComponent from 'utils/useResizeableComponent';
 import {
-  exploitLogAtom,
+  executionsLogAtom,
   scoreboardDataAtom,
   submissionLogAtom,
 } from 'utils/atoms';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 
 export default function Home() {
-  const [scoreboardData, _setScoreboardData] = useAtom(scoreboardDataAtom);
-  const [submissionLog, _setSubmissionLog] = useAtom(submissionLogAtom);
-  const [exploitLog, _setExploitLog] = useAtom(exploitLogAtom);
+  const scoreboardData = useAtomValue(scoreboardDataAtom);
+  const submissionLog = useAtomValue(submissionLogAtom);
+  const executionsLog = useAtomValue(executionsLogAtom);
   const [pin, setPin] = useState(HomePanelEnum.Simple);
   const [fullscreen, setFullscreen] = useState<HomePanelEnum | null>(null);
   const resizableRef = useRef<HTMLElement | null>(null);
@@ -70,7 +70,7 @@ export default function Home() {
         updatePin={() => updatePin(HomePanelEnum.Runner)}
       >
         <LoggingDisplay
-          data={exploitLog || DUMMY_EXPLOIT_LOG}
+          data={executionsLog || DUMMY_EXPLOIT_LOG}
           parser={'exploit'}
           extended={fullscreen === HomePanelEnum.Runner}
           filters={['success', 'info', 'error', 'undefined']}
