@@ -2,6 +2,7 @@ import {
   DUMMY_EXPLOIT_LOG,
   DUMMY_FLAGSUBMISSION_LOG,
   DUMMY_SCOREBOARD_DATA,
+  FLAG_CODE,
   FLAG_STATUS,
 } from 'utils/constants';
 import LoggingDisplay from 'components/LoggingDisplay';
@@ -10,17 +11,13 @@ import { useRef, useState } from 'react';
 import { DragDirection, HomePanelEnum } from 'utils/enums';
 import PinButtonsWrapper from 'components/PinButtonsWrapper';
 import useResizeableComponent from 'utils/useResizeableComponent';
-import {
-  executionsLogAtom,
-  scoreboardDataAtom,
-  submissionLogAtom,
-} from 'utils/atoms';
+import { executionLogAtom, scoreboardDataAtom, flagLogAtom } from 'utils/atoms';
 import { useAtom, useAtomValue } from 'jotai';
 
 export default function Home() {
   const scoreboardData = useAtomValue(scoreboardDataAtom);
-  const submissionLog = useAtomValue(submissionLogAtom);
-  const executionsLog = useAtomValue(executionsLogAtom);
+  const flagLog = useAtomValue(flagLogAtom);
+  const executionLog = useAtomValue(executionLogAtom);
   const [pin, setPin] = useState(HomePanelEnum.Simple);
   const [fullscreen, setFullscreen] = useState<HomePanelEnum | null>(null);
   const resizableRef = useRef<HTMLElement | null>(null);
@@ -50,7 +47,7 @@ export default function Home() {
           extended={fullscreen === HomePanelEnum.Simple}
           data={{
             scoreboard: scoreboardData || DUMMY_SCOREBOARD_DATA,
-            flag: submissionLog || DUMMY_FLAGSUBMISSION_LOG,
+            flag: flagLog || DUMMY_FLAGSUBMISSION_LOG,
           }}
         />
       </PinButtonsWrapper>
@@ -70,7 +67,7 @@ export default function Home() {
         updatePin={() => updatePin(HomePanelEnum.Runner)}
       >
         <LoggingDisplay
-          data={executionsLog || DUMMY_EXPLOIT_LOG}
+          data={executionLog || DUMMY_EXPLOIT_LOG}
           parser={'exploit'}
           extended={fullscreen === HomePanelEnum.Runner}
           filters={['success', 'info', 'error', 'undefined']}
@@ -92,10 +89,10 @@ export default function Home() {
         updatePin={() => updatePin(HomePanelEnum.Submission)}
       >
         <LoggingDisplay
-          data={submissionLog || DUMMY_FLAGSUBMISSION_LOG}
+          data={flagLog || DUMMY_FLAGSUBMISSION_LOG}
           parser={'submission'}
           extended={fullscreen === HomePanelEnum.Submission}
-          filters={Object.keys(FLAG_STATUS)}
+          filters={Object.keys(FLAG_CODE)}
         />
       </PinButtonsWrapper>
     </main>

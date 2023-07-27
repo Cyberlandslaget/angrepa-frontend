@@ -2,9 +2,9 @@ import Logo from '../assets/logo.svg';
 import { useAtom, useAtomValue } from 'jotai';
 import {
   currentTickAtom,
-  executionsLogLengthAtom,
+  executionLogLengthAtom,
   sensorFlagAtom,
-  submissionLogLengthAtom,
+  flagLogLengthAtom,
 } from '../utils/atoms';
 import { Link, useNavigate } from 'react-router-dom';
 import { DoNotDisturb, EmojiFlags } from '@mui/icons-material';
@@ -17,8 +17,8 @@ const PAGES = [
 const Navigation = ({ className = '' }) => {
   const currentTick = useAtomValue(currentTickAtom);
   const [sensorFlags, setSensorFlags] = useAtom(sensorFlagAtom);
-  const submissionLogLength = useAtomValue(submissionLogLengthAtom);
-  const exploitLogLength = useAtomValue(executionsLogLengthAtom);
+  const flagLogLength = useAtomValue(flagLogLengthAtom);
+  const exploitLogLength = useAtomValue(executionLogLengthAtom);
   const _navigate = useNavigate(); // This line enables component re-render on navigation
 
   return (
@@ -42,7 +42,7 @@ const Navigation = ({ className = '' }) => {
             className="flex px-3 py-[4px] text-xs rounded-sm bg-slate-950 bg-opacity-40"
             title="Total flags logged"
           >
-            {submissionLogLength}
+            {flagLogLength}
           </p>
         </div>
       </div>

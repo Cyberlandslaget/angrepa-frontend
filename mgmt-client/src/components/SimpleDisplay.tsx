@@ -2,7 +2,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import { currentTickAtom, extendedSelectionAtom } from 'utils/atoms';
 import { removeSimpleDuplicates } from 'utils/removeSimpleDuplicates';
 import { SERVICE_STATUS } from 'utils/constants';
-import { DataType, ScoreboardType } from 'utils/types';
+import { DataType, FlagType, ScoreboardType } from 'utils/types';
 import getFlagIcon from 'utils/getFlagIcon';
 import { useEffect, useRef } from 'react';
 import { DragDirection, ExtendedType } from 'utils/enums';
@@ -46,7 +46,7 @@ type SimpleDisplayProps = {
   extended: boolean;
   data: {
     scoreboard: ScoreboardType;
-    flag: DataType[];
+    flag: FlagType[];
   };
 };
 const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {

@@ -1,4 +1,5 @@
 import { FLAG_CODE, SERVICE_STATUS } from './constants';
+import { FlagCode } from './enums';
 
 export type ExecutionType = {
   exploit_id: number;
@@ -8,14 +9,17 @@ export type ExecutionType = {
   started_at: Date;
   target_id: number;
 };
-// {
-//   exploit_id: 1;
-//   finished_at: '2023-07-27T12:13:11.256369';
-//   id: 1;
-//   output: '10.0.7.1 ["user39","user40"]\nECSC_I07bMguc47Z0ucfZWAGYkcNwEzFzorBK\n';
-//   started_at: '2023-07-27T12:13:11.055922';
-//   target_id: 321;
-// }
+
+// export type FlagCodeType = `${FlagCode}`;
+export type FlagType = {
+  execution_id: number;
+  exploit_id: number;
+  id: number;
+  status: FlagCode;
+  submitted: boolean;
+  text: string;
+  timestamp: Date;
+};
 
 export type DataType = {
   // Exploit
@@ -49,7 +53,7 @@ export type ScoreboardType = {
 };
 
 export type LoggingDisplayProps = {
-  data: DataType[] | ExecutionType[];
+  data: FlagType[] | ExecutionType[];
   parser: 'exploit' | 'submission';
   extended: boolean;
   filters: string[];

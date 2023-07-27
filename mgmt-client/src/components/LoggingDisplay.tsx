@@ -1,6 +1,11 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import React from 'react';
-import { DataType, ExecutionType, LoggingDisplayProps } from '../utils/types';
+import {
+  DataType,
+  ExecutionType,
+  FlagType,
+  LoggingDisplayProps,
+} from '../utils/types';
 import { useAtomValue } from 'jotai';
 import { sensorFlagAtom } from 'utils/atoms';
 import {
@@ -51,33 +56,39 @@ const executionsDataParser = (data: ExecutionType) => {
     </div>
   );
 };
-const flagSubmissionDataParser = (data: DataType, sensor: boolean) => {
+const flagSubmissionDataParser = (data: FlagType, sensor: boolean) => {
   return (
     <div
-      className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:2.25rem_2.25rem_8rem_1fr_3rem] items-center text-center text-sm ${
-        FLAG_STATUS[data?.status ?? 'Error'] ?? ''
+      className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:8rem_2.5rem_2rem_1fr_3rem] items-center text-center text-sm ${
+        data?.status ?? ''
       }`}
     >
-      <span className="secondaryColor rounded-sm py-[0.1rem]" title="tick">
-        {data.tick || '?'}
+      <span className="secondaryColor rounded-sm py-[0.1rem]" title="Timestamp">
+        {new Date(data?.timestamp)?.getTime() ?? '?'}
       </span>
-      <span className="secondaryColor rounded-sm py-[0.1rem]" title="team">
-        {Math.floor(data.team || 0) || data?.target_ip?.split('.')[2] || '???'}
+      <span
+        className="secondaryColor rounded-sm py-[0.1rem]"
+        title="Execution ID"
+      >
+        {data.execution_id}
       </span>
-      <span className="secondaryColor rounded-sm py-[0.1rem]" title="service">
-        {data.flagstore || '???'}
+      <span
+        className="secondaryColor rounded-sm py-[0.1rem]"
+        title="Exploit ID"
+      >
+        {data.exploit_id}
       </span>
       <p className="text-left text-ellipsis whitespace-nowrap overflow-hidden pl-1 [color:var(--logBackgroundColor)]">
         {sensor
-          ? (data.flag?.substring(0, data.flag?.length - 8) || '') +
+          ? (data.text?.substring(0, data.text?.length - 8) || '') +
             'x'.repeat(8)
-          : data.flag}
+          : data.text}
       </p>
       <span
         className="rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
         title="status code"
       >
-        {FLAG_STATUS[data?.status ?? 'Error']}
+        {data?.status}
       </span>
     </div>
   );

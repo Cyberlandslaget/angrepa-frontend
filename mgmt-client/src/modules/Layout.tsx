@@ -4,23 +4,24 @@ import { ReactNode, useEffect, useState } from 'react';
 import { Socket, io } from 'socket.io-client';
 import {
   currentTickAtom,
-  executionsLogAtom,
+  executionLogAtom,
   exploitsAtom,
   scoreboardDataAtom,
-  submissionLogAtom,
+  flagLogAtom,
 } from 'utils/atoms';
 import { CONFIG } from 'utils/constants';
 import {
   DataType,
   ExecutionType,
   ExploitType,
+  FlagType,
   ScoreboardType,
 } from 'utils/types';
 
 export default function Layout({ children }: { children: ReactNode }) {
   const [scoreboardData, setScoreboardData] = useAtom(scoreboardDataAtom);
-  const [submissionLog, setSubmissionLog] = useAtom(submissionLogAtom);
-  const [executionsLog, setExecutionsLog] = useAtom(executionsLogAtom);
+  const [flagLog, setFlagLog] = useAtom(flagLogAtom);
+  const [executionLog, setExecutionLog] = useAtom(executionLogAtom);
   const [exploits, setExploits] = useAtom(exploitsAtom);
   const [socket, setSocket] = useState<Socket | null>(null);
   const [_, setCurrentTick] = useAtom(currentTickAtom);
@@ -35,19 +36,19 @@ export default function Layout({ children }: { children: ReactNode }) {
           setScoreboardData(data as ScoreboardType);
         })
         .catch((_err) => {});
-    if (!submissionLog)
-      fetch(`${CONFIG.MGMT_SERVER_URL}/api/flag`)
+    if (!flagLog)
+      fetch(`${CONFIG.MGMT_SERVER_URL}/logs/flags`)
         .then((res) => res.json())
-        .then((data) => {
-          setSubmissionLog(data as DataType[]);
+        .then((data: { status: 'ok' | 'error'; data: FlagType[] }) => {
+          console.log(data.data);
+          setFlagLog(data.data);
         })
         .catch((_err) => {});
-    if (!executionsLog)
+    if (!executionLog)
       fetch(`${CONFIG.MGMT_SERVER_URL}/logs/executions`)
         .then((res) => res.json())
         .then((data: { status: 'ok' | 'error'; data: ExecutionType[] }) => {
-          console.log(data.data);
-          setExecutionsLog(data.data);
+          setExecutionLog(data.data);
         })
         .catch((_err) => {});
     if (!exploits)
@@ -61,14 +62,14 @@ export default function Layout({ children }: { children: ReactNode }) {
       newSocket.close();
     };
   }, [
-    executionsLog,
+    executionLog,
     exploits,
     scoreboardData,
-    setExecutionsLog,
+    setExecutionLog,
     setExploits,
     setScoreboardData,
-    setSubmissionLog,
-    submissionLog,
+    setFlagLog,
+    flagLog,
   ]);
 
   useEffect(() => {
@@ -79,7 +80,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     });
     socket.on('submission', (data: DataType[]) => {
       if (data?.length > 0) {
-        setSubmissionLog((sub) => {
+        setFlagLog((sub) => {
           const newData = data.filter(
             (d) => !sub?.find((s) => s.flag === d.flag)
           );
@@ -89,7 +90,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     });
     socket.on('exploit', (data: DataType[]) => {
       if (data?.length > 0)
-        setExecutionsLog((ex) => {
+        setExecutionLog((ex) => {
           const newData = data.filter((d) => !ex?.find((e) => e.id === d.id));
           return [...(ex ?? []), ...newData];
         });
@@ -115,8 +116,8 @@ export default function Layout({ children }: { children: ReactNode }) {
   }, [
     socket,
     setScoreboardData,
-    setSubmissionLog,
-    setExecutionsLog,
+    setFlagLog,
+    setExecutionLog,
     setExploits,
     setCurrentTick,
   ]);
