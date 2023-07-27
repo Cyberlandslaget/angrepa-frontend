@@ -23,10 +23,10 @@ const executionsDataParser = (data: ExecutionType) => {
       }`}
     >
       <div className="flex gap-1 text-left truncate" title={data.output}>
-        <span className="px-1 rounded-sm secondaryColor" title="Execution ID">
+        <span className="px-2 rounded-sm secondaryColor" title="Execution ID">
           {data.id}
         </span>
-        <span className="px-1 rounded-sm secondaryColor" title="Tick">
+        <span className="px-2 rounded-sm secondaryColor" title="Tick">
           {data.target_tick}
         </span>
         <p className="truncate [color:var(--logBackgroundColor)]">
@@ -56,7 +56,7 @@ const executionsDataParser = (data: ExecutionType) => {
 const flagSubmissionDataParser = (data: FlagType, censor: boolean) => {
   return (
     <div
-      className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:8rem_2.5rem_2rem_1fr_3rem] items-center text-center text-sm ${
+      className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:8rem_3.5rem_2rem_1fr_3rem] items-center text-center text-sm ${
         data?.status ?? ''
       }`}
     >

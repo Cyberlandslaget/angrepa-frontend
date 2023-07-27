@@ -2,6 +2,7 @@ import {
   DUMMY_EXPLOIT_LOG,
   DUMMY_FLAGSUBMISSION_LOG,
   DUMMY_SCOREBOARD_DATA,
+  DUMMY_TEAMS_DATA,
   FLAG_CODE,
 } from 'utils/constants';
 import LoggingDisplay from 'components/LoggingDisplay';
@@ -12,6 +13,7 @@ import PinButtonsWrapper from 'components/PinButtonsWrapper';
 import useResizeableComponent from 'utils/useResizeableComponent';
 import { executionLogAtom, scoreboardDataAtom, flagLogAtom } from 'utils/atoms';
 import { useAtomValue } from 'jotai';
+import { FlagType } from 'utils/types';
 
 export default function Home() {
   const scoreboardData = useAtomValue(scoreboardDataAtom);
@@ -45,7 +47,7 @@ export default function Home() {
         <SimpleDisplay
           extended={fullscreen === HomePanelEnum.Simple}
           data={{
-            scoreboard: scoreboardData || DUMMY_SCOREBOARD_DATA,
+            scoreboard: scoreboardData || DUMMY_TEAMS_DATA,
             flag: flagLog || DUMMY_FLAGSUBMISSION_LOG,
           }}
         />

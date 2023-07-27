@@ -28,18 +28,27 @@ export default function Layout({ children }: { children: ReactNode }) {
   useEffect(() => {
     const newSocket = io(`${CONFIG.MGMT_SERVER_URL}`);
     setSocket(newSocket);
-    if (!scoreboardData)
-      fetch(`${CONFIG.MGMT_SERVER_URL}/api/scoreboard`)
-        .then((res) => res.json())
-        .then((data) => {
-          setScoreboardData(data as ScoreboardType);
-        })
-        .catch((_err) => {});
-    if (!flagLog)
+    // if (!scoreboardData)
+    //   fetch(`${CONFIG.MGMT_SERVER_URL}/api/scoreboard`)
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    //       setScoreboardData(data as ScoreboardType);
+    //     })
+    //     .catch((_err) => {});
+    if (!flagLog && executionLog)
       fetch(`${CONFIG.MGMT_SERVER_URL}/logs/flags`)
         .then((res) => res.json())
         .then((data: { status: 'ok' | 'error'; data: FlagType[] }) => {
-          setFlagLog(data.data);
+          const d = data.data.map((d) => {
+            const exec = executionLog.find((e) => e.id === d.execution_id);
+            return {
+              ...d,
+              service: exec?.service,
+              target_tick: exec?.target_tick,
+              team: exec?.team,
+            };
+          });
+          setFlagLog(d);
         })
         .catch((_err) => {});
     if (!executionLog)
@@ -51,17 +60,18 @@ export default function Layout({ children }: { children: ReactNode }) {
               ...d.execution,
               service: d.target.service,
               target_tick: d.target.target_tick,
+              team: d.target.team,
             };
           });
-
           setExecutionLog(d as ExecutionType[]);
         })
         .catch((_err) => {});
     if (!exploits)
-      fetch(`${CONFIG.MGMT_SERVER_URL}/api/exploits`)
+      fetch(`${CONFIG.MGMT_SERVER_URL}/logs/exploits`)
         .then((res) => res.json())
-        .then((data) => {
-          setExploits(data as ExploitType[]);
+        .then((data: { status: 'ok' | 'error'; data: ExploitType[] }) => {
+          console.log(data.data);
+          setExploits(data.data);
         })
         .catch((_err) => {});
     return () => {
@@ -101,7 +111,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           return [...(ex ?? []), ...newData];
         });
     });
-    socket.on('exploit', (data: ExploitType[]) => {
+    socket.on('exploits', (data: ExploitType[]) => {
       if (data?.length > 0)
         setExploits((ex) => {
           const newData = data.filter((d) => !ex?.find((e) => e.id === d.id));
@@ -116,7 +126,7 @@ export default function Layout({ children }: { children: ReactNode }) {
       socket.off('scoreboard');
       socket.off('flag');
       socket.off('execution');
-      socket.off('exploit');
+      socket.off('exploits');
       socket.off('tick');
     };
   }, [

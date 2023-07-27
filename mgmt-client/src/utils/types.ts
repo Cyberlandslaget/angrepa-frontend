@@ -12,6 +12,7 @@ export type ExecutionType = {
 
   service: string;
   target_tick: number;
+  team: string;
 };
 
 // export type FlagCodeType = `${FlagCode}`;
@@ -26,12 +27,13 @@ export type FlagType = {
 
   service: string;
   target_tick: number;
+  team: string;
 };
 
 export type ScoreboardType = {
-  currentTick: number;
   teams: {
     [key: string]: {
+      ip: string;
       name: string;
       services: {
         [key: string]: number;
@@ -63,10 +65,12 @@ export type Exploit = {
 };
 
 export type ExploitType = {
-  id: string;
-  running: boolean;
-  attack_target: string; // Service
-  blacklist: string[];
+  id: number;
+  name: string;
+  enabled: boolean;
+  service: string;
+  pool_size: number;
   docker_image: string;
-  exploit_kind: string;
+  docker_containers: string[];
+  blacklist: string[];
 };

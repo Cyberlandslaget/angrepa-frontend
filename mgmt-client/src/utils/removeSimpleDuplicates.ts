@@ -36,36 +36,22 @@ export const removeSimpleDuplicates = (
     const chall = challs[i];
     try {
       let nexists, nnexists;
-      const exists =
-        nchalls[
-          Number(chall?.target_ip?.split('.')[2]) ||
-            Math.floor(chall?.team || 0) ||
-            ''
-        ];
+      const exists = nchalls[chall?.team || ''];
       if (exists) {
-        nexists = exists[chall?.flagstore || ''];
-        if (nexists) nnexists = nexists[chall?.tick || 0];
+        nexists = exists[chall?.service || ''];
+        if (nexists) nnexists = nexists[chall?.target_tick || 0];
       }
 
-      if (nnexists) {
-        if (
-          FLAG_CODE[chall.status as FlagCodeType] >
+      if (
+        nnexists &&
+        FLAG_CODE[chall.status as FlagCodeType] >
           FLAG_CODE[nnexists.status as FlagCodeType]
-        ) {
-          nchalls[
-            Number(chall?.target_ip?.split('.')[2]) ||
-              Math.floor(chall?.team || 0) ||
-              ''
-          ][chall?.flagstore || ''][chall?.tick || 0] = chall;
-        }
+      ) {
+        nchalls[chall?.team][chall?.service][chall?.target_tick] = chall;
       } else {
-        nchalls[
-          Number(chall?.target_ip?.split('.')[2]) ||
-            Math.floor(chall?.team || 0) ||
-            ''
-        ][chall?.flagstore || ''][chall?.tick || 0] = chall;
+        nchalls[chall?.team][chall?.service][chall?.target_tick] = chall;
       }
-    } catch (err) {
+    } catch (_err) {
       continue;
     }
   }

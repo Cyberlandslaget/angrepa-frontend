@@ -127,7 +127,7 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                   });
                 }}
               >
-                {team[0]}. {team[1].name}
+                [{team[0]}] {team[1].name}
               </p>
             ))}
           </div>
