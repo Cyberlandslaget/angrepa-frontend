@@ -1,8 +1,8 @@
 import { FLAG_CODE } from './constants';
-import { DataType, FlagCodeType } from './types';
+import { FlagCodeType, FlagType } from './types';
 
 type Ticks = {
-  [key: number]: DataType | null;
+  [key: number]: FlagType | null;
 };
 type ServiceTicks = {
   [key: string]: Ticks;
@@ -14,7 +14,7 @@ type Challenges = {
 export const removeSimpleDuplicates = (
   teams: string[],
   services: string[],
-  challs: DataType[],
+  challs: FlagType[],
   currentTick: number
 ) => {
   const nchalls: Challenges = {};

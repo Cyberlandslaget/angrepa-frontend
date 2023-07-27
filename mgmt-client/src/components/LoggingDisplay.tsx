@@ -1,11 +1,6 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import React from 'react';
-import {
-  DataType,
-  ExecutionType,
-  FlagType,
-  LoggingDisplayProps,
-} from '../utils/types';
+import { ExecutionType, FlagType, LoggingDisplayProps } from '../utils/types';
 import { useAtomValue } from 'jotai';
 import { sensorFlagAtom } from 'utils/atoms';
 import {
@@ -19,29 +14,31 @@ import {
   Select,
   SelectChangeEvent,
 } from '@mui/material';
-import { FLAG_STATUS } from 'utils/constants';
 
 const executionsDataParser = (data: ExecutionType) => {
   return (
     <div
-      className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:1fr_6.5rem] items-center text-center text-sm ${'success'}`}
-      title={data.output}
+      className={`log Color grid gap-1 w-full h-full brightness-90 [grid-template-columns:1fr_9rem] items-center text-center text-sm ${
+        data.exit_code === 0 ? 'success' : 'error'
+      }`}
     >
-      <div
-        className="flex gap-1 text-left truncate [color:var(--logBackgroundColor)]"
-        title={'Execution ID'}
-      >
-        <span className="px-1 rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]">
+      <div className="flex gap-1 text-left truncate" title={data.output}>
+        <span className="px-1 rounded-sm secondaryColor" title="Execution ID">
           {data.id}
         </span>
-        <p className="truncate">{data.output}</p>
+        <span className="px-1 rounded-sm secondaryColor" title="Tick">
+          {data.target_tick}
+        </span>
+        <p className="truncate [color:var(--logBackgroundColor)]">
+          {data.output}
+        </p>
       </div>
-      <div className="flex gap-1 pl-1">
+      <div className="grid [grid-template-columns:5.25rem_1fr] gap-1 pl-1">
         <span
-          className="w-16 rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
-          title={'Exploit ID'}
+          className="w-full rounded-sm truncate [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
+          title={'Service'}
         >
-          {data.exploit_id}
+          {data.service}
         </span>
         <span
           className="w-full px-1 rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
@@ -56,7 +53,7 @@ const executionsDataParser = (data: ExecutionType) => {
     </div>
   );
 };
-const flagSubmissionDataParser = (data: FlagType, sensor: boolean) => {
+const flagSubmissionDataParser = (data: FlagType, censor: boolean) => {
   return (
     <div
       className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:8rem_2.5rem_2rem_1fr_3rem] items-center text-center text-sm ${
@@ -79,7 +76,7 @@ const flagSubmissionDataParser = (data: FlagType, sensor: boolean) => {
         {data.exploit_id}
       </span>
       <p className="text-left text-ellipsis whitespace-nowrap overflow-hidden pl-1 [color:var(--logBackgroundColor)]">
-        {sensor
+        {censor
           ? (data.text?.substring(0, data.text?.length - 8) || '') +
             'x'.repeat(8)
           : data.text}
@@ -88,7 +85,7 @@ const flagSubmissionDataParser = (data: FlagType, sensor: boolean) => {
         className="rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
         title="status code"
       >
-        {data?.status}
+        {data?.status ?? '?'}
       </span>
     </div>
   );
@@ -104,8 +101,8 @@ const LoggingDisplay = ({
   const parentRef = React.useRef(null);
   const [statusFilter, setStatusFilter] = React.useState<string[]>(filters);
 
-  const filterData = data.filter((d) =>
-    statusFilter.includes(String(d.status))
+  const filterData = data.filter((d: unknown) =>
+    statusFilter.includes(String(d.status) || String(d.exit_code))
   );
 
   // The virtualizer

@@ -8,6 +8,10 @@ export type ExecutionType = {
   output: string;
   started_at: Date;
   target_id: number;
+  exit_code: number;
+
+  service: string;
+  target_tick: number;
 };
 
 // export type FlagCodeType = `${FlagCode}`;
@@ -19,27 +23,11 @@ export type FlagType = {
   submitted: boolean;
   text: string;
   timestamp: Date;
+
+  service: string;
+  target_tick: number;
 };
 
-export type DataType = {
-  // Exploit
-  id?: string;
-  from_exploit_id?: string;
-  from_ip?: string | null;
-  content?: string;
-
-  // Submission
-  flag?: string;
-  exploit_id?: string;
-  target_ip?: string;
-  team?: number;
-  flagstore?: string;
-  sent?: boolean;
-  status?: string;
-
-  tick?: number;
-  stamp?: Date;
-};
 export type ScoreboardType = {
   currentTick: number;
   teams: {
@@ -74,21 +62,6 @@ export type Exploit = {
   files: File[];
 };
 
-/*
-CREATE TABLE exploits (
-    -- unique id
-    id TEXT PRIMARY KEY,
-    running BOOLEAN NOT NULL DEFAULT FALSE,
-    -- the service to attack
-    attack_target TEXT,
-    -- the blacklisted ips (non-null array of non-null strings)
-    blacklist TEXT[] NOT NULL,
-    -- the image id
-    docker_image TEXT NOT NULL,
-    -- the type (for recreating the actual instance)
-    exploit_kind TEXT NOT NULL
-);
-*/
 export type ExploitType = {
   id: string;
   running: boolean;

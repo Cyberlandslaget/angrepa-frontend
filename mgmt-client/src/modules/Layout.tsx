@@ -11,7 +11,6 @@ import {
 } from 'utils/atoms';
 import { CONFIG } from 'utils/constants';
 import {
-  DataType,
   ExecutionType,
   ExploitType,
   FlagType,
@@ -40,15 +39,22 @@ export default function Layout({ children }: { children: ReactNode }) {
       fetch(`${CONFIG.MGMT_SERVER_URL}/logs/flags`)
         .then((res) => res.json())
         .then((data: { status: 'ok' | 'error'; data: FlagType[] }) => {
-          console.log(data.data);
           setFlagLog(data.data);
         })
         .catch((_err) => {});
     if (!executionLog)
       fetch(`${CONFIG.MGMT_SERVER_URL}/logs/executions`)
         .then((res) => res.json())
-        .then((data: { status: 'ok' | 'error'; data: ExecutionType[] }) => {
-          setExecutionLog(data.data);
+        .then((data: { status: 'ok' | 'error'; data: unknown[] }) => {
+          const d = data.data.map((d) => {
+            return {
+              ...d.execution,
+              service: d.target.service,
+              target_tick: d.target.target_tick,
+            };
+          });
+
+          setExecutionLog(d as ExecutionType[]);
         })
         .catch((_err) => {});
     if (!exploits)
@@ -78,24 +84,24 @@ export default function Layout({ children }: { children: ReactNode }) {
       if (data?.teams) setScoreboardData(data);
       // if (Number(data?.currentTick)) setCurrentTick(Number(data.currentTick));
     });
-    socket.on('submission', (data: DataType[]) => {
+    socket.on('flag', (data: FlagType[]) => {
       if (data?.length > 0) {
-        setFlagLog((sub) => {
+        setFlagLog((flag) => {
           const newData = data.filter(
-            (d) => !sub?.find((s) => s.flag === d.flag)
+            (d) => !flag?.find((s) => s.text === d.text)
           );
-          return [...(sub ?? []), ...newData];
+          return [...(flag ?? []), ...newData];
         });
       }
     });
-    socket.on('exploit', (data: DataType[]) => {
+    socket.on('execution', (data: ExecutionType[]) => {
       if (data?.length > 0)
         setExecutionLog((ex) => {
           const newData = data.filter((d) => !ex?.find((e) => e.id === d.id));
           return [...(ex ?? []), ...newData];
         });
     });
-    socket.on('exploits', (data: ExploitType[]) => {
+    socket.on('exploit', (data: ExploitType[]) => {
       if (data?.length > 0)
         setExploits((ex) => {
           const newData = data.filter((d) => !ex?.find((e) => e.id === d.id));
@@ -108,9 +114,9 @@ export default function Layout({ children }: { children: ReactNode }) {
 
     return () => {
       socket.off('scoreboard');
-      socket.off('submission');
+      socket.off('flag');
+      socket.off('execution');
       socket.off('exploit');
-      socket.off('exploits');
       socket.off('tick');
     };
   }, [

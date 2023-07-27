@@ -2,7 +2,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import { currentTickAtom, extendedSelectionAtom } from 'utils/atoms';
 import { removeSimpleDuplicates } from 'utils/removeSimpleDuplicates';
 import { SERVICE_STATUS } from 'utils/constants';
-import { DataType, FlagType, ScoreboardType } from 'utils/types';
+import { FlagType, ScoreboardType } from 'utils/types';
 import getFlagIcon from 'utils/getFlagIcon';
 import { useEffect, useRef } from 'react';
 import { DragDirection, ExtendedType } from 'utils/enums';
@@ -11,7 +11,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 
 type Data = {
   [key: string]: {
-    [key: string]: DataType;
+    [key: string]: FlagType;
   };
 };
 type SimpleOverviewProps = {
