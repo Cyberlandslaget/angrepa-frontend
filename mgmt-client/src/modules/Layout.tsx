@@ -11,7 +11,6 @@ import {
 } from 'utils/atoms';
 import { CONFIG } from 'utils/constants';
 import { DataType, ExploitType, ScoreboardType } from 'utils/types';
-import { getTick } from 'utils/utils';
 
 export default function Layout({ children }: { children: ReactNode }) {
   const [scoreboardData, setScoreboardData] = useAtom(scoreboardDataAtom);
@@ -28,30 +27,43 @@ export default function Layout({ children }: { children: ReactNode }) {
       fetch(`${CONFIG.MGMT_SERVER_URL}/api/scoreboard`)
         .then((res) => res.json())
         .then((data) => {
-          setScoreboardData(data);
-        });
+          setScoreboardData(data as ScoreboardType);
+        })
+        .catch((_err) => {});
     if (!submissionLog)
       fetch(`${CONFIG.MGMT_SERVER_URL}/api/flag`)
         .then((res) => res.json())
         .then((data) => {
-          setSubmissionLog(data);
-        });
+          setSubmissionLog(data as DataType[]);
+        })
+        .catch((_err) => {});
     if (!exploitLog)
       fetch(`${CONFIG.MGMT_SERVER_URL}/api/exploit_logs`)
         .then((res) => res.json())
         .then((data) => {
-          setExploitLog(data);
-        });
+          setExploitLog(data as DataType[]);
+        })
+        .catch((_err) => {});
     if (!exploits)
       fetch(`${CONFIG.MGMT_SERVER_URL}/api/exploits`)
         .then((res) => res.json())
         .then((data) => {
-          setExploits(data);
-        });
+          setExploits(data as ExploitType[]);
+        })
+        .catch((_err) => {});
     return () => {
       newSocket.close();
     };
-  }, []);
+  }, [
+    exploitLog,
+    exploits,
+    scoreboardData,
+    setExploitLog,
+    setExploits,
+    setScoreboardData,
+    setSubmissionLog,
+    submissionLog,
+  ]);
 
   useEffect(() => {
     if (!socket) return;

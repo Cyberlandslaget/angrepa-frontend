@@ -1,13 +1,6 @@
 import { FLAG_CODE } from './constants';
 import { DataType, FlagCodeType } from './types';
 
-export const getTick = () => {
-  Math.floor(
-    (new Date().getTime() - new Date('2023-07-22T12:00:00Z').getTime()) /
-      (1000 * 60)
-  );
-};
-
 type Ticks = {
   [key: number]: DataType | null;
 };
@@ -18,7 +11,7 @@ type Challenges = {
   [key: string]: ServiceTicks;
 };
 
-export const removeDuplicates = (
+export const removeSimpleDuplicates = (
   teams: string[],
   services: string[],
   challs: DataType[],

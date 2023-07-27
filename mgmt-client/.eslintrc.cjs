@@ -25,6 +25,8 @@ module.exports = {
     '@typescript-eslint/no-non-null-assertion': 'off',
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unsafe-assignment': 'off',
+    '@typescript-eslint/no-empty-function': 'off',
+    'no-empty': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',
       {

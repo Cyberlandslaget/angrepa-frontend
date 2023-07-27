@@ -1,6 +1,6 @@
 import { useAtom, useAtomValue } from 'jotai';
 import { currentTickAtom, extendedSelectionAtom } from 'utils/atoms';
-import { removeDuplicates } from 'utils/utils';
+import { removeSimpleDuplicates } from 'utils/removeSimpleDuplicates';
 import { SERVICE_STATUS } from 'utils/constants';
 import { DataType, ScoreboardType } from 'utils/types';
 import getFlagIcon from 'utils/getFlagIcon';
@@ -74,7 +74,7 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
   const services = Object.keys(
     Object.values(data.scoreboard.teams)[0].services
   );
-  const filteredData = removeDuplicates(
+  const filteredData = removeSimpleDuplicates(
     Object.keys(data.scoreboard.teams),
     services,
     data.flag,

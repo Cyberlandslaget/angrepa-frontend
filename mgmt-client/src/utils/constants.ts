@@ -1,14 +1,8 @@
 export const CONFIG = {
   MGMT_SERVER_URL: import.meta.env.DEV
     ? 'http://localhost:5000'
-    : 'http://172.17.82.30:5000', //`http://${window.location.hostname}:5000`,
+    : 'http://172.23.136.53:5000', //`http://${window.location.hostname}:5000`,
 };
-// Navigation constants
-export const PAGES = [
-  { title: 'Home', href: '/' },
-  { title: 'Exploits', href: '/exploits' },
-  { title: 'Scoreboard', href: '/scoreboard' },
-];
 
 // Display constants
 export const FLAG_CODE = {

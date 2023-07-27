@@ -1,6 +1,5 @@
 import Logo from '../assets/logo.svg';
 import { useAtom, useAtomValue } from 'jotai';
-import { PAGES } from '../utils/constants';
 import {
   currentTickAtom,
   exploitLogLengthAtom,
@@ -10,6 +9,11 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { DoNotDisturb, EmojiFlags } from '@mui/icons-material';
 
+// Navigation constants
+const PAGES = [
+  { title: 'Home', href: '/' },
+  { title: 'Exploits', href: '/exploits' },
+];
 const Navigation = ({ className = '' }) => {
   const currentTick = useAtomValue(currentTickAtom);
   const [sensorFlags, setSensorFlags] = useAtom(sensorFlagAtom);
