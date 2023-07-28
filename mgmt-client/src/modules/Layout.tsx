@@ -82,13 +82,11 @@ export default function Layout({ children }: { children: ReactNode }) {
           .catch((_err) => {});
 
         // Poll flags
-        const test = `${
-          CONFIG.MGMT_SERVER_URL
-        }/logs/flags?since=${toUnixTimestamp(
-          flagLog[flagLog.length - 1]?.timestamp
-        )}`;
-        console.log(test);
-        fetch(test)
+        fetch(
+          `${CONFIG.MGMT_SERVER_URL}/logs/flags?since=${toUnixTimestamp(
+            flagLog[flagLog.length - 10]?.timestamp
+          )}`
+        )
           .then((res) => res.json())
           .then((data: { status: 'ok' | 'error'; data: FlagType[] }) => {
             if (data.status === 'error') return;
