@@ -9,7 +9,7 @@ import {
   scoreboardDataAtom,
   flagLogAtom,
 } from 'utils/atoms';
-import { CONFIG } from 'utils/constants';
+import { CONFIG, SERVICE_STATUS } from 'utils/constants';
 import {
   ExecutionType,
   ExploitType,
@@ -29,12 +29,51 @@ export default function Layout({ children }: { children: ReactNode }) {
   useEffect(() => {
     // const newSocket = io(`${CONFIG.MGMT_SERVER_URL}`);
     // setSocket(newSocket);
+    if (!scoreboardData)
+      fetch(`${CONFIG.MGMT_SERVER_URL}/info/teams`)
+        .then((res) => res.json())
+        .then(
+          (teamData: {
+            status: 'ok' | 'error';
+            data: { ip: string; name?: string }[];
+          }) => {
+            if (teamData.status === 'error') return;
+
+            fetch(`${CONFIG.MGMT_SERVER_URL}/info/services`)
+              .then((res) => res.json())
+              .then(
+                (serviceData: {
+                  status: 'ok' | 'error';
+                  data: { name: string }[];
+                }) => {
+                  if (serviceData.status === 'error') return;
+                  const services = Object.fromEntries(
+                    serviceData.data.map((service) => [
+                      service.name,
+                      SERVICE_STATUS.UP,
+                    ])
+                  );
+                  const scoreboardData = {
+                    teams: Object.fromEntries(
+                      teamData.data.map((team) => [
+                        team.ip,
+                        { ...team, services },
+                      ])
+                    ),
+                  };
+                  setScoreboardData(scoreboardData as ScoreboardType);
+                }
+              )
+              .catch((_err) => {});
+          }
+        )
+        .catch((_err) => {});
     if (currentTick === 0)
       fetch(`${CONFIG.MGMT_SERVER_URL}/info/internal_tick`)
         .then((res) => res.json())
-        .then((data: { status: 'ok' | 'error'; tick: number }) => {
+        .then((data: { status: 'ok' | 'error'; data: number }) => {
           if (data.status === 'error') return;
-          setCurrentTick(data.tick);
+          setCurrentTick(data.data);
         })
         .catch((_err) => {});
     if (!flagLog && executionLog)
@@ -62,7 +101,8 @@ export default function Layout({ children }: { children: ReactNode }) {
         })
         .catch((_err) => {});
 
-    let interval: number;
+    let fastInterval: number;
+    let slowInterval: number;
     if (
       flagLog &&
       flagLog.length > 0 &&
@@ -71,13 +111,13 @@ export default function Layout({ children }: { children: ReactNode }) {
       exploits
     ) {
       //Implementing the setInterval method
-      interval = setInterval(() => {
+      fastInterval = setInterval(() => {
         // Poll ticks
         fetch(`${CONFIG.MGMT_SERVER_URL}/info/internal_tick`)
           .then((res) => res.json())
-          .then((data: { status: 'ok' | 'error'; tick: number }) => {
+          .then((data: { status: 'ok' | 'error'; data: number }) => {
             if (data.status === 'error') return;
-            setCurrentTick(data.tick);
+            setCurrentTick(data.data);
           })
           .catch((_err) => {});
 
@@ -132,9 +172,52 @@ export default function Layout({ children }: { children: ReactNode }) {
           })
           .catch((_err) => {});
       }, 1000);
+
+      slowInterval = setInterval(() => {
+        // Poll scoreboard data
+        fetch(`${CONFIG.MGMT_SERVER_URL}/info/teams`)
+          .then((res) => res.json())
+          .then(
+            (teamData: {
+              status: 'ok' | 'error';
+              data: { ip: string; name?: string }[];
+            }) => {
+              if (teamData.status === 'error') return;
+
+              fetch(`${CONFIG.MGMT_SERVER_URL}/info/services`)
+                .then((res) => res.json())
+                .then(
+                  (serviceData: {
+                    status: 'ok' | 'error';
+                    data: { name: string }[];
+                  }) => {
+                    if (serviceData.status === 'error') return;
+                    const services = Object.fromEntries(
+                      serviceData.data.map((service) => [
+                        service.name,
+                        SERVICE_STATUS.UP,
+                      ])
+                    );
+                    const scoreboardData = {
+                      teams: Object.fromEntries(
+                        teamData.data.map((team) => [
+                          team.ip,
+                          { ...team, services },
+                        ])
+                      ),
+                    };
+                    setScoreboardData(scoreboardData as ScoreboardType);
+                  }
+                )
+                .catch((_err) => {});
+            }
+          )
+          .catch((_err) => {});
+      }, 10000);
     }
     return () => {
-      clearInterval(interval);
+      clearInterval(fastInterval);
+      clearInterval(slowInterval);
       // newSocket.close();
     };
   }, [

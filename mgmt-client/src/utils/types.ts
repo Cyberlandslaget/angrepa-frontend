@@ -34,7 +34,7 @@ export type ScoreboardType = {
   teams: {
     [key: string]: {
       ip: string;
-      name: string;
+      name?: string;
       services: {
         [key: string]: number;
       };
