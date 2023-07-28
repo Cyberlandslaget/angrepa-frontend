@@ -1,7 +1,5 @@
 export const CONFIG = {
-  MGMT_SERVER_URL: import.meta.env.DEV
-    ? 'http://angrepa.cybl:8000'
-    : 'http://172.23.136.53:5000', //`http://${window.location.hostname}:5000`,
+  MGMT_SERVER_URL: 'http://angrepa.cybl:8000', //`http://${window.location.hostname}:5000`,
 };
 
 // Display constants
