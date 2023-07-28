@@ -42,12 +42,12 @@ export const removeSimpleDuplicates = (
         if (nexists) nnexists = nexists[chall?.target_tick || 0];
       }
 
-      if (
-        nnexists &&
-        FLAG_CODE[chall.status as FlagCodeType] >
+      if (nnexists) {
+        if (
+          FLAG_CODE[chall.status as FlagCodeType] >
           FLAG_CODE[nnexists.status as FlagCodeType]
-      ) {
-        nchalls[chall?.team][chall?.service][chall?.target_tick] = chall;
+        )
+          nchalls[chall?.team][chall?.service][chall?.target_tick] = chall;
       } else {
         nchalls[chall?.team][chall?.service][chall?.target_tick] = chall;
       }

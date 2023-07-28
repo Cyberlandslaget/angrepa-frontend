@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ExecutionType, FlagType, LoggingDisplayProps } from '../utils/types';
 import { useAtomValue } from 'jotai';
 import { sensorFlagAtom } from 'utils/atoms';
@@ -19,7 +19,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 const executionsDataParser = (data: ExecutionType) => {
   return (
     <div
-      className={`log Color grid gap-1 w-full h-full brightness-90 [grid-template-columns:1fr_9rem] items-center text-center text-sm ${
+      className={`log Color grid gap-1 w-full h-full brightness-90 [grid-template-columns:1fr_9.25rem] items-center text-center text-sm ${
         data.exit_code === 0 ? 'success' : 'error'
       }`}
     >
@@ -34,7 +34,7 @@ const executionsDataParser = (data: ExecutionType) => {
           {data.output}
         </p>
       </div>
-      <div className="grid [grid-template-columns:5.25rem_1fr] gap-1 pl-1">
+      <div className="grid [grid-template-columns:5.5rem_1fr] gap-1 pl-1">
         <span
           className="w-full rounded-sm truncate [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
           title={'Service'}
@@ -57,13 +57,10 @@ const executionsDataParser = (data: ExecutionType) => {
 const flagSubmissionDataParser = (data: FlagType, censor: boolean) => {
   return (
     <div
-      className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:8rem_3.5rem_2rem_1fr_3rem] items-center text-center text-sm ${
+      className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:3.25rem_2rem_4.75rem_5.5rem_1fr_3rem] items-center text-center text-sm ${
         data?.status ?? ''
       }`}
     >
-      <span className="secondaryColor rounded-sm py-[0.1rem]" title="Timestamp">
-        {new Date(data?.timestamp)?.getTime() ?? '?'}
-      </span>
       <span
         className="secondaryColor rounded-sm py-[0.1rem]"
         title="Execution ID"
@@ -75,6 +72,12 @@ const flagSubmissionDataParser = (data: FlagType, censor: boolean) => {
         title="Exploit ID"
       >
         {data.exploit_id}
+      </span>
+      <span className="secondaryColor rounded-sm py-[0.1rem]" title="Team">
+        {data.team ?? '?'}
+      </span>
+      <span className="secondaryColor rounded-sm py-[0.1rem]" title="Service">
+        {data.service ?? '?'}
       </span>
       <p className="text-left text-ellipsis whitespace-nowrap overflow-hidden pl-1 [color:var(--logBackgroundColor)]">
         {censor
@@ -100,13 +103,15 @@ const LoggingDisplay = ({
 }: LoggingDisplayProps) => {
   const [statusFilter, setStatusFilter] = React.useState<string[]>(filters);
 
-  const filterData =
-    data?.filter((d: unknown) =>
-      statusFilter.includes(String(d.status) || String(d.exit_code))
-    ) ?? [];
+  const filterData = useMemo(() => {
+    return (
+      data?.filter((d: unknown) =>
+        statusFilter.includes(String(d.status) || String(d.exit_code))
+      ) ?? []
+    );
+  }, [data]);
 
   const sensor = useAtomValue(sensorFlagAtom);
-
   const handleChange = (event: SelectChangeEvent<typeof statusFilter>) => {
     const {
       target: { value },
@@ -120,7 +125,6 @@ const LoggingDisplay = ({
       typeof value === 'string' ? value.split(',') : value
     );
   };
-
   const ITEM_HEIGHT = 48;
   const ITEM_PADDING_TOP = 8;
   const MenuProps = {

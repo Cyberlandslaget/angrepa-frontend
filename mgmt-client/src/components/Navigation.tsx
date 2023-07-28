@@ -18,7 +18,7 @@ const Navigation = ({ className = '' }) => {
   const currentTick = useAtomValue(currentTickAtom);
   const [sensorFlags, setSensorFlags] = useAtom(sensorFlagAtom);
   const flagLogLength = useAtomValue(flagLogLengthAtom);
-  const exploitLogLength = useAtomValue(executionLogLengthAtom);
+  const executionLogLength = useAtomValue(executionLogLengthAtom);
   const _navigate = useNavigate(); // This line enables component re-render on navigation
 
   return (
@@ -26,17 +26,19 @@ const Navigation = ({ className = '' }) => {
       className={`tertiaryColor w-full h-full p-2 rounded-md flex justify-between ${className}`}
     >
       <div className="flex items-center h-full gap-2">
-        <img src={Logo} alt="Skjeling logo" className="h-full" />
-        <h1 className="flex font-bold mr-4">Angrapa</h1>
+        <Link to={'/'} className="flex items-center h-full gap-2">
+          <img src={Logo} alt="Skjeling logo" className="h-full" />
+          <h1 className="flex font-bold mr-4">Angrepa</h1>
+        </Link>
         <div className="flex gap-2">
           <p className="flex px-3 py-[4px] text-xs rounded-sm bg-slate-950 bg-opacity-40">
             Tick: {currentTick}
           </p>
           <p
             className="flex px-3 py-[4px] text-xs rounded-sm bg-slate-950 bg-opacity-40"
-            title="Total angrapa runs logged"
+            title="Total executions logged"
           >
-            {exploitLogLength}
+            {executionLogLength}
           </p>
           <p
             className="flex px-3 py-[4px] text-xs rounded-sm bg-slate-950 bg-opacity-40"

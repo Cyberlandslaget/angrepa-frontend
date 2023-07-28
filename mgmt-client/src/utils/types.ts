@@ -3,10 +3,10 @@ import { FlagCode } from './enums';
 
 export type ExecutionType = {
   exploit_id: number;
-  finished_at: Date;
+  finished_at: string;
   id: number;
   output: string;
-  started_at: Date;
+  started_at: string;
   target_id: number;
   exit_code: number;
 
@@ -23,7 +23,7 @@ export type FlagType = {
   status: FlagCode;
   submitted: boolean;
   text: string;
-  timestamp: Date;
+  timestamp: string;
 
   service: string;
   target_tick: number;

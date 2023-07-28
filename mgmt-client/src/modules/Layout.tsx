@@ -16,6 +16,7 @@ import {
   FlagType,
   ScoreboardType,
 } from 'utils/types';
+import { toUnixTimestamp } from 'utils/utils';
 
 export default function Layout({ children }: { children: ReactNode }) {
   const [scoreboardData, setScoreboardData] = useAtom(scoreboardDataAtom);
@@ -23,60 +24,119 @@ export default function Layout({ children }: { children: ReactNode }) {
   const [executionLog, setExecutionLog] = useAtom(executionLogAtom);
   const [exploits, setExploits] = useAtom(exploitsAtom);
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [_, setCurrentTick] = useAtom(currentTickAtom);
+  const [currentTick, setCurrentTick] = useAtom(currentTickAtom);
 
   useEffect(() => {
     // const newSocket = io(`${CONFIG.MGMT_SERVER_URL}`);
     // setSocket(newSocket);
-    // if (!scoreboardData)
-    //   fetch(`${CONFIG.MGMT_SERVER_URL}/api/scoreboard`)
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    //       setScoreboardData(data as ScoreboardType);
-    //     })
-    //     .catch((_err) => {});
+    if (currentTick === 0)
+      fetch(`${CONFIG.MGMT_SERVER_URL}/info/internal_tick`)
+        .then((res) => res.json())
+        .then((data: { status: 'ok' | 'error'; tick: number }) => {
+          if (data.status === 'error') return;
+          setCurrentTick(data.tick);
+        })
+        .catch((_err) => {});
     if (!flagLog && executionLog)
       fetch(`${CONFIG.MGMT_SERVER_URL}/logs/flags`)
         .then((res) => res.json())
         .then((data: { status: 'ok' | 'error'; data: FlagType[] }) => {
-          const d = data.data.map((d) => {
-            const exec = executionLog.find((e) => e.id === d.execution_id);
-            return {
-              ...d,
-              service: exec?.service,
-              target_tick: exec?.target_tick,
-              team: exec?.team,
-            };
-          });
-          console.log(1, d[0]);
-          setFlagLog(d);
+          if (data.status === 'error') return;
+          setFlagLog(data.data);
         })
         .catch((_err) => {});
     if (!executionLog)
       fetch(`${CONFIG.MGMT_SERVER_URL}/logs/executions`)
         .then((res) => res.json())
-        .then((data: { status: 'ok' | 'error'; data: unknown[] }) => {
-          const d = data.data.map((d) => {
-            return {
-              ...d.execution,
-              service: d.target.service,
-              target_tick: d.target.target_tick,
-              team: d.target.team,
-            };
-          });
-          console.log(2, d[0]);
-          setExecutionLog(d as ExecutionType[]);
+        .then((data: { status: 'ok' | 'error'; data: ExecutionType[] }) => {
+          if (data.status === 'error') return;
+          setExecutionLog(data.data);
         })
         .catch((_err) => {});
     if (!exploits)
       fetch(`${CONFIG.MGMT_SERVER_URL}/logs/exploits`)
         .then((res) => res.json())
         .then((data: { status: 'ok' | 'error'; data: ExploitType[] }) => {
-          console.log(data.data);
+          if (data.status === 'error') return;
           setExploits(data.data);
         })
         .catch((_err) => {});
+
+    let interval: number;
+    if (
+      flagLog &&
+      flagLog.length > 0 &&
+      executionLog &&
+      executionLog.length > 0 &&
+      exploits
+    ) {
+      //Implementing the setInterval method
+      interval = setInterval(() => {
+        // Poll ticks
+        fetch(`${CONFIG.MGMT_SERVER_URL}/info/internal_tick`)
+          .then((res) => res.json())
+          .then((data: { status: 'ok' | 'error'; tick: number }) => {
+            if (data.status === 'error') return;
+            setCurrentTick(data.tick);
+          })
+          .catch((_err) => {});
+
+        // Poll flags
+        const test = `${
+          CONFIG.MGMT_SERVER_URL
+        }/logs/flags?since=${toUnixTimestamp(
+          flagLog[flagLog.length - 1]?.timestamp
+        )}`;
+        console.log(test);
+        fetch(test)
+          .then((res) => res.json())
+          .then((data: { status: 'ok' | 'error'; data: FlagType[] }) => {
+            if (data.status === 'error') return;
+            setFlagLog((flag) => {
+              const newData = data.data.filter(
+                (d) =>
+                  !flag?.find((s) => s.id === d.id) && String(d.status) !== ''
+              );
+              newData.sort((a, b) => {
+                if (a.id < b.id) return -1;
+                if (a.id > b.id) return 1;
+                return 0;
+              });
+              return [...(flag ?? []), ...newData];
+            });
+          })
+          .catch((_err) => {});
+
+        // Poll executions
+        fetch(
+          `${CONFIG.MGMT_SERVER_URL}/logs/executions?since=${toUnixTimestamp(
+            executionLog[executionLog.length - 1]?.started_at
+          )}`
+        )
+          .then((res) => res.json())
+          .then((data: { status: 'ok' | 'error'; data: ExecutionType[] }) => {
+            if (data.status === 'error') return;
+            setExecutionLog((ex) => {
+              const newData = data.data.filter(
+                (d) => !ex?.find((e) => e.id === d.id)
+              );
+              return [...(ex ?? []), ...newData];
+            });
+          })
+          .catch((_err) => {});
+
+        // Poll exploits
+        fetch(`${CONFIG.MGMT_SERVER_URL}/logs/exploits`)
+          .then((res) => res.json())
+          .then((data: { status: 'ok' | 'error'; data: ExploitType[] }) => {
+            if (data.status === 'error') return;
+            setExploits(data.data);
+          })
+          .catch((_err) => {});
+      }, 1000);
+    }
     return () => {
+      clearInterval(interval);
       // newSocket.close();
     };
   }, [
@@ -88,6 +148,8 @@ export default function Layout({ children }: { children: ReactNode }) {
     setScoreboardData,
     setFlagLog,
     flagLog,
+    setCurrentTick,
+    currentTick,
   ]);
 
   useEffect(() => {

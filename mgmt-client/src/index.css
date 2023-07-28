@@ -8,6 +8,20 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: 'fantasque_sans_monoregular';
+  src: url('fantasquesansmono-regular-webfont.eot');
+  src:
+    url('fantasquesansmono-regular-webfont.eot?#iefix')
+      format('embedded-opentype'),
+    url('fantasquesansmono-regular-webfont.woff') format('woff'),
+    url('fantasquesansmono-regular-webfont.ttf') format('truetype'),
+    url('fantasquesansmono-regular-webfont.svg#fantasque_sans_monoregular')
+      format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 :root {
   --primary: #5e35b1;
   --secondary: #0f192e;
@@ -24,7 +38,8 @@
   --yellowBg: #edda9b;
   --yellowText: #83611d;
 
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'fantasque_sans_monoregular', Inter, system-ui, Avenir, Helvetica,
+    Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 

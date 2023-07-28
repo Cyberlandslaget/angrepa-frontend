@@ -236,7 +236,7 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                         <List
                           height={height}
                           itemCount={currentTick}
-                          itemSize={28}
+                          itemSize={35 || 28}
                           width={width}
                           layout="horizontal"
                         >
@@ -260,10 +260,11 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                               {extendedSelection.type === ExtendedType.Team
                                 ? services.map((service) => (
                                     <p
+                                      title={currentTick - index}
                                       key={`service_${service}_extended_${
                                         currentTick - index
                                       }`}
-                                      className="flex h-[2.1rem] bg-slate-950 bg-opacity-20 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden"
+                                      className="flex justify-center items-center h-[2.1rem] bg-slate-950 bg-opacity-20 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden"
                                     >
                                       <SimpleOverview
                                         data={
