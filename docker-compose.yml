@@ -4,6 +4,4 @@ services:
     build: ./mgmt-client/
     ports:
       - "80:4173"
-    depends_on:
-      - web-server
     restart: unless-stopped
