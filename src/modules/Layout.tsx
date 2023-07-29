@@ -34,7 +34,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     // const newSocket = io(`${CONFIG.MGMT_SERVER_URL}`);
     // setSocket(newSocket);
     // First poll
-    const fourHoursAgo = Math.floor(new Date().getTime() / 1000) - 3600 * 5;
+    const fourHoursAgo = Math.floor(new Date().getTime() / 1000) - 3600 * 4;
     if (!scoreboardData)
       getScoreboardData()
         .then((data) => setScoreboardData(data))

@@ -1,5 +1,6 @@
 export const CONFIG = {
-  MGMT_SERVER_URL: 'http://angrepa.cybl:8000', //`http://${window.location.hostname}:5000`,
+  MGMT_SERVER_URL: 'http://angrepa.cybl:8000',
+  // MGMT_SERVER_URL: `http://${window.location.hostname}:8000`,
 };
 
 // Display constants
@@ -23,76 +24,6 @@ export const SERVICE_STATUS = {
 
 // Dummy data constants
 export const DUMMY_SCOREBOARD_DATA = {
-  currentTick: 6,
-  teams: {
-    1: {
-      name: 'organizers',
-      services: {
-        'dummy-web1': SERVICE_STATUS.UP,
-        'dummy-web2': SERVICE_STATUS.UP,
-        'dummy-binary1': SERVICE_STATUS.UP,
-        'dummy-binary2': SERVICE_STATUS.UP,
-        'pirate-birthday': SERVICE_STATUS.UP,
-        test1: SERVICE_STATUS.UP,
-        test2: SERVICE_STATUS.UP,
-        test3: SERVICE_STATUS.UP,
-      },
-    },
-    2: {
-      name: 'fibonhack',
-      services: {
-        'dummy-web1': SERVICE_STATUS.UP,
-        'dummy-web2': SERVICE_STATUS.UP,
-        'dummy-binary1': SERVICE_STATUS.UP,
-        'dummy-binary2': SERVICE_STATUS.UP,
-        'pirate-birthday': SERVICE_STATUS.UP,
-        test1: SERVICE_STATUS.UP,
-        test2: SERVICE_STATUS.UP,
-        test3: SERVICE_STATUS.UP,
-      },
-    },
-    3: {
-      name: 'WaterPaddler',
-      services: {
-        'dummy-web1': SERVICE_STATUS.UP,
-        'dummy-web2': SERVICE_STATUS.UP,
-        'dummy-binary1': SERVICE_STATUS.UP,
-        'dummy-binary2': SERVICE_STATUS.UP,
-        'pirate-birthday': SERVICE_STATUS.UP,
-        test1: SERVICE_STATUS.UP,
-        test2: SERVICE_STATUS.UP,
-        test3: SERVICE_STATUS.UP,
-      },
-    },
-    4: {
-      name: 'printer toner level: 90%',
-      services: {
-        'dummy-web1': SERVICE_STATUS.UP,
-        'dummy-web2': SERVICE_STATUS.UP,
-        'dummy-binary1': SERVICE_STATUS.UP,
-        'dummy-binary2': SERVICE_STATUS.UP,
-        'pirate-birthday': SERVICE_STATUS.UP,
-        test1: SERVICE_STATUS.UP,
-        test2: SERVICE_STATUS.UP,
-        test3: SERVICE_STATUS.UP,
-      },
-    },
-    5: {
-      name: 'bootplug',
-      services: {
-        'dummy-web1': SERVICE_STATUS.UP,
-        'dummy-web2': SERVICE_STATUS.FAULTY,
-        'dummy-binary1': SERVICE_STATUS.UP,
-        'dummy-binary2': SERVICE_STATUS.RECOVERING,
-        'pirate-birthday': SERVICE_STATUS.FLAG_NOT_FOUND,
-        test1: SERVICE_STATUS.UP,
-        test2: SERVICE_STATUS.UP,
-        test3: SERVICE_STATUS.UP,
-      },
-    },
-  },
-};
-export const DUMMY_TEAMS_DATA = {
   teams: {
     '10.0.1.1': {
       ip: '10.0.1.1',
