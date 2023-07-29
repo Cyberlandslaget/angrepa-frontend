@@ -11,6 +11,4 @@ RUN npm install --silent --force
 
 RUN npm run build
 
-RUN mv /app/dist/fantasquesansmono-regular-webfont.woff /app/dist/assets/fantasquesansmono-regular-webfont.woff
-
 CMD ["npm", "run", "preview"]
