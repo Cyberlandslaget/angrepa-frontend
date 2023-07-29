@@ -1,3 +1,8 @@
+import getScoreboardData from 'api/informations/getScoreboardData';
+import getTicks from 'api/informations/getTicks';
+import getExecutions from 'api/logs/getExecutions';
+import getExploits from 'api/logs/getExploits';
+import getFlags from 'api/logs/getFlags';
 import Navigation from 'components/Navigation';
 import { useAtom } from 'jotai';
 import { ReactNode, useEffect, useState } from 'react';
@@ -9,7 +14,6 @@ import {
   scoreboardDataAtom,
   flagLogAtom,
 } from 'utils/atoms';
-import { CONFIG, SERVICE_STATUS } from 'utils/constants';
 import {
   ExecutionType,
   ExploitType,
@@ -29,77 +33,28 @@ export default function Layout({ children }: { children: ReactNode }) {
   useEffect(() => {
     // const newSocket = io(`${CONFIG.MGMT_SERVER_URL}`);
     // setSocket(newSocket);
+    // First poll
+    const fourHoursAgo = Math.floor(new Date().getTime() / 1000) - 3600 * 5;
     if (!scoreboardData)
-      fetch(`${CONFIG.MGMT_SERVER_URL}/info/teams`)
-        .then((res) => res.json())
-        .then(
-          (teamData: {
-            status: 'ok' | 'error';
-            data: { ip: string; name?: string }[];
-          }) => {
-            if (teamData.status === 'error') return;
-
-            fetch(`${CONFIG.MGMT_SERVER_URL}/info/services`)
-              .then((res) => res.json())
-              .then(
-                (serviceData: {
-                  status: 'ok' | 'error';
-                  data: { name: string }[];
-                }) => {
-                  if (serviceData.status === 'error') return;
-                  const services = Object.fromEntries(
-                    serviceData.data.map((service) => [
-                      service.name,
-                      SERVICE_STATUS.UP,
-                    ])
-                  );
-                  const scoreboardData = {
-                    teams: Object.fromEntries(
-                      teamData.data.map((team) => [
-                        team.ip,
-                        { ...team, services },
-                      ])
-                    ),
-                  };
-                  setScoreboardData(scoreboardData as ScoreboardType);
-                }
-              )
-              .catch((_err) => {});
-          }
-        )
-        .catch((_err) => {});
+      getScoreboardData()
+        .then((data) => setScoreboardData(data))
+        .catch((_e) => {});
     if (currentTick === 0)
-      fetch(`${CONFIG.MGMT_SERVER_URL}/info/internal_tick`)
-        .then((res) => res.json())
-        .then((data: { status: 'ok' | 'error'; data: number }) => {
-          if (data.status === 'error') return;
-          setCurrentTick(data.data);
-        })
-        .catch((_err) => {});
-    if (!flagLog && executionLog)
-      fetch(`${CONFIG.MGMT_SERVER_URL}/logs/flags`)
-        .then((res) => res.json())
-        .then((data: { status: 'ok' | 'error'; data: FlagType[] }) => {
-          if (data.status === 'error') return;
-          setFlagLog(data.data);
-        })
-        .catch((_err) => {});
+      getTicks()
+        .then((data) => setCurrentTick(data))
+        .catch((_e) => {});
     if (!executionLog)
-      fetch(`${CONFIG.MGMT_SERVER_URL}/logs/executions`)
-        .then((res) => res.json())
-        .then((data: { status: 'ok' | 'error'; data: ExecutionType[] }) => {
-          if (data.status === 'error') return;
-          setExecutionLog(data.data);
-        })
-        .catch((_err) => {});
+      getExecutions(fourHoursAgo)
+        .then((data) => setExecutionLog(data))
+        .catch((_e) => {});
+    if (!flagLog && executionLog)
+      getFlags(fourHoursAgo)
+        .then((data) => setFlagLog(data))
+        .catch((_e) => {});
     if (!exploits)
-      fetch(`${CONFIG.MGMT_SERVER_URL}/logs/exploits`)
-        .then((res) => res.json())
-        .then((data: { status: 'ok' | 'error'; data: ExploitType[] }) => {
-          if (data.status === 'error') return;
-          setExploits(data.data);
-        })
-        .catch((_err) => {});
+      getExploits()
+        .then((data) => setExploits(data))
+        .catch((_e) => {});
 
     let fastInterval: number;
     let slowInterval: number;
@@ -113,106 +68,50 @@ export default function Layout({ children }: { children: ReactNode }) {
       //Implementing the setInterval method
       fastInterval = setInterval(() => {
         // Poll ticks
-        fetch(`${CONFIG.MGMT_SERVER_URL}/info/internal_tick`)
-          .then((res) => res.json())
-          .then((data: { status: 'ok' | 'error'; data: number }) => {
-            if (data.status === 'error') return;
-            setCurrentTick(data.data);
-          })
-          .catch((_err) => {});
-
-        // Poll flags
-        fetch(
-          `${CONFIG.MGMT_SERVER_URL}/logs/flags?since=${toUnixTimestamp(
-            flagLog[flagLog.length - 10]?.timestamp
-          )}`
+        getTicks()
+          .then((data) => setCurrentTick(data))
+          .catch((_e) => {});
+        // Poll executions
+        getExecutions(
+          toUnixTimestamp(executionLog[executionLog.length - 1]?.started_at)
         )
-          .then((res) => res.json())
-          .then((data: { status: 'ok' | 'error'; data: FlagType[] }) => {
-            if (data.status === 'error') return;
+          .then((data) => {
+            setExecutionLog((ex) => {
+              const newData = data?.filter(
+                (d) => !ex?.find((e) => e.id === d.id)
+              );
+              return [...(ex ?? []), ...(newData ?? [])];
+            });
+          })
+          .catch((_e) => {});
+        // Poll flags
+        getFlags(toUnixTimestamp(flagLog[flagLog.length - 10]?.timestamp))
+          .then((data) => {
             setFlagLog((flag) => {
-              const newData = data.data.filter(
+              const newData = data?.filter(
                 (d) =>
                   !flag?.find((s) => s.id === d.id) && String(d.status) !== ''
               );
-              newData.sort((a, b) => {
+              newData?.sort((a, b) => {
                 if (a.id < b.id) return -1;
                 if (a.id > b.id) return 1;
                 return 0;
               });
-              return [...(flag ?? []), ...newData];
+              return [...(flag ?? []), ...(newData ?? [])];
             });
           })
-          .catch((_err) => {});
-
-        // Poll executions
-        fetch(
-          `${CONFIG.MGMT_SERVER_URL}/logs/executions?since=${toUnixTimestamp(
-            executionLog[executionLog.length - 1]?.started_at
-          )}`
-        )
-          .then((res) => res.json())
-          .then((data: { status: 'ok' | 'error'; data: ExecutionType[] }) => {
-            if (data.status === 'error') return;
-            setExecutionLog((ex) => {
-              const newData = data.data.filter(
-                (d) => !ex?.find((e) => e.id === d.id)
-              );
-              return [...(ex ?? []), ...newData];
-            });
-          })
-          .catch((_err) => {});
-
+          .catch((_e) => {});
         // Poll exploits
-        fetch(`${CONFIG.MGMT_SERVER_URL}/logs/exploits`)
-          .then((res) => res.json())
-          .then((data: { status: 'ok' | 'error'; data: ExploitType[] }) => {
-            if (data.status === 'error') return;
-            setExploits(data.data);
-          })
-          .catch((_err) => {});
+        getExploits()
+          .then((data) => setExploits(data))
+          .catch((_e) => {});
       }, 1000);
 
       slowInterval = setInterval(() => {
         // Poll scoreboard data
-        fetch(`${CONFIG.MGMT_SERVER_URL}/info/teams`)
-          .then((res) => res.json())
-          .then(
-            (teamData: {
-              status: 'ok' | 'error';
-              data: { ip: string; name?: string }[];
-            }) => {
-              if (teamData.status === 'error') return;
-
-              fetch(`${CONFIG.MGMT_SERVER_URL}/info/services`)
-                .then((res) => res.json())
-                .then(
-                  (serviceData: {
-                    status: 'ok' | 'error';
-                    data: { name: string }[];
-                  }) => {
-                    if (serviceData.status === 'error') return;
-                    const services = Object.fromEntries(
-                      serviceData.data.map((service) => [
-                        service.name,
-                        SERVICE_STATUS.UP,
-                      ])
-                    );
-                    const scoreboardData = {
-                      teams: Object.fromEntries(
-                        teamData.data.map((team) => [
-                          team.ip,
-                          { ...team, services },
-                        ])
-                      ),
-                    };
-                    setScoreboardData(scoreboardData as ScoreboardType);
-                  }
-                )
-                .catch((_err) => {});
-            }
-          )
-          .catch((_err) => {});
+        getScoreboardData()
+          .then((data) => setScoreboardData(data))
+          .catch((_e) => {});
       }, 10000);
     }
     return () => {
