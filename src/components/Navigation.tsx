@@ -26,7 +26,7 @@ const Navigation = ({ className = '' }) => {
       className={`tertiaryColor w-full h-full p-2 rounded-md flex justify-between ${className}`}
     >
       <div className="flex items-center h-full gap-2">
-        <Link to={'/'} className="flex items-center h-full gap-2">
+        <Link to={'/'} className="flex items-center h-full gap-2 max-w-[8rem]">
           <img src={Logo} alt="Skjeling logo" className="h-full" />
           <h1 className="flex font-bold mr-4">Angrepa</h1>
         </Link>
