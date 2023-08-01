@@ -1,3 +1,5 @@
+import { File } from './types';
+
 export const CONFIG = {
   MGMT_SERVER_URL: 'http://angrepa.cybl:8000',
   // MGMT_SERVER_URL: `http://${window.location.hostname}:8000`,
@@ -21,6 +23,17 @@ export const SERVICE_STATUS = {
   RECOVERING: 4,
   UNKNOWN: -1,
 };
+
+export const DEFAULT_CONFIG_JSON = () =>
+  ({
+    name: 'config.json',
+    data: new TextEncoder().encode(`{
+  "name": "test",
+  "service": "testservice",
+  "blacklist": [],
+  "pool": 1
+}`),
+  }) as File;
 
 // Dummy data constants
 export const DUMMY_SCOREBOARD_DATA = {
