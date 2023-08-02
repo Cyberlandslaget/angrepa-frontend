@@ -54,11 +54,19 @@ const executionsDataParser = (data: ExecutionType) => {
     </div>
   );
 };
-const flagSubmissionDataParser = (data: FlagType, censor: boolean) => {
+const flagSubmissionDataParser = (
+  data: FlagType,
+  censor: boolean,
+  showService = true
+) => {
   return (
     <div
-      className={`log grid gap-1 w-full h-full brightness-90 [grid-template-columns:3.25rem_2rem_4.75rem_5.5rem_1fr_3rem] items-center text-center text-sm ${
+      className={`log grid gap-1 w-full h-full brightness-90 items-center text-center text-sm ${
         data?.status ?? ''
+      } ${
+        showService
+          ? '[grid-template-columns:3.75rem_3.75rem_2rem_4.75rem_5.5rem_1fr_3rem]'
+          : '[grid-template-columns:3.75rem_3.75rem_2rem_4.75rem_1fr_3rem]'
       }`}
     >
       <span
@@ -66,6 +74,9 @@ const flagSubmissionDataParser = (data: FlagType, censor: boolean) => {
         title="Execution ID"
       >
         {data.execution_id}
+      </span>
+      <span className="px-2 rounded-sm secondaryColor" title="Tick">
+        {data.target_tick}
       </span>
       <span
         className="secondaryColor rounded-sm py-[0.1rem]"
@@ -76,9 +87,11 @@ const flagSubmissionDataParser = (data: FlagType, censor: boolean) => {
       <span className="secondaryColor rounded-sm py-[0.1rem]" title="Team">
         {data.team ?? '?'}
       </span>
-      <span className="secondaryColor rounded-sm py-[0.1rem]" title="Service">
-        {data.service ?? '?'}
-      </span>
+      {showService && (
+        <span className="secondaryColor rounded-sm py-[0.1rem]" title="Service">
+          {data.service ?? '?'}
+        </span>
+      )}
       <p className="text-left text-ellipsis whitespace-nowrap overflow-hidden pl-1 [color:var(--logBackgroundColor)]">
         {censor
           ? (data.text?.substring(0, data.text?.length - 8) || '') +
@@ -100,6 +113,7 @@ const LoggingDisplay = ({
   parser,
   extended,
   filters,
+  showService = true,
 }: LoggingDisplayProps) => {
   const [statusFilter, setStatusFilter] = React.useState<string[]>(filters);
 
@@ -233,7 +247,8 @@ const LoggingDisplay = ({
                   {parser === 'submission'
                     ? flagSubmissionDataParser(
                         filterData[filterData.length - 1 - index],
-                        sensor
+                        sensor,
+                        showService
                       )
                     : executionsDataParser(
                         filterData[filterData.length - 1 - index]

@@ -70,6 +70,7 @@ export default function Home() {
           parser={'exploit'}
           extended={fullscreen === HomePanelEnum.Runner}
           filters={['success', 'info', 'error', 'undefined']}
+          showService
         />
       </PinButtonsWrapper>
 

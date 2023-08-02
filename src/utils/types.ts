@@ -47,6 +47,7 @@ export type LoggingDisplayProps = {
   parser: 'exploit' | 'submission';
   extended: boolean;
   filters: string[];
+  showService: boolean;
 };
 
 export type FlagCodeType = keyof typeof FLAG_CODE;
