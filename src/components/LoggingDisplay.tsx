@@ -80,10 +80,11 @@ const flagSubmissionDataParser = (data: FlagType, censor: boolean) => {
         {data.service ?? '?'}
       </span>
       <p className="text-left text-ellipsis whitespace-nowrap overflow-hidden pl-1 [color:var(--logBackgroundColor)]">
-        {censor
+        {/* {censor
           ? (data.text?.substring(0, data.text?.length - 8) || '') +
             'x'.repeat(8)
-          : data.text}
+          : data.text} */}
+        <span className={censor ? 'blur-[2px]' : ''}>{data.text}</span>
       </p>
       <span
         className="rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"

@@ -20,6 +20,10 @@ export default function Home() {
   const executionLog = useAtomValue(executionLogAtom);
   const [pin, setPin] = useState(HomePanelEnum.Simple);
   const [fullscreen, setFullscreen] = useState<HomePanelEnum | null>(null);
+  const [modal, setModal] = useState<{
+    data: ExecutionType | null;
+    visible: boolean;
+  }>({ data: null, visible: false });
   const resizableRef = useRef<HTMLElement | null>(null);
   const { setActiveHandler } = useResizeableComponent(resizableRef);
 
@@ -30,8 +34,10 @@ export default function Home() {
     if (fullscreen === display) setFullscreen(null);
     else setFullscreen(display);
   };
-  const showDetailedLog = (log: ExecutionType) => {
+  const showDetailedLog = (data: unknown) => {
+    const log = data as ExecutionType;
     console.log(log);
+    setModal({ data: log, visible: true });
   };
 
   return (
@@ -99,6 +105,58 @@ export default function Home() {
           filters={Object.keys(FLAG_CODE)}
         />
       </PinButtonsWrapper>
+
+      {/* MODAL VIEW WIP */}
+      <div
+        className={`absolute top-0 left-0 w-full h-full backdrop-blur-[3px] bg-[rgba(0,0,0,0.2)] z-50 transition-all ${
+          modal.visible
+            ? 'opacity-1 pointer-events-auto'
+            : 'opacity-0 pointer-events-none'
+        }`}
+      >
+        <div
+          className="bg-opacity-10 w-full h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+          onClick={() => setModal((modal) => ({ ...modal, visible: false }))}
+        ></div>
+        <div
+          className={`secondaryColor border-2 border-white border-opacity-30 p-3 rounded-md shadow-2xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10/12 h-4/6 flex flex-col gap-2`}
+        >
+          <div className="flex justify-end h-6">
+            <button
+              className="bg-black rounded-sm text-xs px-5"
+              onClick={() =>
+                setModal((modal) => ({ ...modal, visible: false }))
+              }
+            >
+              close
+            </button>
+          </div>
+          {modal.data && (
+            <>
+              <div className="flex gap-3 w-full h-[calc(100%-1.5rem)]">
+                <div className="w-1/4 rounded-md tertiaryColor text-sm">
+                  <p>ID: {modal.data.id}</p>
+                  <p>Exploit ID: {modal.data.exploit_id}</p>
+                  <p>Target ID: {modal.data.target_id}</p>
+                  <p>Exit code: {modal.data.exit_code}</p>
+                  <p>Service: {modal.data.service}</p>
+                  <p>Team: {modal.data.team}</p>
+                  <p>Started at: {modal.data.started_at}</p>
+                  <p>Finished at: {modal.data.finished_at}</p>
+                </div>
+
+                <textarea
+                  className={
+                    'text-sm p-2 rounded-md tertiaryColor w-full h-full resize-none focus-visible:outline-none'
+                  }
+                  value={modal.data.output}
+                  readOnly
+                />
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </main>
   );
 }
