@@ -186,13 +186,18 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
       ></div>
 
       {extended && extendedSelection.type !== null && (
-        <div className="tertiaryColor w-full h-full rounded-md overflow-auto">
+        <div className="tertiaryColor relative w-full h-full rounded-md overflow-auto">
           <div className={`flex flex-col rounded-md`}>
             <h2 className="text-center font-semibold text-xl mt-1 mb-3">
               {extendedSelection.type === ExtendedType.Team
                 ? teams[Number(extendedSelection.selection)][1].name
                 : extendedSelection.selection}
             </h2>
+            <div className="absolute right-3 top-2">
+              <select className="text-black" name="" id="">
+                <option value="test">Test</option>
+              </select>
+            </div>
 
             <div className="relative grid [grid-template-columns:11.75rem_1fr] gap-2 min-h-0">
               <div className="flex flex-col gap-1">

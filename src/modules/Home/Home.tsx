@@ -106,7 +106,7 @@ export default function Home() {
         />
       </PinButtonsWrapper>
 
-      {/* MODAL VIEW WIP */}
+      {/* TODO: Move this to it's own component and redo the layout */}
       <div
         className={`absolute top-0 left-0 w-full h-full backdrop-blur-[3px] bg-[rgba(0,0,0,0.2)] z-50 transition-all ${
           modal.visible
@@ -119,7 +119,7 @@ export default function Home() {
           onClick={() => setModal((modal) => ({ ...modal, visible: false }))}
         ></div>
         <div
-          className={`secondaryColor border-2 border-white border-opacity-30 p-3 rounded-md shadow-2xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10/12 h-4/6 flex flex-col gap-2`}
+          className={`secondaryColor border-2 border-white border-opacity-4s0 p-3 rounded-md shadow-2xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10/12 h-4/6 flex flex-col gap-2`}
         >
           <div className="flex justify-end h-6">
             <button
