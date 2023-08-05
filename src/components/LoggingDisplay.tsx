@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { ExecutionType, FlagType, LoggingDisplayProps } from '../utils/types';
+import { ExecutionType, FlagType } from '../utils/types';
 import { useAtomValue } from 'jotai';
 import { sensorFlagAtom } from 'utils/atoms';
 import {
@@ -94,12 +94,19 @@ const flagSubmissionDataParser = (data: FlagType, censor: boolean) => {
     </div>
   );
 };
-
+type LoggingDisplayProps = {
+  data: FlagType[] | ExecutionType[];
+  parser: 'exploit' | 'submission';
+  extended: boolean;
+  filters: string[];
+  onClick?: (data: unknown) => void;
+};
 const LoggingDisplay = ({
   data,
   parser,
   extended,
   filters,
+  onClick,
 }: LoggingDisplayProps) => {
   const [statusFilter, setStatusFilter] = React.useState<string[]>(filters);
 
@@ -230,7 +237,18 @@ const LoggingDisplay = ({
               width={width}
             >
               {({ index, style }) => (
-                <div style={{ ...style }}>
+                <div
+                  style={{ ...style }}
+                  className={
+                    onClick
+                      ? 'hover:brightness-125 hover:bg-[var(--secondary)] cursor-pointer transition-all duration-150'
+                      : ''
+                  }
+                  onClick={() => {
+                    if (onClick)
+                      onClick(filterData[filterData.length - 1 - index]);
+                  }}
+                >
                   {parser === 'submission'
                     ? flagSubmissionDataParser(
                         filterData[filterData.length - 1 - index] as FlagType,

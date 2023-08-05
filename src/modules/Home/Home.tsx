@@ -30,6 +30,9 @@ export default function Home() {
     if (fullscreen === display) setFullscreen(null);
     else setFullscreen(display);
   };
+  const showDetailedLog = (log: ExecutionType) => {
+    console.log(log);
+  };
 
   return (
     <main
@@ -71,6 +74,7 @@ export default function Home() {
           parser={'exploit'}
           extended={fullscreen === HomePanelEnum.Runner}
           filters={['0', '1', '2', '3']}
+          onClick={showDetailedLog}
         />
       </PinButtonsWrapper>
 

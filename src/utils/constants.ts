@@ -30,6 +30,7 @@ export const DUMMY_SCOREBOARD_DATA = {
       name: 'NOP',
       services: {
         testservice: SERVICE_STATUS.UP,
+        new_testservice: SERVICE_STATUS.UP,
       },
     },
     '10.0.2.1': {
@@ -37,6 +38,7 @@ export const DUMMY_SCOREBOARD_DATA = {
       name: 'Cyberlandslaget',
       services: {
         testservice: SERVICE_STATUS.UP,
+        new_testservice: SERVICE_STATUS.UP,
       },
     },
     '10.0.3.1': {
@@ -44,6 +46,7 @@ export const DUMMY_SCOREBOARD_DATA = {
       name: 'Iku-toppene',
       services: {
         testservice: SERVICE_STATUS.UP,
+        new_testservice: SERVICE_STATUS.UP,
       },
     },
     '10.0.4.1': {
@@ -51,6 +54,7 @@ export const DUMMY_SCOREBOARD_DATA = {
       name: 'Bootplug',
       services: {
         testservice: SERVICE_STATUS.UP,
+        new_testservice: SERVICE_STATUS.UP,
       },
     },
     '10.0.5.1': {
@@ -58,6 +62,7 @@ export const DUMMY_SCOREBOARD_DATA = {
       name: 'Corax',
       services: {
         testservice: SERVICE_STATUS.UP,
+        new_testservice: SERVICE_STATUS.UP,
       },
     },
     '10.0.6.1': {
@@ -65,6 +70,7 @@ export const DUMMY_SCOREBOARD_DATA = {
       name: 'RumbleInTheJungle',
       services: {
         testservice: SERVICE_STATUS.UP,
+        new_testservice: SERVICE_STATUS.UP,
       },
     },
     '10.0.7.1': {
@@ -72,6 +78,7 @@ export const DUMMY_SCOREBOARD_DATA = {
       name: 'coldboots',
       services: {
         testservice: SERVICE_STATUS.UP,
+        new_testservice: SERVICE_STATUS.UP,
       },
     },
     '10.0.8.1': {
@@ -79,6 +86,7 @@ export const DUMMY_SCOREBOARD_DATA = {
       name: 'Norske Nøkkelsnikere',
       services: {
         testservice: SERVICE_STATUS.UP,
+        new_testservice: SERVICE_STATUS.UP,
       },
     },
     '10.0.9.1': {
@@ -86,6 +94,7 @@ export const DUMMY_SCOREBOARD_DATA = {
       name: 'EPT',
       services: {
         testservice: SERVICE_STATUS.UP,
+        new_testservice: SERVICE_STATUS.UP,
       },
     },
     '10.0.10.1': {
@@ -93,6 +102,7 @@ export const DUMMY_SCOREBOARD_DATA = {
       name: 'mode13h',
       services: {
         testservice: SERVICE_STATUS.UP,
+        new_testservice: SERVICE_STATUS.UP,
       },
     },
   },

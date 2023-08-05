@@ -97,7 +97,7 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
               <div
                 key={`team_${team[0]}_overview`}
                 id={team[0]}
-                className={`flex items-center text-sm p-2 h-[2.1rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm transition-all ${
+                className={`flex items-center text-sm p-2 h-[2.1rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm transition-all duration-150 ${
                   extended
                     ? 'hover:brightness-125 hover:bg-opacity-80 cursor-pointer'
                     : ''
@@ -129,7 +129,7 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                 className="flex flex-col gap-1"
               >
                 <p
-                  className={`flex w-44 mb-1 items-center justify-center font-bold text-sm p-2 h-[2.1rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden transition-all ${
+                  className={`flex w-44 mb-1 items-center justify-center font-bold text-sm p-2 h-[2.1rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden transition-all duration-150 ${
                     extended
                       ? 'hover:brightness-125 hover:bg-opacity-80 cursor-pointer'
                       : ''

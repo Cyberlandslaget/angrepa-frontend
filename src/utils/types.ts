@@ -44,13 +44,6 @@ export type ScoreboardType = {
   };
 };
 
-export type LoggingDisplayProps = {
-  data: FlagType[] | ExecutionType[];
-  parser: 'exploit' | 'submission';
-  extended: boolean;
-  filters: string[];
-};
-
 export type File = {
   name: string;
   data: ArrayBuffer;
