@@ -35,7 +35,7 @@ export default function useTar() {
     return await generateTar(currentFiles);
   };
 
-  const setTar = async (tar: ArrayBuffer) => {
+  const _setTar = async (tar: ArrayBuffer) => {
     const files = await parseTar(tar);
     setCurrentFiles(files);
   };

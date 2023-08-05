@@ -11,9 +11,7 @@ import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 type Data = {
-  [key: string]: {
-    [key: string]: FlagType;
-  };
+  [key: number]: FlagType;
 };
 type SimpleOverviewProps = {
   data: Data;
@@ -96,10 +94,10 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
               Team
             </p>
             {teams.map((team, teamIndex) => (
-              <p
+              <div
                 key={`team_${team[0]}_overview`}
                 id={team[0]}
-                className={`flex items-center text-sm p-2 h-[2.1rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden transition-all ${
+                className={`flex items-center text-sm p-2 h-[2.1rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm transition-all ${
                   extended
                     ? 'hover:brightness-125 hover:bg-opacity-80 cursor-pointer'
                     : ''
@@ -108,7 +106,7 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                     ? '!bg-opacity-90'
                     : ''
                 }`}
-                title={team[0]}
+                title={`[${team[0]}] ${team[1].name ?? ''}`}
                 onClick={() => {
                   if (!extended) return;
                   setExtendedSelection({
@@ -117,8 +115,10 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                   });
                 }}
               >
-                [{team[0]}] {team[1].name}
-              </p>
+                <p className="truncate">
+                  [{team[0]}] {team[1].name}
+                </p>
+              </div>
             ))}
           </div>
 
@@ -260,7 +260,7 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                               {extendedSelection.type === ExtendedType.Team
                                 ? services.map((service) => (
                                     <p
-                                      title={currentTick - index}
+                                      title={String(currentTick - index)}
                                       key={`service_${service}_extended_${
                                         currentTick - index
                                       }`}

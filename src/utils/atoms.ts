@@ -11,7 +11,7 @@ import { File } from './types';
 
 export const pagingSelectionAtom = atom('All');
 
-export const currentTickAtom = atom(0);
+export const currentTickAtom = atom(5);
 export const scoreboardDataAtom = atom<ScoreboardType | null>(null);
 export const flagLogAtom = atom<FlagType[] | null>(null);
 export const executionLogAtom = atom<ExecutionType[] | null>(null);

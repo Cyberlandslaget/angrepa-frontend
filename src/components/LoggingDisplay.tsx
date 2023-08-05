@@ -36,7 +36,7 @@ const executionsDataParser = (data: ExecutionType) => {
       </div>
       <div className="grid [grid-template-columns:5.5rem_1fr] gap-1 pl-1">
         <span
-          className="w-full rounded-sm truncate [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
+          className="w-full rounded-sm truncate secondaryColor"
           title={'Service'}
         >
           {data.service}
@@ -104,12 +104,13 @@ const LoggingDisplay = ({
   const [statusFilter, setStatusFilter] = React.useState<string[]>(filters);
 
   const filterData = useMemo(() => {
-    return (
-      data?.filter((d: unknown) =>
-        statusFilter.includes(String(d.status) || String(d.exit_code))
-      ) ?? []
-    );
-  }, [data]);
+    return (data as unknown[])?.filter((d) => {
+      const status = String((d as FlagType).status);
+      return statusFilter.includes(
+        status != 'undefined' ? status : String((d as ExecutionType).exit_code)
+      );
+    });
+  }, [data, statusFilter]);
 
   const sensor = useAtomValue(sensorFlagAtom);
   const handleChange = (event: SelectChangeEvent<typeof statusFilter>) => {
@@ -232,11 +233,13 @@ const LoggingDisplay = ({
                 <div style={{ ...style }}>
                   {parser === 'submission'
                     ? flagSubmissionDataParser(
-                        filterData[filterData.length - 1 - index],
+                        filterData[filterData.length - 1 - index] as FlagType,
                         sensor
                       )
                     : executionsDataParser(
-                        filterData[filterData.length - 1 - index]
+                        filterData[
+                          filterData.length - 1 - index
+                        ] as ExecutionType
                       )}
                 </div>
               )}

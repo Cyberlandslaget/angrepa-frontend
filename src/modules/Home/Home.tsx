@@ -12,6 +12,7 @@ import PinButtonsWrapper from 'components/PinButtonsWrapper';
 import useResizeableComponent from 'utils/useResizeableComponent';
 import { executionLogAtom, scoreboardDataAtom, flagLogAtom } from 'utils/atoms';
 import { useAtomValue } from 'jotai';
+import { ExecutionType, FlagType } from 'utils/types';
 
 export default function Home() {
   const scoreboardData = useAtomValue(scoreboardDataAtom);
@@ -46,7 +47,7 @@ export default function Home() {
           extended={fullscreen === HomePanelEnum.Simple}
           data={{
             scoreboard: scoreboardData || DUMMY_SCOREBOARD_DATA,
-            flag: flagLog || DUMMY_FLAGSUBMISSION_LOG,
+            flag: flagLog || (DUMMY_FLAGSUBMISSION_LOG as FlagType[]),
           }}
         />
       </PinButtonsWrapper>
@@ -66,10 +67,10 @@ export default function Home() {
         updatePin={() => updatePin(HomePanelEnum.Runner)}
       >
         <LoggingDisplay
-          data={executionLog || DUMMY_EXPLOIT_LOG}
+          data={executionLog || (DUMMY_EXPLOIT_LOG as ExecutionType[])}
           parser={'exploit'}
           extended={fullscreen === HomePanelEnum.Runner}
-          filters={['success', 'info', 'error', 'undefined']}
+          filters={['0', '1', '2', '3']}
         />
       </PinButtonsWrapper>
 
@@ -88,7 +89,7 @@ export default function Home() {
         updatePin={() => updatePin(HomePanelEnum.Submission)}
       >
         <LoggingDisplay
-          data={flagLog || DUMMY_FLAGSUBMISSION_LOG}
+          data={flagLog || (DUMMY_FLAGSUBMISSION_LOG as FlagType[])}
           parser={'submission'}
           extended={fullscreen === HomePanelEnum.Submission}
           filters={Object.keys(FLAG_CODE)}

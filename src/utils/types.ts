@@ -1,14 +1,16 @@
 import { FLAG_CODE, SERVICE_STATUS } from './constants';
-import { FlagCode } from './enums';
+
+export type FlagCodeType = keyof typeof FLAG_CODE;
+export type ServiceStatusType = keyof typeof SERVICE_STATUS;
 
 export type ExecutionType = {
-  exploit_id: number;
-  finished_at: string;
   id: number;
+  exploit_id: number;
   output: string;
-  started_at: string;
-  target_id: number;
   exit_code: number;
+  started_at: string;
+  finished_at: string;
+  target_id: number;
 
   service: string;
   target_tick: number;
@@ -17,13 +19,13 @@ export type ExecutionType = {
 
 // export type FlagCodeType = `${FlagCode}`;
 export type FlagType = {
+  id: number;
+  text: string;
+  status: FlagCodeType;
+  submitted: boolean;
+  timestamp: string;
   execution_id: number;
   exploit_id: number;
-  id: number;
-  status: FlagCode;
-  submitted: boolean;
-  text: string;
-  timestamp: string;
 
   service: string;
   target_tick: number;
@@ -48,9 +50,6 @@ export type LoggingDisplayProps = {
   extended: boolean;
   filters: string[];
 };
-
-export type FlagCodeType = keyof typeof FLAG_CODE;
-export type ServiceStatusType = keyof typeof SERVICE_STATUS;
 
 export type File = {
   name: string;

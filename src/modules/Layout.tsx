@@ -27,7 +27,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const [flagLog, setFlagLog] = useAtom(flagLogAtom);
   const [executionLog, setExecutionLog] = useAtom(executionLogAtom);
   const [exploits, setExploits] = useAtom(exploitsAtom);
-  const [socket, setSocket] = useState<Socket | null>(null);
+  const [socket, _setSocket] = useState<Socket | null>(null);
   const [currentTick, setCurrentTick] = useAtom(currentTickAtom);
 
   useEffect(() => {
@@ -132,6 +132,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     currentTick,
   ]);
 
+  /*
   useEffect(() => {
     if (!socket || true) return;
     socket.on('scoreboard', (data: ScoreboardType) => {
@@ -181,6 +182,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     setExploits,
     setCurrentTick,
   ]);
+  */
 
   return (
     <main className="w-full h-full grid grid-cols-1 [grid-template-rows:2.75rem_1fr] gap-3">
