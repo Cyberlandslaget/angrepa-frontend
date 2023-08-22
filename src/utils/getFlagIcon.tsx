@@ -1,8 +1,8 @@
 import { FLAG_CODE } from 'utils/constants';
-import { FlagCodeType, FlagType } from 'utils/types';
+import { FlagType } from 'utils/types';
 
 export default function getFlagIcon(chall: FlagType, tick: number) {
-  switch (FLAG_CODE[chall?.status as FlagCodeType]) {
+  switch (FLAG_CODE[chall?.status]) {
     case FLAG_CODE.OK:
       return (
         <svg
@@ -102,6 +102,27 @@ export default function getFlagIcon(chall: FlagType, tick: number) {
           }}
         >
           <title>ERR ({tick})</title>
+          <path
+            fill="currentColor"
+            d="M96 64c0-17.7-14.3-32-32-32S32 46.3 32 64V320c0 17.7 14.3 32 32 32s32-14.3 32-32V64zM64 480c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40s17.9 40 40 40z"
+          ></path>
+        </svg>
+      );
+    case FLAG_CODE.OWN:
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 128 512"
+          className="w-[1.15rem] h-[1.15rem] p-[1.5px]"
+          style={{
+            background: 'var(--redBg)',
+            color: 'var(--redText)',
+            borderRadius: 2,
+            fontSize: '1.2rem',
+            margin: '0px 3px',
+          }}
+        >
+          <title>OWN ({tick})</title>
           <path
             fill="currentColor"
             d="M96 64c0-17.7-14.3-32-32-32S32 46.3 32 64V320c0 17.7 14.3 32 32 32s32-14.3 32-32V64zM64 480c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40s17.9 40 40 40z"

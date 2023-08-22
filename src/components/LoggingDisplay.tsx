@@ -62,7 +62,7 @@ const flagSubmissionDataParser = (
   return (
     <div
       className={`log grid gap-1 w-full h-full brightness-90 items-center text-center text-sm ${
-        data?.status ?? ''
+        data.status
       } ${
         showService
           ? '[grid-template-columns:3.75rem_3.75rem_2rem_4.75rem_5.5rem_1fr_3rem]'
