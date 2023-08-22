@@ -1,8 +1,5 @@
 import { FLAG_CODE, SERVICE_STATUS } from './constants';
 
-export type FlagCodeType = keyof typeof FLAG_CODE;
-export type ServiceStatusType = keyof typeof SERVICE_STATUS;
-
 export type ExecutionType = {
   id: number;
   exploit_id: number;
@@ -43,6 +40,18 @@ export type ScoreboardType = {
     };
   };
 };
+
+export type LoggingDisplayProps = {
+  data: FlagType[] | ExecutionType[];
+  parser: 'exploit' | 'submission';
+  extended: boolean;
+  filters: string[];
+  onClick?: (data: unknown) => void;
+  showService?: boolean;
+};
+
+export type FlagCodeType = keyof typeof FLAG_CODE;
+export type ServiceStatusType = keyof typeof SERVICE_STATUS;
 
 export type File = {
   name: string;

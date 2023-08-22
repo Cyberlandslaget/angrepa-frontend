@@ -6,6 +6,7 @@ import {
 import generateTar from './tar/generateTar';
 import parseTar from './tar/parseTar';
 import { File } from 'utils/types';
+import { DEFAULT_CONFIG_JSON } from './constants';
 
 export default function useFiles() {
   const [currentFiles, setCurrentFiles] = useAtom(currentFilesAtom);
@@ -21,7 +22,9 @@ export default function useFiles() {
   };
 
   const clearFiles = () => {
-    setCurrentFiles([]);
+    setCurrentFiles((files) =>
+      files.filter((file) => file.name === 'config.json')
+    );
   };
 
   const updateFile = (filename: string, data: ArrayBuffer) => {
@@ -59,16 +62,33 @@ export default function useFiles() {
     return await generateTar(currentFiles);
   };
 
-  const setTar = async (tar: ArrayBuffer) => {
-    const files = await parseTar(tar);
-    setCurrentFiles((curFiles) => [
-      ...curFiles.filter((f) => f.name !== 'config.json'),
-      ...files,
-    ]);
+  const setFiles = (files: File[], resetConfig = true) => {
+    setCurrentFiles((oldFiles) => {
+      const newFiles = files.filter((f) => f.name !== './');
+      if (!newFiles.find((f) => f.name === 'config.json')) {
+        newFiles.push(
+          (!resetConfig && oldFiles.find((f) => f.name === 'config.json')) ||
+            DEFAULT_CONFIG_JSON()
+        );
+      }
+      return newFiles.sort((a, b) => (a.name === 'config.json' ? -1 : 1));
+    });
   };
 
-  const setFiles = (files: File[]) => {
-    setCurrentFiles(files);
+  const setTar = async (tar: ArrayBuffer, resetConfig = true) => {
+    let files = await parseTar(tar);
+    setFiles(files, resetConfig);
+  };
+
+  const downloadFiles = async () => {
+    const tar = await getTar();
+    const blob = new Blob([tar], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'files.tar';
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return {
@@ -84,5 +104,6 @@ export default function useFiles() {
     getSelectedFile,
     setSelectedFile,
     currentFiles,
+    downloadFiles,
   };
 }

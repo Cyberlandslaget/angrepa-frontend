@@ -3,6 +3,7 @@ import getTicks from 'api/informations/getTicks';
 import getExecutions from 'api/logs/getExecutions';
 import getExploits from 'api/logs/getExploits';
 import getFlags from 'api/logs/getFlags';
+import { getTemplateNames } from 'api/templates/getTemplateData';
 import Navigation from 'components/Navigation';
 import { useAtom } from 'jotai';
 import { ReactNode, useEffect, useState } from 'react';
@@ -13,6 +14,7 @@ import {
   exploitsAtom,
   scoreboardDataAtom,
   flagLogAtom,
+  templatesAtom,
 } from 'utils/atoms';
 import {
   ExecutionType,
@@ -29,6 +31,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const [exploits, setExploits] = useAtom(exploitsAtom);
   const [socket, _setSocket] = useState<Socket | null>(null);
   const [currentTick, setCurrentTick] = useAtom(currentTickAtom);
+  const [templates, setTemplates] = useAtom(templatesAtom);
 
   useEffect(() => {
     // const newSocket = io(`${CONFIG.MGMT_SERVER_URL}`);
@@ -54,6 +57,10 @@ export default function Layout({ children }: { children: ReactNode }) {
     if (!exploits)
       getExploits()
         .then((data) => setExploits(data))
+        .catch((_e) => {});
+    if (!templates)
+      getTemplateNames()
+        .then((data) => setTemplates(data))
         .catch((_e) => {});
 
     let fastInterval: number;
