@@ -1,10 +1,14 @@
 import { useAtom, useAtomValue } from 'jotai';
-import { currentTickAtom, extendedSelectionAtom } from 'utils/atoms';
+import {
+  currentTickAtom,
+  exploitsAtom,
+  extendedSelectionAtom,
+} from 'utils/atoms';
 import { removeSimpleDuplicates } from 'utils/removeSimpleDuplicates';
 import { SERVICE_STATUS } from 'utils/constants';
 import { FlagType, ScoreboardType } from 'utils/types';
 import getFlagIcon from 'utils/getFlagIcon';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { DragDirection, ExtendedType } from 'utils/enums';
 import useResizeableComponent from 'utils/useResizeableComponent';
 import { FixedSizeList as List } from 'react-window';
@@ -51,6 +55,9 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
   const [extendedSelection, setExtendedSelection] = useAtom(
     extendedSelectionAtom
   );
+  const [exploits, _setExploits] = useAtom(exploitsAtom);
+  const [filteredExploit, setFilteredExploit] = useState(0);
+
   const resizableRef = useRef<HTMLDivElement | null>(null);
   const { setActiveHandler } = useResizeableComponent(resizableRef);
 
@@ -61,12 +68,31 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
   const services = Object.keys(
     Object.values(data.scoreboard.teams)[0].services
   );
-  const filteredData = removeSimpleDuplicates(
-    Object.keys(data.scoreboard.teams),
-    services,
+  const filteredData = useMemo(() => {
+    return removeSimpleDuplicates(
+      Object.keys(data.scoreboard.teams),
+      services,
+      data.flag,
+      currentTick,
+      undefined
+    );
+  }, [currentTick, data.flag, data.scoreboard.teams, services]);
+
+  const filteredExploitData = useMemo(() => {
+    return removeSimpleDuplicates(
+      Object.keys(data.scoreboard.teams),
+      services,
+      data.flag,
+      currentTick,
+      filteredExploit || undefined
+    );
+  }, [
+    currentTick,
     data.flag,
-    currentTick
-  );
+    data.scoreboard.teams,
+    filteredExploit,
+    services,
+  ]);
 
   useEffect(() => {
     if (!extended && extendedSelection.type !== null)
@@ -195,9 +221,24 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                 : extendedSelection.selection}
             </h2>
             <div className="absolute right-3 top-2">
-              <select className="text-black" name="" id="">
-                <option value="test">Test</option>
-              </select>
+              {exploits && exploits?.length > 0 ? (
+                <select
+                  className="bg-slate-900 py-1 px-2 text-white rounded-sm text-md"
+                  value={filteredExploit}
+                  onChange={({ target }) => {
+                    setFilteredExploit(Number(target.value));
+                  }}
+                >
+                  <option value={0}>All</option>
+                  {exploits.map((exploit) => (
+                    <option key={exploit.id} value={exploit.id}>
+                      {exploit.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <></>
+              )}
             </div>
 
             <div className="relative grid [grid-template-columns:11.75rem_1fr] gap-2 min-h-0">
@@ -277,7 +318,7 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                                 >
                                   <SimpleOverview
                                     data={
-                                      filteredData[
+                                      filteredExploitData[
                                         teams[
                                           Number(extendedSelection.selection)
                                         ][0]
@@ -302,7 +343,9 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                                 >
                                   <SimpleOverview
                                     data={
-                                      filteredData[teams[Number(team)][0]][
+                                      filteredExploitData[
+                                        teams[Number(team)][0]
+                                      ][
                                         String(extendedSelection.selection)
                                       ] as Data
                                     }

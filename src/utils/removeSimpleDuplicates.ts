@@ -37,10 +37,8 @@ export const removeSimpleDuplicates = (
   for (const oldFlag of flags) {
     const newFlag =
       newFlags[oldFlag?.team]?.[oldFlag?.service]?.[oldFlag?.target_tick];
-    if (
-      (!exploitId || newFlag?.exploit_id === exploitId) &&
-      (!newFlag || FLAG_CODE[oldFlag.status] > FLAG_CODE[newFlag.status])
-    )
+    if (exploitId && oldFlag?.exploit_id !== exploitId) continue;
+    if (!newFlag || FLAG_CODE[oldFlag.status] > FLAG_CODE[newFlag.status])
       newFlags[oldFlag.team][oldFlag.service][oldFlag.target_tick] = oldFlag;
   }
   return newFlags;
