@@ -19,30 +19,36 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 const executionsDataParser = (data: ExecutionType) => {
   return (
     <div
-      className={`log Color grid gap-1 w-full h-full brightness-90 [grid-template-columns:1fr_9.25rem] items-center text-center text-sm ${
+      className={`log Color grid gap-1 w-full h-full brightness-90 [grid-template-columns:1fr_9.75rem] items-center text-center text-sm ${
         data.exit_code === 0 ? 'success' : 'error'
       }`}
     >
       <div className="flex gap-1 text-left truncate" title={data.output}>
-        <span className="px-2 rounded-sm secondaryColor" title="Execution ID">
+        <span
+          className="px-2 rounded-sm secondaryColor py-[0.1rem]"
+          title="Execution ID"
+        >
           {data.id}
         </span>
-        <span className="px-2 rounded-sm secondaryColor" title="Tick">
+        <span
+          className="px-2 rounded-sm secondaryColor py-[0.1rem]"
+          title="Tick"
+        >
           {data.target_tick}
         </span>
-        <p className="truncate [color:var(--logBackgroundColor)]">
+        <p className="truncate [color:var(--logBackgroundColor)] py-[0.1rem]">
           {data.output}
         </p>
       </div>
-      <div className="grid [grid-template-columns:5.5rem_1fr] gap-1 pl-1">
+      <div className="grid [grid-template-columns:6rem_1fr] gap-1 pl-1">
         <span
-          className="w-full rounded-sm truncate secondaryColor"
-          title={'Service'}
+          className="w-full px-1 rounded-sm truncate secondaryColor py-[0.1rem]"
+          title={data.service}
         >
           {data.service}
         </span>
         <span
-          className="w-full px-1 rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)]"
+          className="w-full px-1 rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)] py-[0.1rem]"
           title={'Execution time'}
         >
           {(new Date(data.finished_at).getTime() -
@@ -65,17 +71,17 @@ const flagSubmissionDataParser = (
         data.status
       } ${
         showService
-          ? '[grid-template-columns:3.75rem_3.75rem_2rem_4.75rem_5.5rem_1fr_3rem]'
-          : '[grid-template-columns:3.75rem_3.75rem_2rem_4.75rem_1fr_3rem]'
+          ? '[grid-template-columns:3rem_2rem_4.75rem_6rem_1fr_3rem]'
+          : '[grid-template-columns:3rem_2rem_4.75rem_1fr_3rem]'
       }`}
     >
-      <span
+      {/* <span
         className="secondaryColor rounded-sm py-[0.1rem]"
         title="Execution ID"
       >
         {data.execution_id}
-      </span>
-      <span className="px-2 rounded-sm secondaryColor" title="Tick">
+      </span> */}
+      <span className="px-2 rounded-sm secondaryColor py-[0.1rem]" title="Tick">
         {data.target_tick}
       </span>
       <span
@@ -88,7 +94,10 @@ const flagSubmissionDataParser = (
         {data.team ?? '?'}
       </span>
       {showService && (
-        <span className="secondaryColor rounded-sm py-[0.1rem]" title="Service">
+        <span
+          className="secondaryColor rounded-sm px-1 py-[0.1rem]"
+          title="Service"
+        >
           {data.service ?? '?'}
         </span>
       )}

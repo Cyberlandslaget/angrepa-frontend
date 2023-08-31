@@ -1,5 +1,5 @@
 import { FLAG_CODE } from './constants';
-import { FlagCodeType, FlagType } from './types';
+import { FlagType } from './types';
 
 type Ticks = {
   [key: number]: FlagType | null;
@@ -31,6 +31,7 @@ export const removeSimpleDuplicates = (
     }
     nchalls[teamId] = serviceTicks;
   }
+
   // Get total amount of services from current tick
   for (let i = 0, length = challs.length; i < length; i++) {
     const chall = challs[i];
@@ -43,10 +44,7 @@ export const removeSimpleDuplicates = (
       }
 
       if (nnexists) {
-        if (
-          FLAG_CODE[chall.status as FlagCodeType] >
-          FLAG_CODE[nnexists.status as FlagCodeType]
-        )
+        if (FLAG_CODE[chall.status] > FLAG_CODE[nnexists.status])
           nchalls[chall?.team][chall?.service][chall?.target_tick] = chall;
       } else {
         nchalls[chall?.team][chall?.service][chall?.target_tick] = chall;

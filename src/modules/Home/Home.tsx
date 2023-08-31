@@ -13,6 +13,7 @@ import useResizeableComponent from 'utils/useResizeableComponent';
 import { executionLogAtom, scoreboardDataAtom, flagLogAtom } from 'utils/atoms';
 import { useAtomValue } from 'jotai';
 import { ExecutionType, FlagType } from 'utils/types';
+import { Modal } from '@mui/material';
 
 export default function Home() {
   const scoreboardData = useAtomValue(scoreboardDataAtom);
@@ -21,8 +22,8 @@ export default function Home() {
   const [pin, setPin] = useState(HomePanelEnum.Simple);
   const [fullscreen, setFullscreen] = useState<HomePanelEnum | null>(null);
   const [modal, setModal] = useState<{
-    data: ExecutionType | null;
     visible: boolean;
+    data: ExecutionType | null;
   }>({ data: null, visible: false });
   const resizableRef = useRef<HTMLElement | null>(null);
   const { setActiveHandler } = useResizeableComponent(resizableRef);
@@ -106,20 +107,12 @@ export default function Home() {
         />
       </PinButtonsWrapper>
 
-      {/* TODO: Move this to it's own component and redo the layout */}
-      <div
-        className={`absolute top-0 left-0 w-full h-full backdrop-blur-[3px] bg-[rgba(0,0,0,0.2)] z-50 transition-all ${
-          modal.visible
-            ? 'opacity-1 pointer-events-auto'
-            : 'opacity-0 pointer-events-none'
-        }`}
+      <Modal
+        open={modal.visible}
+        onClose={() => setModal((modal) => ({ ...modal, visible: false }))}
       >
         <div
-          className="bg-opacity-10 w-full h-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-          onClick={() => setModal((modal) => ({ ...modal, visible: false }))}
-        ></div>
-        <div
-          className={`secondaryColor border-2 border-white border-opacity-4s0 p-3 rounded-md shadow-2xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10/12 h-4/6 flex flex-col gap-2`}
+          className={`secondaryColor border-2 border-white border-opacity-4s0 p-3 rounded-md shadow-2xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 h-5/6 flex flex-col gap-2`}
         >
           <div className="flex justify-end h-6">
             <button
@@ -133,30 +126,40 @@ export default function Home() {
           </div>
           {modal.data && (
             <>
-              <div className="flex gap-3 w-full h-[calc(100%-1.5rem)]">
-                <div className="w-1/4 rounded-md tertiaryColor text-sm">
-                  <p>ID: {modal.data.id}</p>
-                  <p>Exploit ID: {modal.data.exploit_id}</p>
-                  <p>Target ID: {modal.data.target_id}</p>
-                  <p>Exit code: {modal.data.exit_code}</p>
-                  <p>Service: {modal.data.service}</p>
-                  <p>Team: {modal.data.team}</p>
-                  <p>Started at: {modal.data.started_at}</p>
-                  <p>Finished at: {modal.data.finished_at}</p>
-                </div>
+              <div className="flex flex-col gap-3 h-full">
+                <div className="flex gap-3 w-full h-full">
+                  <div className="w-1/4 rounded-md tertiaryColor text-sm rounded-sm">
+                    <p>ID: {modal.data.id}</p>
+                    <p>Exploit ID: {modal.data.exploit_id}</p>
+                    <p>Target ID: {modal.data.target_id}</p>
+                    <p>Exit code: {modal.data.exit_code}</p>
+                    <p>Service: {modal.data.service}</p>
+                    <p>Team: {modal.data.team}</p>
+                    <p>Started at: {modal.data.started_at}</p>
+                    <p>Finished at: {modal.data.finished_at}</p>
+                  </div>
 
-                <textarea
-                  className={
-                    'text-sm p-2 rounded-md tertiaryColor w-full h-full resize-none focus-visible:outline-none'
-                  }
-                  value={modal.data.output}
-                  readOnly
-                />
+                  <textarea
+                    className={
+                      'text-sm p-2 rounded-md tertiaryColor w-full h-full resize-none focus-visible:outline-none rounded-sm'
+                    }
+                    value={modal.data.output}
+                    readOnly
+                  />
+                </div>
+                <div className="w-full h-[7.5rem] tertiaryColor rounded-sm p-3 pb-0">
+                  <LoggingDisplay
+                    data={flagLog || (DUMMY_FLAGSUBMISSION_LOG as FlagType[])}
+                    parser={'submission'}
+                    extended={fullscreen === HomePanelEnum.Submission}
+                    filters={Object.keys(FLAG_CODE)}
+                  />
+                </div>
               </div>
             </>
           )}
         </div>
-      </div>
+      </Modal>
     </main>
   );
 }
