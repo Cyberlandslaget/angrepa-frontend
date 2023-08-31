@@ -25,7 +25,7 @@ export default function PinButtonsWrapper({
           : ''
       } ${className}`}
     >
-      <div className="secondaryColor sticky flex top-0 w-[6.85rem] h-6 -my-1 z-10 -translate-y-2 -translate-x-2 rounded-br-md text-xs gap-1 p-1 items-center [.simple_&]:w-[7.75rem]">
+      <div className="secondaryColor sticky flex top-0 w-[6.85rem] h-6 -my-1 z-10 -translate-y-2 -translate-x-2 rounded-br-md text-xs gap-1 p-1 items-center [.simple_&]:w-[7.75rem] [.fullscreen_&]:w-[6.25rem] [.simple.fullscreen_&]:w-[7.25rem]">
         <button
           className="px-2 bg-slate-950 bg-opacity-60 text-[0.6rem] rounded-sm hover:bg-black transition-all [.simple_&]:!bg-black [.simple_&]:cursor-default"
           onClick={updatePin}
@@ -36,7 +36,7 @@ export default function PinButtonsWrapper({
           className="px-2 bg-slate-950 bg-opacity-60 text-[0.6rem] rounded-sm hover:bg-black transition-all [.fullscreen_&]:!bg-black"
           onClick={updateFullscreen}
         >
-          Fullscreen
+          {fullscreen ? 'Minimize' : 'Fullscreen'}
         </button>
       </div>
       {children}

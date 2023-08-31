@@ -39,13 +39,13 @@ const Navigation = ({ className = '' }) => {
             className="flex px-3 py-[4px] text-xs rounded-sm bg-slate-950 bg-opacity-40"
             title="Total executions logged"
           >
-            {executionLogLength}
+            Executions: {executionLogLength}
           </p>
           <p
             className="flex px-3 py-[4px] text-xs rounded-sm bg-slate-950 bg-opacity-40"
             title="Total flags logged"
           >
-            {flagLogLength}
+            Flags: {flagLogLength}
           </p>
         </div>
       </div>

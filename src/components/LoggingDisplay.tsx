@@ -15,15 +15,22 @@ import {
 } from '@mui/material';
 import { FixedSizeList as List } from 'react-window';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import { toLocaleDateFormat, toUnixTimestamp } from 'utils/utils';
 
 const executionsDataParser = (data: ExecutionType) => {
   return (
     <div
-      className={`log Color grid gap-1 w-full h-full brightness-90 [grid-template-columns:1fr_9.75rem] items-center text-center text-sm ${
+      className={`log Color grid gap-1 w-full h-full brightness-90 [grid-template-columns:1fr_3.75rem] items-center text-center text-sm ${
         data.exit_code === 0 ? 'success' : 'error'
       }`}
     >
       <div className="flex gap-1 text-left truncate" title={data.output}>
+        <span
+          className="px-2 rounded-sm truncate secondaryColor py-[0.1rem]"
+          title={data.service}
+        >
+          {data.service}
+        </span>
         <span
           className="px-2 rounded-sm secondaryColor py-[0.1rem]"
           title="Execution ID"
@@ -40,13 +47,7 @@ const executionsDataParser = (data: ExecutionType) => {
           {data.output}
         </p>
       </div>
-      <div className="grid [grid-template-columns:6rem_1fr] gap-1 pl-1">
-        <span
-          className="w-full px-1 rounded-sm truncate secondaryColor py-[0.1rem]"
-          title={data.service}
-        >
-          {data.service}
-        </span>
+      <div className="grid [grid-template-columns:1fr] gap-1 pl-1">
         <span
           className="w-full px-1 rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)] py-[0.1rem]"
           title={'Execution time'}
@@ -71,8 +72,8 @@ const flagSubmissionDataParser = (
         data.status
       } ${
         showService
-          ? '[grid-template-columns:3rem_2rem_4.75rem_6rem_1fr_3rem]'
-          : '[grid-template-columns:3rem_2rem_4.75rem_1fr_3rem]'
+          ? '[grid-template-columns:6rem_3rem_2rem_4.75rem_5.5rem_1fr_3rem]'
+          : '[grid-template-columns:3rem_2rem_4.75rem_5.5rem_1fr_3rem]'
       }`}
     >
       {/* <span
@@ -81,6 +82,14 @@ const flagSubmissionDataParser = (
       >
         {data.execution_id}
       </span> */}
+      {showService && (
+        <span
+          className="secondaryColor rounded-sm px-1 py-[0.1rem]"
+          title="Service"
+        >
+          {data.service ?? '?'}
+        </span>
+      )}
       <span className="px-2 rounded-sm secondaryColor py-[0.1rem]" title="Tick">
         {data.target_tick}
       </span>
@@ -93,14 +102,11 @@ const flagSubmissionDataParser = (
       <span className="secondaryColor rounded-sm py-[0.1rem]" title="Team">
         {data.team ?? '?'}
       </span>
-      {showService && (
-        <span
-          className="secondaryColor rounded-sm px-1 py-[0.1rem]"
-          title="Service"
-        >
-          {data.service ?? '?'}
-        </span>
-      )}
+      <span className="secondaryColor rounded-sm py-[0.1rem]" title="Timestamp">
+        {toLocaleDateFormat(new Date(toUnixTimestamp(data.timestamp) * 1000)) ??
+          'hh:mm:ss'}
+      </span>
+
       <p className="text-left text-ellipsis whitespace-nowrap overflow-hidden pl-1 [color:var(--logBackgroundColor)]">
         {/* {censor
           ? (data.text?.substring(0, data.text?.length - 8) || '') +

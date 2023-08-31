@@ -16,12 +16,6 @@ import {
   flagLogAtom,
   templatesAtom,
 } from 'utils/atoms';
-import {
-  ExecutionType,
-  ExploitType,
-  FlagType,
-  ScoreboardType,
-} from 'utils/types';
 import { toUnixTimestamp } from 'utils/utils';
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -137,6 +131,8 @@ export default function Layout({ children }: { children: ReactNode }) {
     flagLog,
     setCurrentTick,
     currentTick,
+    templates,
+    setTemplates,
   ]);
 
   /*
