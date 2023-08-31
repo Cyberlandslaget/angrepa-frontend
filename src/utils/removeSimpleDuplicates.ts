@@ -14,10 +14,11 @@ type Challenges = {
 export const removeSimpleDuplicates = (
   teams: string[],
   services: string[],
-  challs: FlagType[],
-  currentTick: number
+  flags: FlagType[],
+  currentTick: number,
+  exploitId?: number
 ) => {
-  const nchalls: Challenges = {};
+  const newFlags: Challenges = {};
 
   // Generate ticks by team services
   for (const teamId of teams) {
@@ -29,29 +30,18 @@ export const removeSimpleDuplicates = (
       }
       serviceTicks[service] = ticks;
     }
-    nchalls[teamId] = serviceTicks;
+    newFlags[teamId] = serviceTicks;
   }
 
   // Get total amount of services from current tick
-  for (let i = 0, length = challs.length; i < length; i++) {
-    const chall = challs[i];
-    try {
-      let nexists, nnexists;
-      const exists = nchalls[chall?.team || ''];
-      if (exists) {
-        nexists = exists[chall?.service || ''];
-        if (nexists) nnexists = nexists[chall?.target_tick || 0];
-      }
-
-      if (nnexists) {
-        if (FLAG_CODE[chall.status] > FLAG_CODE[nnexists.status])
-          nchalls[chall?.team][chall?.service][chall?.target_tick] = chall;
-      } else {
-        nchalls[chall?.team][chall?.service][chall?.target_tick] = chall;
-      }
-    } catch (_err) {
-      continue;
-    }
+  for (const oldFlag of flags) {
+    const newFlag =
+      newFlags[oldFlag?.team]?.[oldFlag?.service]?.[oldFlag?.target_tick];
+    if (
+      (!exploitId || newFlag?.exploit_id === exploitId) &&
+      (!newFlag || FLAG_CODE[oldFlag.status] > FLAG_CODE[newFlag.status])
+    )
+      newFlags[oldFlag.team][oldFlag.service][oldFlag.target_tick] = oldFlag;
   }
-  return nchalls;
+  return newFlags;
 };

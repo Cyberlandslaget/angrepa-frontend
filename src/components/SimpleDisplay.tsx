@@ -189,7 +189,9 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
           <div className={`flex flex-col rounded-md`}>
             <h2 className="text-center font-semibold text-xl mt-1 mb-3">
               {extendedSelection.type === ExtendedType.Team
-                ? teams[Number(extendedSelection.selection)][1].name
+                ? `[${teams[Number(extendedSelection.selection)][0]}] ${String(
+                    teams[Number(extendedSelection.selection)][1].name
+                  )} `
                 : extendedSelection.selection}
             </h2>
             <div className="absolute right-3 top-2">
@@ -236,7 +238,11 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
 
                   <div className="flex gap-[2px] mt-[2.6rem] w-full h-full">
                     <List
-                      height={40 * teams.length + 15}
+                      height={
+                        extendedSelection.type === ExtendedType.Team
+                          ? 40 * services.length + 15
+                          : 40 * teams.length + 25
+                      }
                       itemCount={currentTick}
                       itemSize={28}
                       width={window.innerWidth - 196}

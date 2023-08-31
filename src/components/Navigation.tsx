@@ -75,7 +75,7 @@ const Navigation = ({ className = '' }) => {
           <Link
             key={page.title}
             className={`primaryColor p-1 px-3 rounded-sm text-sm transition-all hover:!bg-purple-500 ${
-              window.location.href.split('/')[3] === page.href.substring(1)
+              window.location.pathname.split('/')[1] === page.href.substring(1)
                 ? '!bg-purple-600'
                 : ''
             }`}

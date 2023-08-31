@@ -20,17 +20,17 @@ import { toLocaleDateFormat, toUnixTimestamp } from 'utils/utils';
 const executionsDataParser = (data: ExecutionType) => {
   return (
     <div
-      className={`log Color grid gap-1 w-full h-full brightness-90 [grid-template-columns:1fr_3.75rem] items-center text-center text-sm ${
+      className={`log Color grid gap-1 w-full h-full brightness-90 [grid-template-columns:6rem_1fr_3.75rem] items-center text-center text-sm ${
         data.exit_code === 0 ? 'success' : 'error'
       }`}
     >
+      <span
+        className="px-2 rounded-sm truncate secondaryColor py-[0.1rem]"
+        title={data.service}
+      >
+        {data.service}
+      </span>
       <div className="flex gap-1 text-left truncate" title={data.output}>
-        <span
-          className="px-2 rounded-sm truncate secondaryColor py-[0.1rem]"
-          title={data.service}
-        >
-          {data.service}
-        </span>
         <span
           className="px-2 rounded-sm secondaryColor py-[0.1rem]"
           title="Execution ID"
@@ -176,8 +176,11 @@ const LoggingDisplay = ({
               m: 1,
               width: 300,
             }}
+            size="small"
           >
-            <InputLabel sx={{ color: 'white' }}>Filter</InputLabel>
+            <InputLabel sx={{ color: 'white' }}>
+              {parser === 'exploit' ? 'Exit code' : 'Status code'}
+            </InputLabel>
             <Select
               multiple
               value={statusFilter}
@@ -193,7 +196,7 @@ const LoggingDisplay = ({
               }}
               input={
                 <OutlinedInput
-                  label="Filter"
+                  label={parser === 'exploit' ? 'Exit code' : 'Status code'}
                   sx={{
                     color: 'white',
                     '& .MuiOutlinedInput-notchedOutline': {
@@ -201,6 +204,13 @@ const LoggingDisplay = ({
                     },
                     '&:hover > .MuiOutlinedInput-notchedOutline': {
                       borderColor: 'white',
+                    },
+                    'svg path': {
+                      fill: 'white',
+                    },
+                    '.MuiSelect-select': {
+                      padding: '10px 14px',
+                      fontSize: '0.9rem',
                     },
                   }}
                 />

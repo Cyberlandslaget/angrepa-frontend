@@ -16,6 +16,7 @@ import {
   flagLogAtom,
   templatesAtom,
 } from 'utils/atoms';
+import { CONFIG } from 'utils/constants';
 import { toUnixTimestamp } from 'utils/utils';
 
 export default function Layout({ children }: { children: ReactNode }) {
@@ -28,7 +29,7 @@ export default function Layout({ children }: { children: ReactNode }) {
   const [templates, setTemplates] = useAtom(templatesAtom);
 
   useEffect(() => {
-    // const newSocket = io(`${CONFIG.MGMT_SERVER_URL}`);
+    // const newSocket = io(`${CONFIG.MGMT_SERVER_URL}:8001`);
     // setSocket(newSocket);
     // First poll
     const fourHoursAgo = Math.floor(new Date().getTime() / 1000) - 3600 * 4;

@@ -24,16 +24,15 @@ export const SERVICE_STATUS = {
   UNKNOWN: -1,
 };
 
-export const DEFAULT_CONFIG_JSON = (): File =>
-  ({
-    name: 'config.json',
-    data: new TextEncoder().encode(`{
+export const DEFAULT_CONFIG_JSON = (): File => ({
+  name: 'config.json',
+  data: new TextEncoder().encode(`{
   "name": "test",
   "service": "testservice",
   "blacklist": [],
   "pool": 1
 }`),
-  })
+});
 
 // Dummy data constants
 export const DUMMY_SCOREBOARD_DATA = {
@@ -133,7 +132,7 @@ export const DUMMY_FLAGSUBMISSION_LOG = [
 
     service: 'testservice',
     target_tick: 5,
-    team: '10.0.2.1s',
+    team: '10.0.2.1',
   },
   {
     id: 2,
