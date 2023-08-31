@@ -95,8 +95,10 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
   ]);
 
   useEffect(() => {
-    if (!extended && extendedSelection.type !== null)
+    if (!extended && extendedSelection.type !== null) {
       setExtendedSelection({ type: null, selection: null });
+      setFilteredExploit(0);
+    }
   }, [extended, extendedSelection, setExtendedSelection]);
 
   return (
@@ -220,26 +222,29 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                   )} `
                 : extendedSelection.selection}
             </h2>
-            <div className="absolute right-3 top-2">
-              {exploits && exploits?.length > 0 ? (
-                <select
-                  className="bg-slate-900 py-1 px-2 text-white rounded-sm text-md"
-                  value={filteredExploit}
-                  onChange={({ target }) => {
-                    setFilteredExploit(Number(target.value));
-                  }}
-                >
-                  <option value={0}>All</option>
-                  {exploits.map((exploit) => (
-                    <option key={exploit.id} value={exploit.id}>
-                      {exploit.name}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <></>
-              )}
-            </div>
+            {extendedSelection.type === ExtendedType.Service && (
+              <div className="absolute right-3 top-2">
+                Exploit:{' '}
+                {exploits && exploits?.length > 0 ? (
+                  <select
+                    className="bg-slate-900 py-1 px-2 text-white rounded-sm text-md"
+                    value={filteredExploit}
+                    onChange={({ target }) => {
+                      setFilteredExploit(Number(target.value));
+                    }}
+                  >
+                    <option value={0}>All</option>
+                    {exploits.map((exploit) => (
+                      <option key={exploit.id} value={exploit.id}>
+                        {exploit.name}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <></>
+                )}
+              </div>
+            )}
 
             <div className="relative grid [grid-template-columns:11.75rem_1fr] gap-2 min-h-0">
               <div className="flex flex-col gap-1">
@@ -280,9 +285,9 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                   <div className="flex gap-[2px] mt-[2.6rem] w-full h-full">
                     <List
                       height={
-                        extendedSelection.type === ExtendedType.Team
-                          ? 40 * services.length + 15
-                          : 40 * teams.length + 25
+                        extendedSelection.type === ExtendedType.Service
+                          ? 40 * teams.length + 15
+                          : 60 * services.length + 15
                       }
                       itemCount={currentTick}
                       itemSize={28}
