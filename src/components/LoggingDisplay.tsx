@@ -166,7 +166,10 @@ const LoggingDisplay = ({
       },
     },
   };
-  const Row: React.FC<{ index: number; style: React.CSSProperties }> = ({ index, style }) => (
+  const Row: React.FC<{ index: number; style: React.CSSProperties }> = ({
+    index,
+    style,
+  }) => (
     <div
       style={{ ...style }}
       className={
@@ -283,7 +286,7 @@ const LoggingDisplay = ({
         </div>
       )}
 
-      <div className="w-full h-[calc(100%-1rem)]">
+      <div className="w-full h-[calc(100%-1rem)] [&>div>div]:!overflow-x-hidden">
         <AutoSizer>
           {({ height, width }) => (
             <List

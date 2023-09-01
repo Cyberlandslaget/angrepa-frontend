@@ -112,7 +112,6 @@ export default function DataProvider({ children }: { children: ReactNode }) {
     return () => {
       clearInterval(fastInterval);
       clearInterval(slowInterval);
-      // newSocket.close();
     };
   }, [
     executionLog,
