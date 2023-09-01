@@ -71,12 +71,12 @@ export default function useFiles() {
             DEFAULT_CONFIG_JSON()
         );
       }
-      return newFiles.sort((a, b) => (a.name === 'config.json' ? -1 : 1));
+      return newFiles.sort((a, _b) => (a.name === 'config.json' ? -1 : 1));
     });
   };
 
   const setTar = async (tar: ArrayBuffer, resetConfig = true) => {
-    let files = await parseTar(tar);
+    const files = await parseTar(tar);
     setFiles(files, resetConfig);
   };
 

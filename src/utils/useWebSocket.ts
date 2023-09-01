@@ -12,14 +12,14 @@ export default function useWebSocket() {
 
   useEffect(() => {
     if (ws)
-      ws.onmessage = function (e) {
-        onData && onData(JSON.parse(e.data));
+      ws.onmessage = (res) => {
+        onData && onData(JSON.parse(String(res.data)) as WebSocketMessageType);
       };
   }, [ws, onData]);
 
   useEffect(() => {
     if (ws) {
-      ws.onclose = function (e) {
+      ws.onclose = (_res) => {
         setTimeout(function () {
           setWs(
             new WebSocket(`ws://${CONFIG.MGMT_SERVER_URL.split(':')[1]}:8001`)
@@ -27,7 +27,7 @@ export default function useWebSocket() {
         }, 1000);
       };
 
-      ws.onerror = function (err) {
+      ws.onerror = (_err) => {
         ws.close();
       };
     } else {

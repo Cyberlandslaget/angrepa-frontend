@@ -128,7 +128,7 @@ export default function Home() {
             <>
               <div className="flex flex-col gap-3 h-full">
                 <div className="flex gap-3 w-full h-full">
-                  <div className="w-1/4 rounded-md tertiaryColor text-sm rounded-sm">
+                  <div className="w-1/4 tertiaryColor text-sm rounded-sm">
                     <p>ID: {modal.data.id}</p>
                     <p>Exploit ID: {modal.data.exploit_id}</p>
                     <p>Target ID: {modal.data.target_id}</p>
@@ -141,7 +141,7 @@ export default function Home() {
 
                   <textarea
                     className={
-                      'text-sm p-2 rounded-md tertiaryColor w-full h-full resize-none focus-visible:outline-none rounded-sm'
+                      'text-sm p-2 tertiaryColor w-full h-full resize-none focus-visible:outline-none rounded-sm'
                     }
                     value={modal.data.output}
                     readOnly
