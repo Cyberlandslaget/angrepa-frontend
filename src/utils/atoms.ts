@@ -8,6 +8,7 @@ import {
   ScoreboardType,
 } from './types';
 import { File } from './types';
+import { CONFIG } from './constants';
 
 export const pagingSelectionAtom = atom('All');
 
@@ -36,3 +37,7 @@ export const currentExploit = atom<Exploit | null>(null);
 export const currentlySelectedFile = atom<string | null>(null);
 
 export const templatesAtom = atom<string[] | null>(null);
+
+export const wsAtom = atom<WebSocket>(
+  new WebSocket(`ws://${CONFIG.MGMT_SERVER_URL.split(':')[1]}:8001`)
+);

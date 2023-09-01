@@ -11,3 +11,8 @@ export enum ExtendedType {
   Team = 'team',
   Service = 'service',
 }
+export enum WebSocketTable {
+  FLAG = 'flag',
+  EXECUTION = 'execution',
+  EXPLOIT = 'exploit',
+}

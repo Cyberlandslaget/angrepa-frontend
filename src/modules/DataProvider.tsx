@@ -17,8 +17,14 @@ import {
   flagLogAtom,
   templatesAtom,
 } from 'utils/atoms';
-import runWebSocket from 'utils/runWebSocket';
-import { toUnixTimestamp } from 'utils/utils';
+import { WebSocketTable } from 'utils/enums';
+import {
+  ExecutionType,
+  ExploitType,
+  FlagType,
+  WebSocketMessageType,
+} from 'utils/types';
+import useWebSocket from 'utils/useWebSocket';
 
 export default function DataProvider({ children }: { children: ReactNode }) {
   const [scoreboardData, setScoreboardData] = useAtom(scoreboardDataAtom);
@@ -30,6 +36,12 @@ export default function DataProvider({ children }: { children: ReactNode }) {
   const updateExecutions = useUpdateExecutions();
   const updateFlags = useUpdateFlags();
   const updateExploits = useUpdateExploits();
+  const setOnData = useWebSocket();
+  const [hasInitializedFlags, setHasInitilizedFlags] = useState<boolean>(false);
+  const [hasInitializedExecutions, setHasInitilizedExecutions] =
+    useState<boolean>(false);
+  const [hasInitializedExploits, setHasInitilizedExploits] =
+    useState<boolean>(false);
 
   useEffect(() => {
     const fourHoursAgo = Math.floor(new Date().getTime() / 1000) - 3600 * 4;
@@ -41,30 +53,38 @@ export default function DataProvider({ children }: { children: ReactNode }) {
       getTicks()
         .then((data) => setCurrentTick(data))
         .catch((_e) => {});
-    if (!executionLog)
+    if (!hasInitializedExecutions)
       getExecutions(fourHoursAgo)
-        .then((data) => setExecutionLog(data))
+        .then((data) => data && updateExecutions(data))
         .catch((_e) => {});
-    if (!flagLog && executionLog)
+    if (!hasInitializedFlags && executionLog)
       getFlags(fourHoursAgo)
-        .then((data) => setFlagLog(data))
+        .then((data) => {
+          if (data) {
+            updateFlags(data);
+            setHasInitilizedFlags(true);
+          }
+        })
         .catch((_e) => {});
-    if (!exploits)
+    if (!hasInitializedExploits)
       getExploits()
-        .then((data) => setExploits(data))
+        .then((data) => {
+          if (data) {
+            setExploits(data);
+            setHasInitilizedExploits(true);
+          }
+        })
         .catch((_e) => {});
     if (!templates)
       getTemplateNames()
-        .then((data) => setTemplates(data))
-        .catch((_e) => {}); 
-    
-    runWebSocket((data) => {
-      updateExecutions(data.executions);
-      updateFlags(data.flags);
-      updateExploits(data.exploits);
-    })
+        .then((data) => {
+          if (data) {
+            setTemplates(data);
+            setHasInitilizedExecutions(true);
+          }
+        })
+        .catch((_e) => {});
 
-    /*
     let fastInterval: number;
     let slowInterval: number;
     if (
@@ -80,40 +100,6 @@ export default function DataProvider({ children }: { children: ReactNode }) {
         getTicks()
           .then((data) => setCurrentTick(data))
           .catch((_e) => {});
-        // Poll executions
-        getExecutions(
-          toUnixTimestamp(executionLog[executionLog.length - 1]?.started_at)
-        )
-          .then((data) => {
-            setExecutionLog((ex) => {
-              const newData = data?.filter(
-                (d) => !ex?.find((e) => e.id === d.id)
-              );
-              return [...(ex ?? []), ...(newData ?? [])];
-            });
-          })
-          .catch((_e) => {});
-        // Poll flags
-        getFlags(toUnixTimestamp(flagLog[flagLog.length - 10]?.timestamp))
-          .then((data) => {
-            setFlagLog((flag) => {
-              const newData = data?.filter(
-                (d) =>
-                  !flag?.find((s) => s.id === d.id) && String(d.status) !== ''
-              );
-              newData?.sort((a, b) => {
-                if (a.id < b.id) return -1;
-                if (a.id > b.id) return 1;
-                return 0;
-              });
-              return [...(flag ?? []), ...(newData ?? [])];
-            });
-          })
-          .catch((_e) => {});
-        // Poll exploits
-        getExploits()
-          .then((data) => setExploits(data))
-          .catch((_e) => {});
       }, 1000);
 
       slowInterval = setInterval(() => {
@@ -128,7 +114,6 @@ export default function DataProvider({ children }: { children: ReactNode }) {
       clearInterval(slowInterval);
       // newSocket.close();
     };
-    */
   }, [
     executionLog,
     exploits,
@@ -142,8 +127,29 @@ export default function DataProvider({ children }: { children: ReactNode }) {
     currentTick,
     templates,
     setTemplates,
-    updateExecutions
+    updateExecutions,
+    hasInitializedExecutions,
+    hasInitializedFlags,
+    hasInitializedExploits,
   ]);
+
+  useEffect(() => {
+    const func = () => (data: WebSocketMessageType) => {
+      if (!data.data) return;
+      switch (data.table) {
+        case WebSocketTable.EXECUTION:
+          updateExecutions([data.data as ExecutionType]);
+          break;
+        case WebSocketTable.FLAG:
+          updateFlags([data.data as FlagType]);
+          break;
+        case WebSocketTable.EXPLOIT:
+          updateExploits([data.data as ExploitType]);
+          break;
+      }
+    };
+    setOnData(func);
+  }, [updateExecutions, updateFlags, updateExploits, setOnData]);
 
   return <>{children}</>;
 }

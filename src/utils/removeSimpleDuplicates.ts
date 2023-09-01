@@ -35,11 +35,16 @@ export const removeSimpleDuplicates = (
 
   // Get total amount of services from current tick
   for (const oldFlag of flags) {
-    const newFlag =
-      newFlags[oldFlag?.team]?.[oldFlag?.service]?.[oldFlag?.target_tick];
-    if (exploitId && oldFlag?.exploit_id !== exploitId) continue;
-    if (!newFlag || FLAG_CODE[oldFlag.status] > FLAG_CODE[newFlag.status])
-      newFlags[oldFlag.team][oldFlag.service][oldFlag.target_tick] = oldFlag;
+    try {
+      const newFlag =
+        newFlags[oldFlag?.team]?.[oldFlag?.service]?.[oldFlag?.target_tick];
+      if (exploitId && oldFlag?.exploit_id !== exploitId) continue;
+      if (!newFlag || FLAG_CODE[oldFlag.status] > FLAG_CODE[newFlag.status])
+        newFlags[oldFlag.team][oldFlag.service][oldFlag.target_tick] = oldFlag;
+    } catch (e) {
+      console.log(e);
+      console.log(oldFlag);
+    }
   }
   return newFlags;
 };

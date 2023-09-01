@@ -1,4 +1,5 @@
 import { FLAG_CODE, SERVICE_STATUS } from './constants';
+import { WebSocketTable } from './enums';
 
 export type ExecutionType = {
   id: number;
@@ -77,8 +78,6 @@ export type ExploitType = {
 };
 
 export type WebSocketMessageType = {
-  exploits: ExploitType[];
-  flags: FlagType[];
-  executions: ExecutionType[];
-}
-
+  table: WebSocketTable;
+  data: FlagType | ExecutionType | ExploitType;
+};
