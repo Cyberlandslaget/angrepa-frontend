@@ -1,3 +1,5 @@
+import ConfettiPage from "components/ConfettiPage";
+
 // TODO: Add Frisk's scoreboard graph here
 function Scoreboard() {
   return (
@@ -16,6 +18,7 @@ function Scoreboard() {
           />
         </div>
       </div>
+      <ConfettiPage></ConfettiPage>
     </main>
   );
 }
