@@ -166,6 +166,29 @@ const LoggingDisplay = ({
       },
     },
   };
+  const Row: React.FC<{ index: number; style: React.CSSProperties }> = ({ index, style }) => (
+    <div
+      style={{ ...style }}
+      className={
+        onClick
+          ? 'hover:brightness-125 hover:bg-[var(--secondary)] cursor-pointer transition-all duration-150'
+          : ''
+      }
+      onClick={() => {
+        if (onClick) onClick(filterData[filterData.length - 1 - index]);
+      }}
+    >
+      {parser === 'submission'
+        ? flagSubmissionDataParser(
+            filterData[filterData.length - 1 - index] as FlagType,
+            sensor,
+            showService
+          )
+        : executionsDataParser(
+            filterData[filterData.length - 1 - index] as ExecutionType
+          )}
+    </div>
+  );
 
   return (
     <>
@@ -269,32 +292,7 @@ const LoggingDisplay = ({
               itemSize={28}
               width={width}
             >
-              {({ index, style }) => (
-                <div
-                  style={{ ...style }}
-                  className={
-                    onClick
-                      ? 'hover:brightness-125 hover:bg-[var(--secondary)] cursor-pointer transition-all duration-150'
-                      : ''
-                  }
-                  onClick={() => {
-                    if (onClick)
-                      onClick(filterData[filterData.length - 1 - index]);
-                  }}
-                >
-                  {parser === 'submission'
-                    ? flagSubmissionDataParser(
-                        filterData[filterData.length - 1 - index] as FlagType,
-                        sensor,
-                        showService
-                      )
-                    : executionsDataParser(
-                        filterData[
-                          filterData.length - 1 - index
-                        ] as ExecutionType
-                      )}
-                </div>
-              )}
+              {Row}
             </List>
           )}
         </AutoSizer>
