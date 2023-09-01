@@ -75,3 +75,10 @@ export type ExploitType = {
   docker_containers: string[];
   blacklist: string[];
 };
+
+export type WebSocketMessageType = {
+  exploits: ExploitType[];
+  flags: FlagType[];
+  executions: ExecutionType[];
+}
+
