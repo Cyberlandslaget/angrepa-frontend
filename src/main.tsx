@@ -20,7 +20,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route path="/scoreboard" element={<Scoreboard />} />
               <Route path="/exploits/*" element={<Exploits />} />
             </Routes>
-          </Layout></DataProvider>
+          </Layout>
+        </DataProvider>
       </BrowserRouter>
     </SnackbarProvider>
   </React.StrictMode>
