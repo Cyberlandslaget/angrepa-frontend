@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import Confetti from 'react-confetti';
 import { useReward } from 'react-rewards';
 
-
 function ConfettiPage() {
     const {reward: balloonsReward1} = useReward('balloonsReward1', 'balloons', {lifetime: 6000, elementSize: 24, elementCount: 15, spread: 130, startVelocity: 5, decay: 0.9999, zIndex: 499});
     const {reward: balloonsReward2} = useReward('balloonsReward2', 'balloons', {lifetime: 6000, elementSize: 24, elementCount: 15, spread: 130, startVelocity: 5, decay: 0.9999, zIndex: 499});
@@ -27,6 +26,9 @@ function ConfettiPage() {
       emojiReward3()
     }, [])
 
+
+    const flagStyle = {position: "absolute", left: "calc(50% - 360px)", top: "calc(50% - 202px)", zIndex: 497} as React.CSSProperties;
+
     return (
       <div>
         <Confetti   
@@ -44,7 +46,7 @@ function ConfettiPage() {
         <span id="emojiReward1" style={{position: 'absolute', left: 0, right: 0, marginLeft: "auto", marginRight: "auto", width: "1px", paddingTop: "300px"}}/>
         <span id="emojiReward2" style={{position: 'absolute', left: "50%", right: 0, marginLeft: "auto", marginRight: "auto", width: "1px", paddingTop: "300px"}}/>
         <span id="emojiReward3" style={{position: 'absolute', left: 0, right: "50%", marginLeft: "auto", marginRight: "auto", width: "1px", paddingTop: "300px"}}/>
-        <video id="video" controls autoPlay width="720" src='/norsk_flag.mp4' style={{ position: "absolute", left: "calc(50% - 360px)", top: "calc(50% - 202px)", zIndex: 497 }} className='animate-spin [animation-duration:4.66s]'></video>
+        <video id="video" controls autoPlay width="720" src='/norsk_flag.mp4' style={flagStyle} className='animate-spin [animation-duration:4.82s]'></video>
       </div>
     );
   }
