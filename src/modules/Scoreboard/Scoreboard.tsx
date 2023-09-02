@@ -1,7 +1,16 @@
+import ReactDOM from "react-dom";
+
 import ConfettiPage from "components/ConfettiPage";
+
 
 // TODO: Add Frisk's scoreboard graph here
 function Scoreboard() {
+  // summon the confetti page 5 seconds after page load, delete it after 50 seconds
+  window.onload = () => {
+    setTimeout(spawnConfetti, 5000);
+    setTimeout(deleteConfetti, 50000)
+  };
+
   return (
     <main className="w-full h-full grid grid-cols-1 [grid-template-rows:2.75rem_1fr] gap-3">
       <div className="tertiaryColor w-full h-full p-2 rounded-md">
@@ -18,9 +27,28 @@ function Scoreboard() {
           />
         </div>
       </div>
-      <ConfettiPage></ConfettiPage>
+      <div id="confettiPageParent" />
     </main>
   );
 }
 
 export default Scoreboard;
+
+
+// helper functions to spawn and delete the confetti page
+function spawnConfetti() {
+  const parentElement = document.getElementById("confettiPageParent")
+
+  if (parentElement) {
+    const confettiPageInstance = <ConfettiPage /> // Create an instance of your component
+    ReactDOM.render(confettiPageInstance, parentElement) // Append it to the DOM
+  }
+}
+function deleteConfetti() {
+  const confettiPage = document.getElementById("confettiPage")
+
+  if (confettiPage) {
+    confettiPage.parentNode?.removeChild(confettiPage)
+  }
+
+}
