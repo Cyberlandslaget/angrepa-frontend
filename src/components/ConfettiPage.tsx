@@ -60,7 +60,7 @@ function ConfettiPage() {
     return (
       <animated.div id="confettiPage" style={{...fadeEntirePageSpring}}>
         {/* define the falling confetti itself */}
-        <Confetti width={1920} height={1080} numberOfPieces={1500} tweenDuration={100000} recycle={false} />
+        <Confetti width={1920} height={1080} numberOfPieces={1500} tweenDuration={100000} recycle={false} style={{zIndex: 498}}/>
         {/* spawn the balloons and norwegian flags */}
         <span id="balloonsReward1" style={{position: 'absolute', left: 0, right: 0, marginLeft: "auto", marginRight: "auto", width: "1px", paddingTop: "300px"}}/>
         <span id="balloonsReward2" style={{position: 'absolute', left: "35%", right: 0, marginLeft: "auto", marginRight: "auto", width: "1px", paddingTop: "300px"}}/>
