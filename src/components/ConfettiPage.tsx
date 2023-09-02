@@ -28,6 +28,8 @@ function ConfettiPage() {
       emojiReward1()
       emojiReward2()
       emojiReward3()
+
+      setTimeout(playAnthem, 500);
     }, [])
 
 
@@ -48,7 +50,7 @@ function ConfettiPage() {
     const spinVideoSpring = useSpring({ref: spinVideoRef,from: { y: -100, transform: "rotate(0deg)" },to: { y: 150, transform: "rotate(720deg)" }, config: { duration: 1000 }})
     const expandTextSpring = useSpring({ref: expandTextRef,from: { width: 0 },to: { width: 1280 }, config: { duration: 2000 }})
     const spinTextSpring = useSpring({ref: spinTextRef,from: { transform: "rotate(0deg)" },to: { transform: "rotate(720deg)" }, config: { duration: 400 }})
-    const spinTextSpring2 = useSpring({ref: spinTextRef2,from: { transform: "rotate(720deg)" },to: { transform: "rotate(8200deg)" }, config: { duration: 1200 }})
+    const spinTextSpring2 = useSpring({ref: spinTextRef2,from: { transform: "rotate(720deg)" },to: { transform: "rotate(8260deg)" }, config: { duration: 1200 }})
     const fadeEntirePageSpring = useSpring({ref: fadeEntirePageRef,from: { opacity: 1 },to: { opacity: 0 }, config: { duration: 10000 }})
    
     // define the use chain, it consists of what spring to play, and the time in seconds to play them after loading
@@ -88,3 +90,8 @@ function ConfettiPage() {
   }
 
 export default ConfettiPage;
+
+function playAnthem () {
+  const audio = new Audio('/Ja_Vi_Elsker_Dette_Landet.wav');
+  void audio.play();  
+}
