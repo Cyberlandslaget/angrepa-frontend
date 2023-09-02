@@ -54,7 +54,7 @@ function ConfettiPage() {
     const fadeEntirePageSpring = useSpring({ref: fadeEntirePageRef,from: { opacity: 1 },to: { opacity: 0 }, config: { duration: 10000 }})
    
     // define the use chain, it consists of what spring to play, and the time in seconds to play them after loading
-    useChain([ expandSizeVideoRef, spinVideoRef, expandTextRef, spinTextRef, spinTextRef2, fadeEntirePageRef ], [0, 2.5, 4, 8, 15, 19]) 
+    useChain([ expandSizeVideoRef, spinVideoRef, expandTextRef, spinTextRef, spinTextRef2, fadeEntirePageRef ], [0, 2.5, 4, 8, 19, 30]) 
     
     
     return (

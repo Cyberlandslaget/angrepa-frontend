@@ -47,6 +47,9 @@ function spawnConfetti() {
   const parentElement = document.getElementById("confettiPageParent")
 
   if (parentElement) {
+    if (parentElement.childElementCount > 0) {
+      deleteConfetti()
+    }
     // this might not be right, unsure - it sure does work tho! 
     const confettiPageInstance = <ConfettiPage />
     const parentElementInstance = createRoot(parentElement)
@@ -60,5 +63,4 @@ function deleteConfetti() {
   if (confettiPage) {
     confettiPage.parentNode?.removeChild(confettiPage)
   }
-
 }
