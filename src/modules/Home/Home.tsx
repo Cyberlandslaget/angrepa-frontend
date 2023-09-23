@@ -149,7 +149,11 @@ export default function Home() {
                 </div>
                 <div className="w-full h-[7.5rem] tertiaryColor rounded-sm p-3 pb-0">
                   <LoggingDisplay
-                    data={flagLog || (DUMMY_FLAGSUBMISSION_LOG as FlagType[])}
+                    data={
+                      flagLog?.filter(
+                        (flag) => flag.execution_id === modal?.data?.id
+                      ) as FlagType[]
+                    }
                     parser={'submission'}
                     extended={fullscreen === HomePanelEnum.Submission}
                     filters={Object.keys(FLAG_CODE)}

@@ -13,7 +13,7 @@ import { DoNotDisturb, EmojiFlags } from '@mui/icons-material';
 const PAGES = [
   { title: 'Home', href: '/' },
   { title: 'Exploits', href: '/exploits' },
-  { title: 'Scoreboard', href: '/scoreboard' },
+  // { title: 'Scoreboard', href: '/scoreboard' },
 ];
 const Navigation = ({ className = '' }) => {
   const currentTick = useAtomValue(currentTickAtom);
