@@ -44,7 +44,9 @@ export default function DataProvider({ children }: { children: ReactNode }) {
     useState<boolean>(false);
 
   useEffect(() => {
-    const tenSecondsAgo = Math.floor(new Date().getTime() / 1000) - 10;
+    // TODO: make user configurable
+    const MINUTES_TO_FETCH = 6;
+    const xMinutesAgo = Math.floor(new Date().getTime() / 1000) - (60 * MINUTES_TO_FETCH);
     if (!scoreboardData)
       getScoreboardData()
         .then((data) => setScoreboardData(data))
@@ -54,11 +56,11 @@ export default function DataProvider({ children }: { children: ReactNode }) {
         .then((data) => setCurrentTick(data))
         .catch((_e) => {});
     if (!hasInitializedExecutions)
-      getExecutions(tenSecondsAgo)
+      getExecutions(xMinutesAgo)
         .then((data) => data && updateExecutions(data))
         .catch((_e) => {});
     if (!hasInitializedFlags && executionLog)
-      getFlags(tenSecondsAgo)
+      getFlags(xMinutesAgo)
         .then((data) => {
           if (data) {
             updateFlags(data);
