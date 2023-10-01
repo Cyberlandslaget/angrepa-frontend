@@ -284,7 +284,7 @@ const LoggingDisplay = ({
         <AutoSizer>
           {({ height, width }) => (
             <List
-              height={height}
+              height={height || 0}
               itemCount={filterData.length}
               itemSize={28}
               width={width}

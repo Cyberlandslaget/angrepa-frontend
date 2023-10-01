@@ -42,8 +42,8 @@ export const removeSimpleDuplicates = (
       if (!newFlag || FLAG_CODE[oldFlag.status] > FLAG_CODE[newFlag.status])
         newFlags[oldFlag.team][oldFlag.service][oldFlag.target_tick] = oldFlag;
     } catch (e) {
-      console.log(e);
-      console.log(oldFlag);
+      // console.log(e);
+      // console.log(oldFlag);
     }
   }
   return newFlags;

@@ -13,7 +13,6 @@ import useResizeableComponent from 'utils/useResizeableComponent';
 import { executionLogAtom, scoreboardDataAtom, flagLogAtom } from 'utils/atoms';
 import { useAtomValue } from 'jotai';
 import { ExecutionType, FlagType } from 'utils/types';
-import { Modal } from '@mui/material';
 import LogModal from 'components/LogModal';
 
 export default function Home() {

@@ -234,11 +234,13 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                     }}
                   >
                     <option value={0}>All</option>
-                    {exploits.map((exploit) => (
-                      <option key={exploit.id} value={exploit.id}>
-                        {exploit.name}
-                      </option>
-                    ))}
+                    {exploits
+                      .filter((e) => e.service === extendedSelection.selection)
+                      .map((exploit) => (
+                        <option key={exploit.id} value={exploit.id}>
+                          {exploit.name}
+                        </option>
+                      ))}
                   </select>
                 ) : (
                   <></>

@@ -45,7 +45,7 @@ export default function DataProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // TODO: make user configurable
-    const MINUTES_TO_FETCH = 2 * 60;
+    const MINUTES_TO_FETCH = 3 * 60;
     const xMinutesAgo =
       Math.floor(new Date().getTime() / 1000) - 60 * MINUTES_TO_FETCH;
     if (!scoreboardData)
