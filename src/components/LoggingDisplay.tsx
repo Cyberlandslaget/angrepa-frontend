@@ -61,20 +61,12 @@ const executionsDataParser = (data: ExecutionType) => {
     </div>
   );
 };
-const flagSubmissionDataParser = (
-  data: FlagType,
-  censor: boolean,
-  showService = true
-) => {
+const flagSubmissionDataParser = (data: FlagType, censor: boolean) => {
   return (
     <div
       className={`log grid gap-1 w-full h-full brightness-90 items-center text-center text-sm ${
         data.status
-      } ${
-        showService
-          ? '[grid-template-columns:6rem_3rem_2rem_4.75rem_5.5rem_1fr_3rem]'
-          : '[grid-template-columns:3rem_2rem_4.75rem_5.5rem_1fr_3rem]'
-      }`}
+      } ${'[grid-template-columns:6rem_3rem_2rem_7rem_4.75rem_1fr_3rem]'}`}
     >
       {/* <span
         className="secondaryColor rounded-sm py-[0.1rem]"
@@ -82,24 +74,28 @@ const flagSubmissionDataParser = (
       >
         {data.execution_id}
       </span> */}
-      {showService && (
-        <span
-          className="secondaryColor rounded-sm px-1 py-[0.1rem]"
-          title="Service"
-        >
-          {data.service ?? '?'}
-        </span>
-      )}
-      <span className="px-2 rounded-sm secondaryColor py-[0.1rem]" title="Tick">
+      <span
+        className="secondaryColor rounded-sm px-1 py-[0.1rem] truncate"
+        title="Service"
+      >
+        {data.service ?? '?'}
+      </span>
+      <span
+        className="px-2 rounded-sm secondaryColor py-[0.1rem] truncate"
+        title="Tick"
+      >
         {data.target_tick}
       </span>
       <span
-        className="secondaryColor rounded-sm py-[0.1rem]"
+        className="secondaryColor rounded-sm py-[0.1rem] truncate"
         title="Exploit ID"
       >
         {data.exploit_id}
       </span>
-      <span className="secondaryColor rounded-sm py-[0.1rem]" title="Team">
+      <span
+        className="secondaryColor rounded-sm py-[0.1rem] truncate"
+        title="Team"
+      >
         {data.team ?? '?'}
       </span>
       <span className="secondaryColor rounded-sm py-[0.1rem]" title="Timestamp">
@@ -129,7 +125,6 @@ const LoggingDisplay = ({
   extended,
   filters,
   onClick,
-  showService = true,
 }: LoggingDisplayProps) => {
   const [statusFilter, setStatusFilter] = React.useState<string[]>(filters);
 
@@ -184,8 +179,7 @@ const LoggingDisplay = ({
       {parser === 'submission'
         ? flagSubmissionDataParser(
             filterData[filterData.length - 1 - index] as FlagType,
-            sensor,
-            showService
+            sensor
           )
         : executionsDataParser(
             filterData[filterData.length - 1 - index] as ExecutionType

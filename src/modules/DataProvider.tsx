@@ -45,8 +45,9 @@ export default function DataProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // TODO: make user configurable
-    const MINUTES_TO_FETCH = 6;
-    const xMinutesAgo = Math.floor(new Date().getTime() / 1000) - (60 * MINUTES_TO_FETCH);
+    const MINUTES_TO_FETCH = 2 * 60;
+    const xMinutesAgo =
+      Math.floor(new Date().getTime() / 1000) - 60 * MINUTES_TO_FETCH;
     if (!scoreboardData)
       getScoreboardData()
         .then((data) => setScoreboardData(data))
@@ -87,8 +88,8 @@ export default function DataProvider({ children }: { children: ReactNode }) {
         })
         .catch((_e) => {});
 
-    let fastInterval: number;
-    let slowInterval: number;
+    let fastInterval: NodeJS.Timeout;
+    let slowInterval: NodeJS.Timeout;
     if (
       flagLog &&
       flagLog.length > 0 &&
