@@ -14,6 +14,7 @@ import { executionLogAtom, scoreboardDataAtom, flagLogAtom } from 'utils/atoms';
 import { useAtomValue } from 'jotai';
 import { ExecutionType, FlagType } from 'utils/types';
 import LogModal from 'components/LogModal';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
   const scoreboardData = useAtomValue(scoreboardDataAtom);
@@ -21,10 +22,13 @@ export default function Home() {
   const executionLog = useAtomValue(executionLogAtom);
   const [pin, setPin] = useState(HomePanelEnum.Simple);
   const [fullscreen, setFullscreen] = useState<HomePanelEnum | null>(null);
-  const [modal, setModal] = useState<{
-    visible: boolean;
-    data: ExecutionType | null;
-  }>({ data: null, visible: false });
+  const navigate = useNavigate();
+
+  const showDetailedLog = (data: unknown) => {
+    const log = data as ExecutionType;
+    navigate(`${location.pathname}?log=${log.id}${location.hash}`);
+  };
+
   const resizableRef = useRef<HTMLElement | null>(null);
   const { setActiveHandler } = useResizeableComponent(resizableRef);
 
@@ -34,11 +38,6 @@ export default function Home() {
   const updateFullscreen = (display: HomePanelEnum) => {
     if (fullscreen === display) setFullscreen(null);
     else setFullscreen(display);
-  };
-  const showDetailedLog = (data: unknown) => {
-    const log = data as ExecutionType;
-    console.log(log);
-    setModal({ data: log, visible: true });
   };
 
   return (
@@ -107,7 +106,7 @@ export default function Home() {
         />
       </PinButtonsWrapper>
 
-      <LogModal modal={modal} setModal={setModal} log={flagLog} />
+      <LogModal executions={executionLog} log={flagLog} />
     </main>
   );
 }

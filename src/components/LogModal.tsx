@@ -2,29 +2,36 @@ import { Modal } from '@mui/material';
 import { FLAG_CODE } from 'utils/constants';
 import { ExecutionType, FlagType } from 'utils/types';
 import LoggingDisplay from './LoggingDisplay';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useMemo } from 'react';
 
-type ModalType = {
-  data: ExecutionType | null;
-  visible: boolean;
-};
 type Props = {
-  modal: ModalType;
-  setModal: React.Dispatch<React.SetStateAction<ModalType>>;
   log: FlagType[] | null;
+  executions: ExecutionType[] | null;
 };
-const LogModal = ({ modal, setModal, log }: Props) => {
+const LogModal = ({ executions, log }: Props) => {
+  const { search } = useLocation();
+  const navigate = useNavigate();
+  const query = useMemo(() => new URLSearchParams(search), [search]);
+  const modal = useMemo(() => {
+    const logId = query.get('log');
+    const data = executions?.find((e) => e.id === Number(logId));
+    return { visible: !!data, data: data };
+  }, [query, executions]);
+
+  const closeModal = () => {
+    navigate(`${location.pathname}${location.hash}`);
+  };
+
   return (
-    <Modal
-      open={modal.visible}
-      onClose={() => setModal((modal) => ({ ...modal, visible: false }))}
-    >
+    <Modal open={modal.visible} onClose={closeModal}>
       <div
         className={`secondaryColor border-2 border-white border-opacity-4s0 p-3 rounded-md shadow-2xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-11/12 h-5/6 flex flex-col gap-2`}
       >
         <div className="flex justify-end h-6">
           <button
             className="bg-black rounded-sm text-xs px-5"
-            onClick={() => setModal((modal) => ({ ...modal, visible: false }))}
+            onClick={closeModal}
           >
             close
           </button>
