@@ -57,6 +57,10 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
   );
   const [exploits, _setExploits] = useAtom(exploitsAtom);
   const [filteredExploit, setFilteredExploit] = useState(0);
+  const filteredExploitObj = useMemo(() => {
+    if (exploits) return exploits.find((e) => e.id === filteredExploit);
+    return null;
+  }, [filteredExploit, exploits]);
 
   const resizableRef = useRef<HTMLDivElement | null>(null);
   const { setActiveHandler } = useResizeableComponent(resizableRef);
@@ -68,15 +72,6 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
   const services = Object.keys(
     Object.values(data.scoreboard.teams)[0].services
   );
-  const filteredData = useMemo(() => {
-    return removeSimpleDuplicates(
-      Object.keys(data.scoreboard.teams),
-      services,
-      data.flag,
-      currentTick,
-      undefined
-    );
-  }, [currentTick, data.flag, data.scoreboard.teams, services]);
 
   const filteredExploitData = useMemo(() => {
     return removeSimpleDuplicates(
@@ -189,7 +184,7 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                       }`}
                     >
                       <SimpleOverview
-                        data={filteredData[team[0]][service] as Data}
+                        data={filteredExploitData[team[0]][service] as Data}
                         status={team[1].services[service]}
                         currentTick={currentTick}
                         total={total}
@@ -259,7 +254,7 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                       <p
                         key={`service_${service}_extended`}
                         id={service}
-                        className={`flex items-center text-sm p-2 h-[2.1rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden transition-all`}
+                        className={`flex items-center text-sm p-2 h-[2.1rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm truncate transition-all`}
                       >
                         {service}
                       </p>
@@ -268,14 +263,17 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                       <p
                         key={`team_${team[0]}_extended`}
                         id={team[0]}
-                        className={`flex items-center text-sm p-2 h-[2.1rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden transition-all`}
+                        className={`flex items-center text-sm p-2 h-[2.1rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm truncate transition-all ${
+                          filteredExploitObj?.blacklist.includes(team[0])
+                            ? 'opacity-50 !bg-black brightness-75'
+                            : ''
+                        }`}
                       >
                         {team[0]} {team[1].name}
                       </p>
                     ))}
               </div>
 
-              {/* The scrollable element for your list */}
               <div className="flex overflow-auto w-full h-[calc(100%+1rem)]">
                 <div className="flex flex-col gap-1 w-full">
                   <p
@@ -303,10 +301,10 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                           style={{
                             ...style,
                           }}
-                          className="flex flex-col gap-1"
+                          className="flex flex-col gap-1 "
                         >
                           <p
-                            className={`flex w-full mb-1 items-center justify-center text-xs h-[1.25rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden transition-all ${
+                            className={`flex w-full mb-1 items-center justify-center text-xs h-[1.25rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm transition-all ${
                               (currentTick - index) % 2 === 0
                                 ? 'text-indigo-300'
                                 : 'text-indigo-100'
@@ -321,7 +319,7 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                                   key={`service_${service}_extended_${
                                     currentTick - index
                                   }`}
-                                  className="flex justify-center items-center h-[2.1rem] bg-slate-950 bg-opacity-20 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden"
+                                  className="flex justify-center items-center h-[2.1rem] bg-slate-950 bg-opacity-20 border-slate-950 border-opacity-20 border-2 rounded-sm truncate"
                                 >
                                   <SimpleOverview
                                     data={
@@ -346,7 +344,13 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                                   key={`team_${team}_extended_${
                                     currentTick - index
                                   }`}
-                                  className="flex h-[2.1rem] bg-slate-950 bg-opacity-20 border-slate-950 border-opacity-20 border-2 rounded-sm text-ellipsis whitespace-nowrap overflow-hidden"
+                                  className={`flex h-[2.1rem] bg-slate-950 bg-opacity-20 border-slate-950 border-opacity-20 border-2 rounded-sm truncate ${
+                                    filteredExploitObj?.blacklist.includes(
+                                      teams[Number(team)][0]
+                                    )
+                                      ? 'opacity-50 !bg-black brightness-75'
+                                      : ''
+                                  }`}
                                 >
                                   <SimpleOverview
                                     data={
