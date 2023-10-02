@@ -59,11 +59,14 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
   const [filteredExploit, setFilteredExploit] = useState(0);
   const filteredBlacklist = useMemo(() => {
     if (exploits) {
-      if (filteredExploit === 0) return exploits.flatMap((e) => e.blacklist);
+      if (filteredExploit === 0)
+        return exploits
+          .filter((e) => e.service === String(extendedSelection?.selection))
+          .flatMap((e) => e.blacklist);
       return exploits.find((e) => e.id === filteredExploit)?.blacklist;
     }
     return [];
-  }, [filteredExploit, exploits]);
+  }, [filteredExploit, exploits, extendedSelection]);
 
   const resizableRef = useRef<HTMLDivElement | null>(null);
   const { setActiveHandler } = useResizeableComponent(resizableRef);
