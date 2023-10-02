@@ -33,15 +33,39 @@ const LogModal = ({ modal, setModal, log }: Props) => {
           <>
             <div className="flex flex-col gap-3 h-full">
               <div className="flex gap-3 w-full h-full">
-                <div className="w-1/4 tertiaryColor text-sm rounded-sm">
-                  <p>ID: {modal.data.id}</p>
-                  <p>Exploit ID: {modal.data.exploit_id}</p>
-                  <p>Target ID: {modal.data.target_id}</p>
-                  <p>Exit code: {modal.data.exit_code}</p>
-                  <p>Service: {modal.data.service}</p>
-                  <p>Team: {modal.data.team}</p>
-                  <p>Started at: {modal.data.started_at}</p>
-                  <p>Finished at: {modal.data.finished_at}</p>
+                <div className="flex flex-col gap-2 w-1/4 tertiaryColor text-sm rounded-sm">
+                  <div>
+                    <h3 className="font-bold">ID: </h3>
+                    <p>{modal.data.id}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Exploit ID: </h3>
+                    <p>{modal.data.exploit_id}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Target ID: </h3>
+                    <p>{modal.data.target_id}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Exit code:</h3>
+                    <p>{modal.data.exit_code}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Service: </h3>
+                    <p>{modal.data.service}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Team: </h3>
+                    <p>{modal.data.team}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Started at: </h3>
+                    <p>{modal.data.started_at}</p>
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Finished at: </h3>
+                    <p>{modal.data.finished_at}</p>
+                  </div>
                 </div>
 
                 <textarea
