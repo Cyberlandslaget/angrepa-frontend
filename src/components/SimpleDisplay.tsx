@@ -270,7 +270,7 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                         key={`team_${team[0]}_extended`}
                         id={team[0]}
                         className={`flex items-center text-sm p-2 h-[2.1rem] shadow-inner bg-slate-950 bg-opacity-30 border-slate-950 border-opacity-20 border-2 rounded-sm truncate transition-all ${
-                          filteredBlacklist.includes(team[0])
+                          filteredBlacklist?.includes(team[0])
                             ? 'opacity-50 !bg-black brightness-75'
                             : ''
                         }`}
@@ -351,7 +351,7 @@ const SimpleDisplay = ({ data, extended }: SimpleDisplayProps) => {
                                     currentTick - index
                                   }`}
                                   className={`flex h-[2.1rem] bg-slate-950 bg-opacity-20 border-slate-950 border-opacity-20 border-2 rounded-sm truncate ${
-                                    filteredBlacklist.includes(
+                                    filteredBlacklist?.includes(
                                       teams[Number(team)][0]
                                     )
                                       ? 'opacity-50 !bg-black brightness-75'
