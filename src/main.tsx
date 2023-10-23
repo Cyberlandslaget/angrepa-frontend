@@ -8,6 +8,7 @@ import Exploits from './modules/Exploits/Exploits.tsx';
 import Layout from 'modules/Layout.tsx';
 import { SnackbarProvider } from 'notistack';
 import DataProvider from 'modules/DataProvider.tsx';
+import Configuration from 'modules/Configuration/Configuration.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -19,6 +20,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route path="/" element={<Home />} />
               <Route path="/scoreboard" element={<Scoreboard />} />
               <Route path="/exploits/*" element={<Exploits />} />
+              <Route path="/configuration" element={<Configuration />} />
             </Routes>
           </Layout>
         </DataProvider>

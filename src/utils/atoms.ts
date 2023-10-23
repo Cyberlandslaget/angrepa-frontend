@@ -41,3 +41,5 @@ export const templatesAtom = atom<string[] | null>(null);
 export const wsAtom = atom<WebSocket>(
   new WebSocket(`ws://${CONFIG.MGMT_SERVER_URL.split(':')[1]}:8001`)
 );
+
+export const configurationAtom = atom({ minutesToFetch: 3 * 60 });

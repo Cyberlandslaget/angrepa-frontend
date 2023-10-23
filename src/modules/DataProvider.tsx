@@ -7,7 +7,7 @@ import useUpdateExecutions from 'api/logs/useUpdateExecutions';
 import useUpdateExploits from 'api/logs/useUpdateExploits';
 import useUpdateFlags from 'api/logs/useUpdateFlags';
 import { getTemplateNames } from 'api/templates/getTemplateData';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { ReactNode, useEffect, useState } from 'react';
 import {
   currentTickAtom,
@@ -16,6 +16,7 @@ import {
   scoreboardDataAtom,
   flagLogAtom,
   templatesAtom,
+  configurationAtom,
 } from 'utils/atoms';
 import { WebSocketTable } from 'utils/enums';
 import {
@@ -33,6 +34,7 @@ export default function DataProvider({ children }: { children: ReactNode }) {
   const [exploits, setExploits] = useAtom(exploitsAtom);
   const [currentTick, setCurrentTick] = useAtom(currentTickAtom);
   const [templates, setTemplates] = useAtom(templatesAtom);
+  const [configuration, setConfiguration] = useAtom(configurationAtom);
   const updateExecutions = useUpdateExecutions();
   const updateFlags = useUpdateFlags();
   const updateExploits = useUpdateExploits();
@@ -44,10 +46,17 @@ export default function DataProvider({ children }: { children: ReactNode }) {
     useState<boolean>(false);
 
   useEffect(() => {
-    // TODO: make user configurable
-    const MINUTES_TO_FETCH = 3 * 60;
+    const config = localStorage.getItem('configuration');
+    if (config) {
+      const parsedConfig: { minutesToFetch: number } = JSON.parse(config);
+      setConfiguration(parsedConfig);
+    }
+  }, [setConfiguration]);
+
+  useEffect(() => {
     const xMinutesAgo =
-      Math.floor(new Date().getTime() / 1000) - 60 * MINUTES_TO_FETCH;
+      Math.floor(new Date().getTime() / 1000) -
+      60 * configuration.minutesToFetch;
     if (!scoreboardData)
       getScoreboardData()
         .then((data) => setScoreboardData(data))
@@ -133,6 +142,7 @@ export default function DataProvider({ children }: { children: ReactNode }) {
     hasInitializedExecutions,
     hasInitializedFlags,
     hasInitializedExploits,
+    configuration,
   ]);
 
   useEffect(() => {
