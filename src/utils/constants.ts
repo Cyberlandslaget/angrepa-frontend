@@ -1,7 +1,7 @@
 import { File } from './types';
 
 export const CONFIG = {
-  MGMT_SERVER_URL: 'http://angrepa.cybl:8000',
+  MGMT_SERVER_URL: 'http://nordbo.cybl:8000',
   // MGMT_SERVER_URL: `http://${window.location.hostname}:8000`,
 };
 
