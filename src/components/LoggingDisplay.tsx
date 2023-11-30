@@ -52,9 +52,9 @@ const executionsDataParser = (data: ExecutionType) => {
           className="w-full px-1 rounded-sm [background-color:var(--logBackgroundColor)] [color:var(--logColor)] py-[0.1rem]"
           title={'Execution time'}
         >
-          {(new Date(data.finished_at).getTime() -
+          {((new Date(data.finished_at).getTime() -
             new Date(data.started_at).getTime()) /
-            1000}
+            1000).toFixed(1)}
           s
         </span>
       </div>
@@ -64,9 +64,8 @@ const executionsDataParser = (data: ExecutionType) => {
 const flagSubmissionDataParser = (data: FlagType, censor: boolean) => {
   return (
     <div
-      className={`log grid gap-1 w-full h-full brightness-90 items-center text-center text-sm ${
-        data.status
-      } ${'[grid-template-columns:6rem_3rem_2rem_7rem_4.75rem_1fr_3rem]'}`}
+      className={`log grid gap-1 w-full h-full brightness-90 items-center text-center text-sm ${data.status
+        } ${'[grid-template-columns:6rem_3rem_2rem_7rem_4.75rem_1fr_3rem]'}`}
     >
       {/* <span
         className="secondaryColor rounded-sm py-[0.1rem]"
@@ -178,12 +177,12 @@ const LoggingDisplay = ({
     >
       {parser === 'submission'
         ? flagSubmissionDataParser(
-            filterData[filterData.length - 1 - index] as FlagType,
-            sensor
-          )
+          filterData[filterData.length - 1 - index] as FlagType,
+          sensor
+        )
         : executionsDataParser(
-            filterData[filterData.length - 1 - index] as ExecutionType
-          )}
+          filterData[filterData.length - 1 - index] as ExecutionType
+        )}
     </div>
   );
 
