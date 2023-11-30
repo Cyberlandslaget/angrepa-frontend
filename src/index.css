@@ -37,6 +37,9 @@
   --yellowWrapper: #eae6df;
   --yellowBg: #edda9b;
   --yellowText: #83611d;
+  --whiteWrapper: #eaeae8;
+  --whiteBg: #a3a3a1;
+  --whiteText: #4b4b4b;
 
   font-family: 'fantasque_sans_monoregular', Inter, system-ui, Avenir, Helvetica,
     Arial, sans-serif;
@@ -108,9 +111,9 @@ body {
   --logColor: var(--redText);
 }
 .log.success {
-  --logWrapperColor: var(--greenWrapper);
-  --logBackgroundColor: var(--greenBg);
-  --logColor: var(--greenText);
+  --logWrapperColor: var(--whiteWrapper);
+  --logBackgroundColor: var(--whiteBg);
+  --logColor: var(--whiteText);
 }
 .log.info {
   --logWrapperColor: var(--yellowWrapper);
